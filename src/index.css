@@ -1,7 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+* {
+  /* font-family: ; */
+  /* color:#1A1A1A; */
 
-/* .active{
-    background-color: #38C776;
-} */
+  font-weight: 100;
+}
+.btn-primary {
+  padding: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-width: 1px;
+  border-color: #059669;
+  color: black;
+}
+
+.btn-secondary {
+  padding: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-width: 1px;
+  color: #ffffff;
+  background-color: #38c776;
+}
+
+.btn-active {
+  width: 60px;
+  height: 23px;
+  top: 213px;
+  left: 996px;
+  padding: 4px 12px 4px 12px;
+  border-radius: 22px;
+  border: 1px;
+  opacity: 0px;
+  color: #38c776;
+  background: #e1ffee;
+  border: 1px solid #38c776;
+}
+
+.btn-Inactive {
+  width: 69px;
+  height: 23px;
+  top: 273px;
+  left: 996px;
+  padding: 4px 12px 4px 12px;
+  border-radius: 22px;
+  border: 1px;
+  opacity: 0px;
+  color: #101f31;
+  background: #e7f1fe;
+  border: 1px solid #101f31;
+}
+.btn-draft {
+  width: 53px;
+  height: 23px;
+  top: 453px;
+  left: 996px;
+  padding: 4px 12px 4px 12px;
+  border-radius: 22px;
+  border: 1px;
+  opacity: 0px;
+  color: #ff8a00;
+  background: #fff6d4;
+  border: 1px solid #ff8a00;
+}

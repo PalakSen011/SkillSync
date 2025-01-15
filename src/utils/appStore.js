@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import typeReducer from "../redux/typeSlice";
 import usersReducer from "../redux/usersSlice";
+import courseReducer from "../redux/courseSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // use the default localStorage storage
 
@@ -14,6 +15,7 @@ const persistedReducer = persistReducer(persistConfig, usersReducer);
 const appStore = configureStore({
   reducer: {
     type: typeReducer,
+    courses: courseReducer,
     users: persistedReducer, // Persist users reducer
   },
 });

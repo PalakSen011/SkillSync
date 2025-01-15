@@ -12,6 +12,7 @@ import UserManagement from "./pages/UserManagement"; // User management page
 import AllCourses from "./pages/AllCourses.jsx"; // All courses page
 import { PersistGate } from "redux-persist/integration/react";
 import { appStore, persistor } from "./utils/appStore";
+import AddNewCourse from "./pages/AddNewCourse.jsx";
 
 function App() {
   return (
@@ -22,12 +23,14 @@ function App() {
             {/* Public routes */}
             <Route path="/" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/addnewcourse" element={<AddNewCourse />} />
 
             {/* Home route with nested routes */}
             <Route path="/home" element={<Home />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="user-management" element={<UserManagement />} />
               <Route path="all-courses" element={<AllCourses />} />
+              
             </Route>
           </Routes>
         </BrowserRouter>

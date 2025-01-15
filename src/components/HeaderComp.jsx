@@ -27,9 +27,9 @@ const   HeaderComp = () => {
           alt="Notification Icon"
         />
         <p className="text-white text-2xl font-medium">|</p>
-        <div className="w-12 h-12 border border-slate-600 overflow-hidden">
+        <div className="w-12 h-10 border border-slate-600 overflow-hidden">
           <img
-            className="w-full h-full object-cover"
+            className="w-full h-10 object-cover"
             src={User_IMG}
             alt="User Image"
           />
