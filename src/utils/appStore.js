@@ -11,11 +11,12 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, usersReducer);
+const coursePersistedReducer = persistReducer(persistConfig, courseReducer);
 
 const appStore = configureStore({
   reducer: {
     type: typeReducer,
-    courses: courseReducer,
+    courses: coursePersistedReducer,
     users: persistedReducer, // Persist users reducer
   },
 });

@@ -1,103 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  courses: [
+    {
+      
+    },
+  ],
+};
+
 const coursesSlice = createSlice({
-    name : "courses",
-    initialState : [
-        {
-            course_title : 'A',
-            is_mandatory : false,
-            status: 'active',
-            category: 'Training',
-            assignee : 17,
-            duration : '1hr 12 min',
-        },
-        {
-            course_title : 'B',
-            is_mandatory : true,
-            status: 'active',
-            category: 'Training',
-            assignee : 17,
-            duration : '1hr 52 min',
-        },
-        {
-            course_title : 'C',
-            is_mandatory : true,
-            status: 'draft',
-            category: 'Training',
-            assignee : 23,
-            duration : '1hr 7 min',
-        },
-        {
-            course_title : 'D',
-            is_mandatory : false,
-            status: 'draft',
-            category: 'Training',
-            assignee : 8,
-            duration : '1hr 27 min',
-        },
-        {
-            course_title : 'E',
-            is_mandatory : false,
-            status: 'inactive',
-            category: 'Training',
-            assignee : 16,
-            duration : '1hr 44 min',
-        },
-        {
-            course_title : 'F',
-            is_mandatory : true,
-            status: 'active',
-            category: 'Training',
-            assignee : 20,
-            duration : '1hr 33 min',
-        },
-        {
-            course_title : 'G',
-            is_mandatory : false,
-            status: 'inactive',
-            category: 'Training',
-            assignee : 14,
-            duration : '1hr 40 min',
-        },
-        {
-            course_title : 'H',
-            is_mandatory : true,
-            status: 'active',
-            category: 'Training',
-            assignee : 15,
-            duration : '59 min',
-        },
-        {
-            course_title : 'I',
-            is_mandatory : false,
-            status: 'inactive',
-            category: 'Training',
-            assignee : 17,
-            duration : '52 min',
-        },
-        {
-            course_title : 'J',
-            is_mandatory : false,
-            status: 'active',
-            category: 'Training',
-            assignee : 24,
-            duration : '2hr 12 min',
-        },
-        {
-            course_title : 'K',
-            is_mandatory : false,
-            status: 'inactive',
-            category: 'Training',
-            assignee : 6,
-            duration : '1hr 45 min',
-        },
-        {
-            course_title : 'L',
-            is_mandatory : false,
-            status: 'active',
-            category: 'Training',
-            assignee : 9,
-            duration : '1hr 36 min',
-        },
-    ]
-})
+  name: "courses",
+  initialState,
+  reducers: {
+    addCourse: (state, action) => {
+        state.courses.push(action.payload);
+        console.log("🚀 ~ initialState.courses:", JSON.stringify(state.courses));
+    },
+  },
+});
+
+export const { addCourse } = coursesSlice.actions;
+
 export default coursesSlice.reducer;

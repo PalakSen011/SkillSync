@@ -1,11 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-* {
-  /* font-family: ; */
-  /* color:#1A1A1A; */
 
-  font-weight: 100;
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  src: url("path-to-font-file/Inter-Bold.woff2") format("woff2");  font-display: swap;
+}
+html, body {
+  font-family: 'Inter', Arial, sans-serif; /* Add a fallback font for safety */
+  font-size: 15px; /* Base font size */
+  line-height: 15.73px; /* Optional: Adjust line height */
 }
 .btn-primary {
   padding: 2rem;
