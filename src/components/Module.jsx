@@ -1,7 +1,6 @@
 import React from "react";
 
 import AddLesson from "./AddLesson";
-import AddTest from "./AddTest";
 import Lesson from "./Lesson";
 
 const Module = () => {
@@ -10,8 +9,7 @@ const Module = () => {
       <div className=" flex">
         <Lesson />
         {/* Main content area with input fields */}
-        <AddLesson/>
-        {/* <AddTest /> */}
+        {/* <AddLesson /> */}
       </div>
     </>
   );

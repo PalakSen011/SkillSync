@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addUser } from "../../redux/usersSlice"; // Adjust the import path as needed
-import logo from "../../assets/logo.svg";
-import show from "../../assets/show.svg";
-import hide from "../../assets/hide.svg";
+import { addUser } from "../../../redux/usersSlice"; 
+import logo from "../../../assets/logo.svg";
+import show from "../../../assets/show.svg";
+import hide from "../../../assets/hide.svg";
 import {
   validateEmail,
   validatePassword,
   validateConfirmPassword,
-} from "../../utils/validation";
+} from "../../../utils/validation";
 
 const SignUp = () => {
   const [name, setName] = useState("");

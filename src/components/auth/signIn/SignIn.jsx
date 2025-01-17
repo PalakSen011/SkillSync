@@ -2,12 +2,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/logo.svg";
+import logo from "../../../assets/logo.svg";
 import SignInForm from "./SignInForm";
 import ResetPasswordForm from "./ResetPasswordForm";
-import { resetAuthenticationState } from "../../redux/usersSlice";
+import { resetAuthenticationState } from "../../../redux/usersSlice";
 import ForgotPassword from "./ForgotPassword";
-import ResetSuccessful from "../../components/ResetSuccessful";
+import ResetSuccessful from "../../../components/ResetSuccessful";
 
 const SignIn = () => {
   const [isForgotModal, setIsForgotModalOpen] = useState(false);

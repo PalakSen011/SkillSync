@@ -1,9 +1,9 @@
 import React from "react";
-import CourseListTable from "../components/CourseListTable";
+import CourseListTable from "../../CourseListTable";
 
-import filter from "../assets/filter.svg";
-import searchIcon from "../assets/search.svg";
-import dropDownIcon from "../assets/caretIcon.svg";
+import filter from "../../../assets/filter.svg";
+import searchIcon from "../../../assets/search.svg";
+import dropDownIcon from "../../../assets/caretIcon.svg";
 
 const CourseList = ({ onAddNewClick }) => {
   

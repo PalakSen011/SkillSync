@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../redux/usersSlice";
-import { validateEmail, validatePassword } from "../../utils/validation";
-import show from "../../assets/show.svg";
-import hide from "../../assets/hide.svg";
+import { loginUser } from "../../../redux/usersSlice";
+import { validateEmail, validatePassword } from "../../../utils/validation";
+import show from "../../../assets/show.svg";
+import hide from "../../../assets/hide.svg";
 
 const SignIn = ({ setIsForgotModalOpen }) => {
   // State variables for managing form inputs and validation errors

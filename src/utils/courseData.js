@@ -1,24 +1,24 @@
-const courses = [
-  {
-    course_title: 'React',
-    category: 'Training',
-    status: 'Draft',
-    is_mandatory: false,
-    assignee: 'John Doe',
-    duration: '30 hours',
-    modules: [
-      {
-        module_name: 'Module 1',
-        sequence: 1,
-        type: 'chapter',
-        lessons: [
-          { lesson_name: 'lesson 1', Duration: '50min', sequence: 1, content: 'test content' },
-          { lesson_name: 'lesson 2', Duration: '50min', sequence: 2, content: 'test content' },
-          { lesson_name: 'lesson 3', Duration: '50min', sequence: 3, content: 'test content' }
-        ]
-      }
-    ]
-  },
+  const courses = [
+    {
+      course_title: 'React',
+      category: 'Training',
+      status: 'Draft',
+      is_mandatory: false,
+      assignee: 'John Doe',
+      duration: '30 hours',
+      modules: [
+        {
+          module_name: 'Module 1',
+          sequence: 1,
+          type: 'chapter',
+          lessons: [
+            { lesson_name: 'lesson 1', Duration: '50min', sequence: 1, content: 'test content' },
+            { lesson_name: 'lesson 2', Duration: '50min', sequence: 2, content: 'test content' },
+            { lesson_name: 'lesson 3', Duration: '50min', sequence: 3, content: 'test content' }
+          ]
+        }
+      ]
+    },
   {
     course_title: 'JavaScript Basics',
     category: 'Training',

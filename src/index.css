@@ -15,8 +15,8 @@ html, body {
 }
 .btn-primary {
   padding: 2rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
   border-width: 1px;
   border-color: #059669;
   color: black;
@@ -24,8 +24,8 @@ html, body {
 
 .btn-secondary {
   padding: 2rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
   border-width: 1px;
   color: #ffffff;
   background-color: #38c776;

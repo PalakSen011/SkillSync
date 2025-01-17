@@ -4,15 +4,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import "./App.css";
-import SignUp from "./screen/signUp/SignUp";
-import SignIn from "./screen/signIn/SignIn";
-import Home from "./pages/Home"; // Home component (layout)
-import Dashboard from "./pages/Dashboard.jsx";
-import UserManagement from "./pages/UserManagement"; // User management page
-import AllCourses from "./pages/AllCourses.jsx"; // All courses page
+import SignUp from "./components/auth/signUp/SignUp";
+import SignIn from "./components/auth/signIn/SignIn";
+import Home from "./components/home/Home"; // Home component (layout)
+import Dashboard from "./components/home/dashboard/Dashboard.jsx";
+import UserManagement from "./components/home/userManegement/UserManagement"; // User management page
+import AllCourses from "./components/home/allCourses/AllCourses.jsx"; // All courses page
 import { PersistGate } from "redux-persist/integration/react";
 import { appStore, persistor } from "./utils/appStore";
-import AddNewCourse from "./pages/AddNewCourse.jsx";
+import AddNewCourse from "./components/home/allCourses/AddNewCourse.jsx";
 
 function App() {
   return (

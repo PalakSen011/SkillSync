@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { resetPassword } from "../../redux/usersSlice";
+import { resetPassword } from "../../../redux/usersSlice";
 import {
   validatePassword,
   validateConfirmPassword,
-} from "../../utils/validation";
-import show from "../../assets/show.svg";
-import hide from "../../assets/hide.svg";
+} from "../../../utils/validation";
+import show from "../../../assets/show.svg";
+import hide from "../../../assets/hide.svg";
 
 const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   const [password, setPassword] = useState("");

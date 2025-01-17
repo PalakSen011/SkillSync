@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import HeaderComp from "../components/HeaderComp";
-import SideBar from "../components/SideBar";
+import HeaderComp from "../HeaderComp";
+import SideBar from "../SideBar";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const Home = () => {

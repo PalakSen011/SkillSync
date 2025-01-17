@@ -1,6 +1,4 @@
 import React from "react";
-import HeaderComp from "../components/HeaderComp";
-import SideBar from "../components/SideBar";
 
 const Dashboard = () => {
   return (

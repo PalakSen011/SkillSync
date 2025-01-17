@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import editIcon from "../assets/edit-black.svg";
-import trash from "../assets/delete-red.svg";
-import Lesson from "../components/Lesson";
+import editIcon from "../../../assets/edit-black.svg";
+import trash from "../../../assets/delete-red.svg";
+import Lesson from "../../Lesson";
 
 const CourseDetails = () => {
   const [activeTab, setActiveTab] = useState("details"); // Manage active button state

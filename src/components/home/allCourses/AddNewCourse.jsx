@@ -1,58 +1,49 @@
 import React, { useState } from "react";
-import edit_module from "../assets/edit-grey.png";
-import add_new from "../assets/add-new.png";
-import trash from "../assets/trash.png";
-import Module from "../components/Module";
+import edit_module from "../../../assets/edit-grey.png";
+import add_new from "../../../assets/add-new.png";
+import trash from "../../../assets/trash.png";
+import Module from "../../Module";
+import ModuleModal from "./Courses/ModuleModal";
+import Header from "./Courses/Header";
 
 const AddNewCourse = ({ onBackClick }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modules, setModules] = useState([]);
-  const [moduleName, setModuleName] = useState("");
-  const [moduleNumber, setModuleNumber] = useState("");
-  const [courseTitle, setCourseTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [status, setStatus] = useState("");
-  const [mandatoryAll, setMandatoryAll] = useState(false);
-
-  const handleSave = () => {
-    setCourseTitle("")
-    console.log("Course saved:", courseData);
-    // You can add additional logic here, like sending the data to an API or updating the parent component
-  };
+  const [moduleData, setModuleData] = useState(null);
 
   const handleAddModuleClick = () => {
+    setModuleData(null); // Reset module data when adding a new one
     setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setModuleName("");
-    setModuleNumber("");
+    setModuleData(null); // Reset on modal close
   };
 
-  const handleAddModule = () => {
-    if (moduleName && moduleNumber) {
-      setModules([...modules, { name: moduleName, number: moduleNumber }]);
-      handleModalClose();
+  const handleSaveModule = (module) => {
+    if (moduleData) {
+      // Update existing module
+      setModules(modules.map((m) => (m.id === module.id ? module : m)));
+    } else {
+      // Add new module
+      setModules([...modules, { ...module, id: Date.now() }]);
     }
+    handleModalClose();
   };
 
-  const handleDeleteModule = (index) => {
-    setModules(modules.filter((_, i) => i !== index));
+  const handleDeleteModule = (id) => {
+    setModules(modules.filter((module) => module.id !== id));
+  };
+
+  const handleEditModule = (module) => {
+    setModuleData(module);
+    setIsModalOpen(true);
   };
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="text-xl font-bold mb-5">Add New</div>
-        <div className="flex gap-4">
-          <button className="btn-primary flex items-end" onClick={onBackClick}>
-            Back
-          </button>
-          <button className="btn-secondary flex items-end">Publish</button>
-        </div>
-      </div>
-
+      <Header onClick={onBackClick} />
       <div className="min-w-full font-sm mt-4 p-5 bg-white">
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold">Course details</div>
@@ -96,6 +87,7 @@ const AddNewCourse = ({ onBackClick }) => {
               <option value="Seminar">Learning</option>
             </select>
           </div>
+
           {/* Status dropdown */}
           <div className="flex flex-col w-1/4">
             <label
@@ -115,83 +107,54 @@ const AddNewCourse = ({ onBackClick }) => {
             </select>
           </div>
         </div>
-        <div className="flex justify-end mt-5">
-          <button
-            className="btn-secondary flex items-end "
-            onClick={handleSave}
-          >
-            Save
-          </button>
-        </div>
+          <div className="flex justify-end mt-5">
+            <button className="btn-secondary flex items-end">Save</button>
+          </div>
       </div>
 
       <div className="min-w-full mt-4 h-screen bg-white">
         <div className="flex gap-6 p-4 pb-0">
-          {modules.map((module, index) => (
-            <button
-              key={index}
+          {modules.map((module) => (
+            <div
+              key={module.id}
               className="flex px-4 py-3 hover:border-b-2 hover:border-green-500"
             >
               <div className="text-sm hover:text-green-500">
                 {module.name} {module.number}
               </div>
-              <img src={edit_module} alt="" className="h-4 pl-1" />
+              <img
+                src={edit_module}
+                alt="edit"
+                className="h-4 pl-1 cursor-pointer"
+                onClick={() => handleEditModule(module)}
+              />
               <img
                 src={trash}
-                alt="trash icon"
+                alt="trash"
                 className="h-4 pl-1 cursor-pointer"
-                onClick={() => handleDeleteModule(index)}
+                onClick={() => handleDeleteModule(module.id)}
               />
-            </button>
+            </div>
           ))}
           <button
             className="flex px-4 py-3 hover:border-b-2 hover:border-green-500"
             onClick={handleAddModuleClick}
           >
-            <img src={add_new} alt="add new icon" className="h-5" />
+            <img src={add_new} alt="add new" className="h-5" />
             <div className="text-sm hover:text-green-500 pl-1">Add</div>
           </button>
         </div>
         <hr className="h-px border bg-neutral-500" />
-
         <Module />
       </div>
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-5 rounded-lg w-1/3">
-            <h2 className="text-lg font-semibold mb-4">Add Module</h2>
-            <div className="flex flex-col gap-4">
-              <div>
-                <label className="text-sm font-medium">Module Name</label>
-                <input
-                  type="text"
-                  value={moduleName}
-                  onChange={(e) => setModuleName(e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Module Number</label>
-                <input
-                  type="text"
-                  value={moduleNumber}
-                  onChange={(e) => setModuleNumber(e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 mt-1"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-4 mt-4">
-              <button className="btn-secondary" onClick={handleModalClose}>
-                Cancel
-              </button>
-              <button className="btn-primary" onClick={handleAddModule}>
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
+        <ModuleModal
+          moduleData={moduleData}
+          onClose={handleModalClose}
+          onSave={handleSaveModule}
+        />
       )}
     </>
   );
