@@ -7,6 +7,7 @@ import {
 } from "../../../utils/validation";
 import show from "../../../assets/show.svg";
 import hide from "../../../assets/hide.svg";
+import { useForm } from "react-hook-form";
 
 const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   const [password, setPassword] = useState("");
@@ -16,6 +17,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
 
+  const { form, handlesubmit,wacth,}=useForm();
   // Redux hooks
   const dispatch = useDispatch();
   const userEmail = useSelector((state) => state.users.userEmail);
@@ -34,13 +36,13 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    consol
     if (password === "") {
       setPasswordError("Password cannot be empty.");
     }
     if (confirmPassword === "") {
       setConfirmPasswordError("Password cannot be empty.");
-      return;
+      return;  
     }
     if (confirmPasswordError || passwordError) {
       return;
@@ -60,8 +62,8 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
             id="password"
             className="w-full px-4 py-2"
             placeholder="Password"
-            value={password}
             onChange={handlePasswordChange}
+            {...form("password")}
             required
           />
           {/* Toggle show/hide password */}
@@ -91,8 +93,9 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
             id="confirmPassword"
             className="w-full px-4 py-2"
             placeholder="Re-enter New Password"
-            value={confirmPassword}
+
             onChange={handleConfirmPasswordChange}
+            {...form("confirmPassword")}
             required
           />
           {/* Toggle show/hide confirmation password */}

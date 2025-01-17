@@ -24,9 +24,9 @@ const SidebarLink = ({ to, icon, label }) => {
 const SideBar = () => {
   return (
     <div className="m-3 text-sm p-1">
-      <SidebarLink to="/home/dashboard" icon={home} label="Dashboard" />
-      <SidebarLink to="/home/all-courses" icon={graduation_cap} label="All Courses" />
-      <SidebarLink to="/home/user-management" icon={user_management} label="User Management" />
+      <SidebarLink to="/dashboard" icon={home} label="Dashboard" />
+      <SidebarLink to="/all-courses" icon={graduation_cap} label="All Courses" />
+      <SidebarLink to="/user-management" icon={user_management} label="User Management" />
     </div>
   );
 };

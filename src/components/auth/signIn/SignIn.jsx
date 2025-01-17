@@ -7,7 +7,7 @@ import SignInForm from "./SignInForm";
 import ResetPasswordForm from "./ResetPasswordForm";
 import { resetAuthenticationState } from "../../../redux/usersSlice";
 import ForgotPassword from "./ForgotPassword";
-import ResetSuccessful from "../../../components/ResetSuccessful";
+import ResetSuccessful from "../../../Common/ResetSuccessful";
 
 const SignIn = () => {
   const [isForgotModal, setIsForgotModalOpen] = useState(false);
@@ -23,7 +23,7 @@ const SignIn = () => {
 
   // Redirect the user to the dashboard if they are authenticated
   useEffect(() => {
-    if (isAuthenticated) navigate("/home");
+    if (isAuthenticated) navigate("/dashboard");
   }, [isAuthenticated, navigate]);
 
   // Reset the authentication state when the `type` is not `resetPassword`

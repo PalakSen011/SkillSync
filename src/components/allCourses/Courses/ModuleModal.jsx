@@ -8,6 +8,7 @@ const ModuleModal = ({ moduleData, onClose, onSave }) => {
   const handleSave = () => {
     if (!moduleName || !moduleNumber) return alert("All fields are required!");
     onSave({ id: moduleData?.id, name: moduleName, number: moduleNumber });
+    console.log("🚀 ~ handleSave ~ moduleData?.id:", moduleData?.id)
   };
 
   return (

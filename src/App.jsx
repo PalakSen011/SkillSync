@@ -6,13 +6,15 @@ import { Provider } from "react-redux";
 import "./App.css";
 import SignUp from "./components/auth/signUp/SignUp";
 import SignIn from "./components/auth/signIn/SignIn";
-import Home from "./components/home/Home"; // Home component (layout)
-import Dashboard from "./components/home/dashboard/Dashboard.jsx";
-import UserManagement from "./components/home/userManegement/UserManagement"; // User management page
-import AllCourses from "./components/home/allCourses/AllCourses.jsx"; // All courses page
+import Dashboard from "./components//dashboard/Dashboard.jsx";
+import UserManagement from "./components//userManegement/UserManagement"; // User management page
+import AllCourses from "./components//allCourses/AllCourses.jsx"; // All courses page
 import { PersistGate } from "redux-persist/integration/react";
 import { appStore, persistor } from "./utils/appStore";
-import AddNewCourse from "./components/home/allCourses/AddNewCourse.jsx";
+import AddNewCourse from "./components//allCourses/AddNewCourse.jsx";
+import ResetPassword from "./components/auth/signIn/ResetPasswordForm.jsx";
+import ProtectedRoute from "./Common/ProtectedRoute.jsx";
+import NotFound from "./Common/NotFound.jsx";
 
 function App() {
   return (
@@ -21,17 +23,19 @@ function App() {
         <BrowserRouter>
           <Routes>
             {/* Public routes */}
-            <Route path="/" element={<SignIn />} />
+            <Route index element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/addnewcourse" element={<AddNewCourse />} />
-
-            {/* Home route with nested routes */}
-            <Route path="/home" element={<Home />}>
-              <Route path="dashboard" element={<Dashboard />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/all-courses" element={<AllCourses />} />
+              <Route path="/all-courses/addNew-course" element={<AddNewCourse />} />
               <Route path="user-management" element={<UserManagement />} />
-              <Route path="all-courses" element={<AllCourses />} />
-              
             </Route>
+            {/* <Route path="*" element={<NotFound />} /> */}
+            {/* <Route path="/addnewcourse" element={<AddNewCourse />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/user-management" element={<UserManagement />} />
+            <Route path="/all-courses" element={<AllCourses />} /> */}
           </Routes>
         </BrowserRouter>
       </PersistGate>

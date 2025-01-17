@@ -1,12 +1,11 @@
 import React from "react";
-import CourseListTable from "../../CourseListTable";
+import CourseListTable from "../../Common/CourseListTable";
 
-import filter from "../../../assets/filter.svg";
-import searchIcon from "../../../assets/search.svg";
-import dropDownIcon from "../../../assets/caretIcon.svg";
+import filter from "../../assets/filter.svg";
+import searchIcon from "../../assets/search.svg";
+import { Link } from "react-router-dom";
 
-const CourseList = ({ onAddNewClick }) => {
-  
+const CourseList = () => {
   return (
     <>
       <div className="text-xl font-semibold mb-5">All Courses</div>
@@ -31,13 +30,12 @@ const CourseList = ({ onAddNewClick }) => {
           </button>
         </div>
         {/* Right Section (Add New Button) */}
-        <button className="btn-primary flex items-end" onClick={onAddNewClick}>
-          Add New
-        </button>
+        <Link to="/all-courses/addNew-course">
+          <button className="btn-primary flex items-end">Add New</button>
+        </Link>
       </div>
       {/* CourseList Component */}
-      <CourseListTable  />
-      
+      <CourseListTable />
     </>
   );
 };
