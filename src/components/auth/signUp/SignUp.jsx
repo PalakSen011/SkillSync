@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addUser } from "../../../redux/usersSlice"; 
+import { addUser } from "../../../Store/Slice/usersSlice";
 import logo from "../../../assets/logo.svg";
 import show from "../../../assets/show.svg";
 import hide from "../../../assets/hide.svg";
@@ -72,7 +72,13 @@ const SignUp = () => {
       hasError = true;
     }
 
-    if (!hasError && !nameError && !emailError && !passwordError && !confirmPasswordError) {
+    if (
+      !hasError &&
+      !nameError &&
+      !emailError &&
+      !passwordError &&
+      !confirmPasswordError
+    ) {
       // Dispatch addUser action to store user data
       dispatch(
         addUser({
@@ -92,8 +98,12 @@ const SignUp = () => {
       </div>
       <div className="min-h-screen relative">
         <div className="absolute top-36 left-8 sm:left-16 md:top-24 md:left-36 lg:top-36 lg:left-48 w-full max-w-sm">
-          <h2 className="text-2xl font-semibold mb-2 text-green-400">Sign Up</h2>
-          <p className="mb-6 font-light text-white">Create an account to access courses.</p>
+          <h2 className="text-2xl font-semibold mb-2 text-green-400">
+            Sign Up
+          </h2>
+          <p className="mb-6 font-light text-white">
+            Create an account to access courses.
+          </p>
 
           <form onSubmit={handleSubmit}>
             {/* Name Field */}
@@ -121,7 +131,9 @@ const SignUp = () => {
                 onChange={handleEmailChange}
                 required
               />
-              {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+              {emailError && (
+                <p className="text-red-500 text-sm">{emailError}</p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -148,7 +160,9 @@ const SignUp = () => {
                   />
                 </button>
               </div>
-              {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+              {passwordError && (
+                <p className="text-red-500 text-sm">{passwordError}</p>
+              )}
             </div>
 
             {/* Confirm Password Field */}
@@ -170,12 +184,16 @@ const SignUp = () => {
                 >
                   <img
                     src={showConfirmPassword ? show : hide}
-                    alt={showConfirmPassword ? "Hide password" : "Show password"}
+                    alt={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
                     className="w-5 h-5"
                   />
                 </button>
               </div>
-              {confirmPasswordError && <p className="text-red-500 text-sm">{confirmPasswordError}</p>}
+              {confirmPasswordError && (
+                <p className="text-red-500 text-sm">{confirmPasswordError}</p>
+              )}
             </div>
 
             {/* Submit Button */}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import HeaderComp from "./HeaderComp";
+import HeaderComp from "./HeaderComponent";
 import SideBar from "./SideBar";
 import { Outlet, useNavigate } from "react-router-dom";
 

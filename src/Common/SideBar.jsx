@@ -25,7 +25,7 @@ const SideBar = () => {
   return (
     <div className="m-3 text-sm p-1">
       <SidebarLink to="/dashboard" icon={home} label="Dashboard" />
-      <SidebarLink to="/all-courses" icon={graduation_cap} label="All Courses" />
+      <SidebarLink to="/courses" icon={graduation_cap} label="All Courses" />
       <SidebarLink to="/user-management" icon={user_management} label="User Management" />
     </div>
   );

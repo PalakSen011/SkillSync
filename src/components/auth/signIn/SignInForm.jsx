@@ -1,8 +1,7 @@
-// SignIn.js
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../../redux/usersSlice";
+import { loginUser } from "../../../Store/Slice/usersSlice";
 import { validateEmail, validatePassword } from "../../../utils/validation";
 import show from "../../../assets/show.svg";
 import hide from "../../../assets/hide.svg";
@@ -13,7 +12,7 @@ const SignIn = ({ setIsForgotModalOpen }) => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

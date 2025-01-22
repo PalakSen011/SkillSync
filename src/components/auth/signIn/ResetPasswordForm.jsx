@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { resetPassword } from "../../../redux/usersSlice";
+import { resetPassword } from "../../../Store/Slice/usersSlice";
 import {
   validatePassword,
   validateConfirmPassword,

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.svg";
 import SignInForm from "./SignInForm";
 import ResetPasswordForm from "./ResetPasswordForm";
-import { resetAuthenticationState } from "../../../redux/usersSlice";
+import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
 import ForgotPassword from "./ForgotPassword";
 import ResetSuccessful from "../../../Common/ResetSuccessful";
 
@@ -38,7 +38,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="overflow-hidden h-screen bg-cover bg-center bg-[url('./assets/authBackground.svg')]">
+    <div className="overflow-hidden h-screen bg-cover bg-center bg-[url('./public/authBackground.svg')]">
       {/* Logo Section */}
       <div>
         <img className="p-5" src={logo} alt="Skill Sync logo" />
@@ -80,3 +80,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
+ 

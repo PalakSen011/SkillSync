@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import password from "../assets/password.gif";
 import { useDispatch, useSelector } from "react-redux";
-import { changeType } from "../redux/typeSlice";
+import { changeType } from "../Store/Slice/typeSlice";
 
 const ResetSuccessful = ({ onClose }) => {
   const [countdown, setCountdown] = useState(10);

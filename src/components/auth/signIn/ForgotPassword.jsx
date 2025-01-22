@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import forgotPassword from "../../../assets/forgotPassword.svg";
 import resetPasswordImage from "../../../assets/sent-mail.gif";
 import { useDispatch, useSelector } from "react-redux";
-import { changeType } from "../../../redux/typeSlice";
-import { resetUserEmail, setUserEmail } from "../../../redux/usersSlice";
+import { changeType } from "../../../Store/Slice/typeSlice";
+import { resetUserEmail, setUserEmail } from "../../../Store/Slice/usersSlice";
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
