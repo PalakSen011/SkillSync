@@ -20,7 +20,7 @@ const AddNewCourse = ({ onBackClick }) => {
   });
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  const targetCourse = useSelector((state) => state.courses.currentCourse);
+  const targetCourse = useSelector((state) => state.courses.courses);
   const {
     register,
     handleSubmit,
@@ -29,6 +29,13 @@ const AddNewCourse = ({ onBackClick }) => {
   } = useForm();
 
   const onSubmit = (data) => {
+    // Calculate modulesCount and lessonsCount dynamically
+    const modulesCount = courseDetails.modules.length;
+    const lessonsCount = courseDetails.modules.reduce(
+      (total, module) => total + (module.lessons ? module.lessons.length : 0),
+      0
+    );
+
     const course = {
       course_id: Date.now(),
       course_title: courseDetails.title,
@@ -37,29 +44,58 @@ const AddNewCourse = ({ onBackClick }) => {
       is_mandatory: courseDetails.mandatory,
       assignee: "John Doe",
       duration: "30 hours",
-      modules: courseDetails.modules,
+      modules: [
+        {
+          module_id: Date.now() + Math.random(),
+          module_name: `Module ${modulesCount + 1}`,
+          sequence: modulesCount + 1,
+          type: "chapter",
+          lessons: [
+            {
+              lesson_id: Date.now() + Math.random(),
+              lesson_name: `Lesson ${lessonsCount + 1}`,
+              duration: "",
+              sequence: lessonsCount + 1,
+              content: "",
+            },
+          ],
+
+          test: [
+            {
+              question_id: Date.now() + Math.random(),
+              question: "",
+              options: [{}],
+              type: "",
+            },
+          ],
+        },
+      ],
     };
 
     console.log("Final Course Details: ", course);
     dispatch(addCourse(course));
+    setCourseDetails(course);
     setShow(true);
   };
-
-  useEffect(() => {
-    if (targetCourse) {
-      setCourseDetails(targetCourse); // Updates courseDetails
-    }
-  }, [targetCourse]);
-
-  useEffect(() => {
-    console.log("Updated courseDetails:", courseDetails);
-  }, [courseDetails]); // Logs courseDetails whenever it updates
+  console.log("Updated courseDetails:", courseDetails);
 
   const handleFieldChange = (field, value) => {
     setCourseDetails((prev) => ({
       ...prev,
-      [field]: value,
+      [field]: field === "mandatory" ? Boolean(value) : value,
     }));
+  };
+
+  const updateTestInCourseDetails = (moduleId, testData) => {
+    console.log("🚀 ~ updateTestInCourseDetails ~ testData:", testData);
+    setCourseDetails((prevDetails) => ({
+      ...prevDetails,
+      modules: prevDetails.modules.map((module) =>
+        module.module_id === moduleId ? { ...module, test: testData } : module
+      ),
+    }));
+    dispatch(addCourse(courseDetails));
+    console.log("🚀 ~ AddNewCourse ~ targetCourse:", targetCourse);
   };
 
   return (
@@ -140,6 +176,7 @@ const AddNewCourse = ({ onBackClick }) => {
         <AddModule
           modules={courseDetails.modules}
           setModules={(newModules) => handleFieldChange("modules", newModules)}
+          updateTestInCourseDetails={updateTestInCourseDetails}
         />
       )}
     </>

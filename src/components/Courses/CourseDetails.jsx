@@ -1,82 +1,130 @@
-import React, { useState } from "react";
-import editIcon from "../../../assets/edit-black.svg";
-import trash from "../../../assets/delete-red.svg";
-import Lesson from "../../Lesson";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Pagination from "rc-pagination";
+import dropDownIcon from "../assets/caretIcon.svg";
+import "rc-pagination/assets/index.css";
 
-const CourseDetails = () => {
-  const [activeTab, setActiveTab] = useState("details"); // Manage active button state
+const Courses = () => {
+  const dispatch = useDispatch();
+  const courses = useSelector((state) => state.courses.courses); // Fetch courses from Redux store
+  const [currentPage, setCurrentPage] = useState(1); // Current page
+  const [itemsPerPage, setItemsPerPage] = useState(9); // Items per page
+
+  // Calculate the displayed courses based on the current page and items per page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCourses = courses.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleItemsPerPageChange = (event) => {
+    const newItemsPerPage = parseInt(event.target.value);
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
-    <>
-      <div className="flex items-center justify-between">
-        <div className="text-xl font-semibold mb-5">Course Details</div>
-        <div className="">
-          <button className="btn-primary flex items-end">Back</button>
-        </div>
-      </div>
+    <div className="pt-2">
+      {courses.length === 0 ? (
+        <div className="text-center text-gray-500 mt-4">No courses are added yet.</div>
+      ) : (
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto border-collapse text-sm mt-4 text-slate-800 bg-white">
+              <thead>
+                <tr className="text-left">
+                  <th className="border-b p-5 pl-6">Name</th>
+                  <th className="flex border-b p-5 hide-on-mobile">
+                    <span>Mandatory</span>
+                    <img
+                      className="pt-1 pl-2"
+                      src={dropDownIcon}
+                      alt="caret icon"
+                    />
+                  </th>
+                  <th className="border-b p-5 hide-on-mobile">Category</th>
+                  <th className="flex border-b p-5 hide-on-mobile">
+                    <span>No of assignees</span>
+                    <img
+                      className="pt-1 pl-2"
+                      src={dropDownIcon}
+                      alt="caret icon"
+                    />
+                  </th>
+                  <th className="border-b p-5 hide-on-mobile">Course duration</th>
+                  <th className="border-b p-4 hide-on-mobile pr-6">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentCourses.map((course, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-gray-50 p-6 text-sm text-neutral-700"
+                  >
+                    <td className="border-b p-5 pl-6">{course.course_title}</td>
+                    <td className="border-b p-5 hide-on-mobile">
+                      {course.is_mandatory ? "Yes" : "No"}
+                    </td>
+                    <td className="border-b p-5 hide-on-mobile">
+                      {course.category}
+                    </td>
+                    <td className="border-b p-5 hide-on-mobile">
+                      {course.assignee}
+                    </td>
+                    <td className="border-b p-5">{course.duration}</td>
+                    <td className="border-b p-4 hide-on-mobile pr-6">
+                      <span
+                        className={
+                          course.status === "Draft"
+                            ? "btn-draft"
+                            : course.status === "Active"
+                            ? "btn-active"
+                            : "btn-Inactive"
+                        }
+                      >
+                        {course.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      <div className="min-w-full font-sm mt-4 p-5 bg-white ">
-        <div className="flex justify-between">
-          <div>
-            <span className="btn-active text-sm">Active</span>
-          </div>
-          <div className="flex gap-4">
-            <button className="p-2 border border-neutral-300">
-              <img src={editIcon} alt="" className="" />
-            </button>
-            <button className="p-2 border border-neutral-300">
-              <img src={trash} alt="" className="" />
-            </button>
-          </div>
-        </div>
-        <div className="mt-4 ml-1 flex">
-          <div className="flex flex-col w-1/3">
-            <div className="mb-1 text-sm font-semibold">Title</div>
-            <div className="text-sm text-neutral-500 font-light mb-1">
-              Compensation and Benefits Policies
+          {/* Dropdown for selecting items per page */}
+          <div className="flex justify-between">
+            <div className="flex-row text-neutral-500 mt-4">
+              Show
+              <select
+                className="ml-2 py-2 px-4 border border-neutral-300 shadow-sm"
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
+              </select>{" "}
+              entries
+            </div>
+
+            {/* Pagination controls */}
+            <div className="mt-4 flex justify-center">
+              <Pagination
+                current={currentPage}
+                total={courses.length}
+                pageSize={itemsPerPage}
+                onChange={handlePageChange}
+              />
             </div>
           </div>
-          <div className="flex flex-col w-1/6">
-            <div className="mb-1 text-sm font-semibold">Type</div>
-            <div className="text-sm text-neutral-500 font-light mb-1">
-              Role-specific
-            </div>
-          </div>
-          <div className="flex flex-col w-1/6">
-            <div className="mb-1 text-sm font-semibold">Category</div>
-            <div className="text-sm text-neutral-500 font-light mb-1">
-              Compliance training
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex mt-6 gap-6 text-slate-800">
-        <div
-          className={`py-3 px-14 bg-white font-semibold ${
-            activeTab === "details"
-              ? "text-green-500 border-b-2 border-b-green-500"
-              : "hover:text-green-500 hover:border-b-2 border-b-transparent"
-          }`}
-        >
-          <button onClick={() => setActiveTab("details")}>Details</button>
-        </div>
-        <div
-          className={`py-3 px-10 bg-white font-semibold ${
-            activeTab === "assignees"
-              ? "text-green-500 border-b-2 border-b-green-500"
-              : "hover:text-green-500 hover:border-b-2 border-b-transparent"
-          }`}
-        >
-          <button onClick={() => setActiveTab("assignees")}>
-            Assignees (28)
-          </button>
-        </div>
-      </div>
-      <div className="bg-white flex">
-        <Lesson />
-      </div>
-    </>
+        </>
+      )}
+    </div>
   );
 };
 
-export default CourseDetails;
+export default Courses;

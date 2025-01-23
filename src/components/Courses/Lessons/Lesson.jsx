@@ -1,12 +1,34 @@
+// Lesson.js
 import React, { useState } from "react";
 import { trash, add_new } from "../../../Assets/index.js";
 import AddLesson from "./AddLesson.jsx";
-import AddTest from "./AddTest";
-const Lesson = ({ lessons, addLesson }) => {
-  const [lessonName, setLessonName] = useState("");
+import AddTest from "../Test/AddTest.jsx";
+import { useForm } from "react-hook-form";
+import ConfirmationDelete from "../../../Common/ConfirmationDelete.jsx";
+import LessonModal from "./LessonModal.jsx";
+
+const Lesson = ({
+  lessons,
+  moduleDetails,
+  addLesson,
+  deleteLesson,
+  updateLesson,
+  updateTestInCourseDetails,
+}) => {
+  console.log("🚀 ~ moduleDeatils:", moduleDetails)
   const [showModal, setShowModal] = useState(false);
   const [isAddTest, setIsAddTest] = useState(false);
-  const [error, setError] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [lessonToDelete, setLessonToDelete] = useState(null);
+  const [activeLessonId, setActiveLessonId] = useState(null);
+  const [activeLessonData, setActiveLessonData] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   const openModal = () => {
     setShowModal(true);
@@ -14,36 +36,70 @@ const Lesson = ({ lessons, addLesson }) => {
 
   const closeModal = () => {
     setShowModal(false);
-    setError("");
+    reset();
   };
 
-  const handleAddLesson = () => {
-    if (!lessonName) {
+  const handleAddLesson = (data) => {
+    if (!data.lessonName) {
       setError("Lesson name is required");
       return;
     }
+
     const newLesson = {
       lesson_id: Date.now(),
-      lesson_name: lessonName,
-      content: "test content",
-      Duration: "50min",
+      lesson_name: data.lessonName,
+      content: "",
+      Duration: "",
       sequence: lessons.length + 1,
     };
+
     addLesson(newLesson);
-    setLessonName("");
+    setActiveLessonId(newLesson.lesson_id); // Set the new lesson as active
+    setActiveLessonData(newLesson); // Populate the active lesson data
+    reset();
     setIsAddTest(false);
     closeModal();
   };
 
- 
   const handleDeleteLesson = (lessonId) => {
-    addLesson((lessons) => lessons.filter((lesson) => lesson !== lessonId));
-};
+    setLessonToDelete(lessonId);
+    setShowDeleteModal(true);
+  };
 
+  const confirmDelete = () => {
+    if (lessonToDelete && deleteLesson) {
+      deleteLesson(lessonToDelete);
+    }
+    setShowDeleteModal(false);
+    setLessonToDelete(null);
+  };
 
-  // Handler to toggle between AddLesson and AddTest
-  const toggleAddTest = () => {
-    setIsAddTest(true);
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setLessonToDelete(null);
+  };
+
+  const toggleView = (view) => {
+    setIsAddTest(view === "test");
+    setActiveLessonId(view === "lesson" ? activeLessonId : null); // Clear active lesson when switching to Test
+  };
+
+  const handleLessonClick = (lessonId) => {
+    setActiveLessonId(lessonId);
+    const selectedLesson = lessons.find(
+      (lesson) => lesson.lesson_id === lessonId
+    );
+    setActiveLessonData(selectedLesson);
+    setIsAddTest(false); // Switch back to Lesson view when selecting a lesson
+  };
+
+  const handleUpdateLesson = (updatedData) => {
+    updateLesson(updatedData);
+  };
+
+  const handleSaveTest = (testData) => {
+    console.log("🚀 ~ handleSaveTest ~ testData:", testData)
+    updateTestInCourseDetails(activeLessonId, testData);
   };
 
   return (
@@ -52,8 +108,13 @@ const Lesson = ({ lessons, addLesson }) => {
         <div className="mt-4 w-1/5">
           {lessons.map((lesson, index) => (
             <div
-              key={index}
-              className="border-l-2 border-neutral-300 p-3 mb-4 hover:text-green-500 hover:border-green-500 bg-neutral-100 flex justify-between items-center"
+              key={lesson.lesson_id}
+              className={`border-l-2 p-3 mb-4 hover:text-green-500 hover:border-green-500 bg-neutral-100 flex justify-between items-center ${
+                activeLessonId === lesson.lesson_id
+                  ? "border-green-500 text-green-500"
+                  : ""
+              }`}
+              onClick={() => handleLessonClick(lesson.lesson_id)}
             >
               <div>
                 <div className="text-xs text-neutral-500 pb-2">
@@ -66,53 +127,44 @@ const Lesson = ({ lessons, addLesson }) => {
               </button>
             </div>
           ))}
-
           <div className="border-dashed border-2 mb-4 border-green-500 hover:border-2 hover:border-green-500 flex justify-center items-center">
             <button className="flex py-3 justify-center" onClick={openModal}>
               <img src={add_new} alt="add new icon" className="h-5" />
               <div className="text-sm hover:text-green-500 pl-1">Add</div>
             </button>
           </div>
-          <div className="border-l-2 border-neutral-300 p-3 mb-4 hover:border-green-500 bg-zinc-100">
-            <div className="text-sm" onClick={toggleAddTest}>
-              Test
-            </div>
+          <div
+            className={`border-l-2 p-3 mb-4 hover:border-green-500 bg-zinc-100 ${
+              isAddTest
+                ? "border-green-500 text-green-500"
+                : "border-neutral-300"
+            }`}
+            onClick={() => toggleView("test")}
+          >
+            <div className="text-sm">Test</div>
           </div>
         </div>
-        {isAddTest ? <AddTest /> : <AddLesson />}
-
-        {/* Modal */}
-        {showModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-8 w-1/4">
-              <div className="text-sm text-neutral-500 font-medium">
-                Enter Lesson Name
-              </div>
-              <input
-                type="text"
-                value={lessonName}
-                onChange={(e) => setLessonName(e.target.value)}
-                className="border p-2 w-full mb-4"
-              />
-              {error && <p className="text-red-500 text-xs">{error}</p>}
-              <div className="flex gap-4 mt-3 justify-end">
-                <button
-                  className="btn-primary"
-                  type="button"
-                  onClick={closeModal}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="btn-secondary px-4 py-2"
-                  type="button"
-                  onClick={handleAddLesson}
-                >
-                  Add Lesson
-                </button>
-              </div>
-            </div>
-          </div>
+        {isAddTest ? (
+          <AddTest moduleDetails={moduleDetails} onSave={handleSaveTest} />
+        ) : (
+          <AddLesson
+            lessonData={activeLessonData} // Pass active lesson data to AddLesson
+            onSave={handleUpdateLesson}
+          />
+        )}
+        <LessonModal
+          showModal={showModal}
+          closeModal={closeModal}
+          handleAddLesson={handleSubmit(handleAddLesson)}
+          errors={errors}
+          register={register}
+        />
+        {showDeleteModal && (
+          <ConfirmationDelete
+            onConfirm={confirmDelete}
+            onCancel={cancelDelete}
+            message="Are you sure you want to delete this lesson?"
+          />
         )}
       </div>
     </>

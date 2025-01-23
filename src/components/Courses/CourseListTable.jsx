@@ -28,7 +28,7 @@ const Courses = () => {
   return (
     <div className="pt-2">
       {courses.length === 0 ? (
-        <div className="text-center text-gray-500 mt-4 text-xl">No courses are added yet.</div>
+        <div className="text-center text-gray-500 mt-4 text-xl">No courses are added yet. Click on Add New to Add One !</div>
       ) : (
         <>
           <div className="overflow-x-auto">
