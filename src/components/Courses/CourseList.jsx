@@ -2,6 +2,7 @@ import React from "react";
 import CourseListTable from "./CourseListTable";
 import {filter,search} from "../../Assets/index"
 import { Link } from "react-router-dom";
+import { PATH_ADD_NEW_COURSE } from "../../Constants/RouteConstants";
 
 const CourseList = () => {
   return (
@@ -28,7 +29,7 @@ const CourseList = () => {
           </button>
         </div>
         {/* Right Section (Add New Button) */}
-        <Link to="/courses/addNew-course">
+        <Link to={PATH_ADD_NEW_COURSE}>
           <button className="btn-primary flex items-end">Add New</button>
         </Link>
       </div>

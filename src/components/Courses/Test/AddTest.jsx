@@ -1,8 +1,8 @@
-// AddTest.js
 import React, { useState } from "react";
 import InputField from "../../../Common/InputField";
 import DropdownField from "../../../Common/DropdownField";
 import { info, add_new, add_green, copy, trash } from "../../../Assets/index";
+import { optionTypes } from "../../../Constants/Options";
 
 const AddTest = ({ moduleDetails, onSave }) => {
   const [questions, setQuestions] = useState([
@@ -11,10 +11,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
   console.log("🚀 ~ AddTest ~ questions:", questions);
   const [errors, setErrors] = useState({});
 
-  const handleDropdownClick = (id) => {
-    setDropdownOpen((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
+  // Handle adding a new question
   const handleAddQuestion = () => {
     setQuestions((prev) => [
       ...prev,
@@ -22,10 +19,12 @@ const AddTest = ({ moduleDetails, onSave }) => {
     ]);
   };
 
+  // Handle deleting a question
   const handleDeleteQuestion = (id) => {
     setQuestions((prev) => prev.filter((question) => question.id !== id));
   };
 
+  // Handle copying a question
   const handleCopyQuestion = (id) => {
     setQuestions((prev) => {
       const questionToCopy = prev.find((q) => q.id === id);
@@ -44,12 +43,14 @@ const AddTest = ({ moduleDetails, onSave }) => {
     });
   };
 
+  // Handle changing the question text
   const handleQuestionChange = (id, value) => {
     setQuestions((prev) =>
       prev.map((q) => (q.id === id ? { ...q, question: value } : q))
     );
   };
 
+  // Handle changing the question type
   const handleTypeChange = (id, type) => {
     setQuestions((prev) =>
       prev.map((q) => (q.id === id ? { ...q, type, options: [] } : q))
@@ -57,6 +58,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
     setErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
+  // Handle adding an option to a question
   const handleAddOption = (id) => {
     const question = questions.find((q) => q.id === id);
     if (!question.type) {
@@ -84,7 +86,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
                 ...question.options,
                 {
                   id: Date.now(),
-                  question:"  ",
+                  label: "",
                   isCorrect: false,
                 },
               ],
@@ -95,6 +97,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
     setErrors((prev) => ({ ...prev, [id]: "" })); // Clear error if successfully added
   };
 
+  // Handle changing the option text
   const handleOptionChange = (questionId, optionId, label) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -110,6 +113,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
     );
   };
 
+  // Handle selecting the correct option
   const handleOptionSelect = (questionId, optionId) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -127,52 +131,21 @@ const AddTest = ({ moduleDetails, onSave }) => {
     );
   };
 
-
-
+  // Save the test data
   const saveTest = () => {
-    const formattedQuestions = questions.map((q) => {
-      const formattedOptions = q.options.reduce((optionsObj, option, index) => {
-        optionsObj[`option${index + 1}`] = {
-          name: option.label,
-          isCorrect: option.isCorrect,
-        };
-        return optionsObj;
-      }, {});
-  
-      return { ...q, options: formattedOptions };
-    });
-  
-    // Ensure moduleDetails has test array and update the first test object
-    const updatedModuleDetails = moduleDetails.map((module) => ({
-      ...module,
-      test: module.test && module.test.length > 0
-        ? module.test.map((testItem, index) => {
-            if (index === 0) {
-              return {
-                ...testItem,
-                questions: formattedQuestions,
-              };
-            }
-            return testItem;
-          })
-        : [{
-            question_id: Date.now() + Math.random(),
-            question: "",
-            options: formattedQuestions.map((q, index) => ({
-              [`option${index + 1}`]: {
-                name: q.options[`option${index + 1}`].name,
-                isCorrect: q.options[`option${index + 1}`].isCorrect,
-              },
-            })),
-            type: "",
-          }],
+    const formattedQuestions = questions.map((q) => ({
+      ...q,
+      options: q.options.map((opt, index) => ({
+        [`option${index + 1}`]: {
+          name: opt.label,
+          isCorrect: opt.isCorrect,
+        },
+      })),
     }));
-  
-    // Trigger onSave with updated moduleDetails
-    onSave(updatedModuleDetails);
+
+    onSave(formattedQuestions);
   };
-  
- 
+
   return (
     <div className="m-5 w-full">
       <div className="gap-1 flex">
@@ -206,11 +179,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
                 id={`type-${question.id}`}
                 label="Type"
                 required
-                options={[
-                  { label: "Select Type", value: "", disabled: true },
-                  { label: "Multiple", value: "checkbox" },
-                  { label: "Single Choice", value: "radio" },
-                ]}
+                options={optionTypes}
                 value={question.type}
                 onChange={(e) => handleTypeChange(question.id, e.target.value)}
                 error={errors[question.id]}

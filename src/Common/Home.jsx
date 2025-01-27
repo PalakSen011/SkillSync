@@ -1,14 +1,10 @@
 import React, { useEffect } from "react";
-import HeaderComp from "./HeaderComponent";
-import SideBar from "./SideBar";
 import { Outlet, useNavigate } from "react-router-dom";
 
-const Home = () => {
-  const navigate = useNavigate();
+import HeaderComp from "./HeaderComponent";
+import SideBar from "./SideBar";
 
-//   useEffect(()=>{
-// navigate("/home/dashboard");
-//   },[])
+const Home = () => {
   return (
     <>
       <div className="flex  bg-slate-100 ">

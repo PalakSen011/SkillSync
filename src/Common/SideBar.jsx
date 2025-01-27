@@ -1,8 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import home from "../assets/home.svg";
-import graduation_cap from "../assets/graduation-cap.svg";
-import user_management from "../assets/user-settings.svg";
+import { home, graduation_cap, user_settings } from "../Assets/index";
+import {
+  PATH_COURSES,
+  PATH_DASHBOARD,
+  PATH_USER_MANAGEMENT,
+} from "../Constants/RouteConstants";
 
 // Reusable SidebarLink component
 const SidebarLink = ({ to, icon, label }) => {
@@ -24,9 +27,17 @@ const SidebarLink = ({ to, icon, label }) => {
 const SideBar = () => {
   return (
     <div className="m-3 text-sm p-1">
-      <SidebarLink to="/dashboard" icon={home} label="Dashboard" />
-      <SidebarLink to="/courses" icon={graduation_cap} label="All Courses" />
-      <SidebarLink to="/user-management" icon={user_management} label="User Management" />
+      <SidebarLink to={PATH_DASHBOARD} icon={home} label="Dashboard" />
+      <SidebarLink
+        to={PATH_COURSES}
+        icon={graduation_cap}
+        label="All Courses"
+      />
+      <SidebarLink
+        to={PATH_USER_MANAGEMENT}
+        icon={user_settings}
+        label="User Management"
+      />
     </div>
   );
 };

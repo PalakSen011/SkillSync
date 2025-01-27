@@ -1,130 +1,100 @@
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import Pagination from "rc-pagination";
-import dropDownIcon from "../assets/caretIcon.svg";
-import "rc-pagination/assets/index.css";
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { edit_module, delete_red, edit_Black } from "../../Assets/index";
 
-const Courses = () => {
-  const dispatch = useDispatch();
-  const courses = useSelector((state) => state.courses.courses); // Fetch courses from Redux store
-  const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [itemsPerPage, setItemsPerPage] = useState(9); // Items per page
+const CourseDetails = () => {
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+  const course = useSelector((state) =>
+    state.courses.courses.find(
+      (course) => course.course_id === parseInt(courseId)
+    )
+  );
 
-  // Calculate the displayed courses based on the current page and items per page
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentCourses = courses.slice(indexOfFirstItem, indexOfLastItem);
+  if (!course) {
+    return <div>Course not found</div>;
+  }
 
-  const handleItemsPerPageChange = (event) => {
-    const newItemsPerPage = parseInt(event.target.value);
-    setItemsPerPage(newItemsPerPage);
-    setCurrentPage(1); // Reset to the first page
-  };
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  // Handle back button click to navigate to the course list
+  const handleBackClick = () => {
+    navigate("/courses");
   };
 
   return (
-    <div className="pt-2">
-      {courses.length === 0 ? (
-        <div className="text-center text-gray-500 mt-4">No courses are added yet.</div>
-      ) : (
-        <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full table-auto border-collapse text-sm mt-4 text-slate-800 bg-white">
-              <thead>
-                <tr className="text-left">
-                  <th className="border-b p-5 pl-6">Name</th>
-                  <th className="flex border-b p-5 hide-on-mobile">
-                    <span>Mandatory</span>
-                    <img
-                      className="pt-1 pl-2"
-                      src={dropDownIcon}
-                      alt="caret icon"
-                    />
-                  </th>
-                  <th className="border-b p-5 hide-on-mobile">Category</th>
-                  <th className="flex border-b p-5 hide-on-mobile">
-                    <span>No of assignees</span>
-                    <img
-                      className="pt-1 pl-2"
-                      src={dropDownIcon}
-                      alt="caret icon"
-                    />
-                  </th>
-                  <th className="border-b p-5 hide-on-mobile">Course duration</th>
-                  <th className="border-b p-4 hide-on-mobile pr-6">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentCourses.map((course, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-gray-50 p-6 text-sm text-neutral-700"
-                  >
-                    <td className="border-b p-5 pl-6">{course.course_title}</td>
-                    <td className="border-b p-5 hide-on-mobile">
-                      {course.is_mandatory ? "Yes" : "No"}
-                    </td>
-                    <td className="border-b p-5 hide-on-mobile">
-                      {course.category}
-                    </td>
-                    <td className="border-b p-5 hide-on-mobile">
-                      {course.assignee}
-                    </td>
-                    <td className="border-b p-5">{course.duration}</td>
-                    <td className="border-b p-4 hide-on-mobile pr-6">
-                      <span
-                        className={
-                          course.status === "Draft"
-                            ? "btn-draft"
-                            : course.status === "Active"
-                            ? "btn-active"
-                            : "btn-Inactive"
-                        }
-                      >
-                        {course.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Dropdown for selecting items per page */}
+    <>
+      <div className="flex items-center justify-between">
+        <div className="text-xl font-bold mb-5">Course Details</div>
+        <div>
+          <button
+            className="btn-primary flex items-end"
+            onClick={handleBackClick}
+          >
+            Back
+          </button>
+        </div>
+      </div>
+      <div className="min-w-full font-sm mt-4 p-5 bg-white">
+        <div className="min-w-full font-sm mt-4 p-5 bg-white">
           <div className="flex justify-between">
-            <div className="flex-row text-neutral-500 mt-4">
-              Show
-              <select
-                className="ml-2 py-2 px-4 border border-neutral-300 shadow-sm"
-                value={itemsPerPage}
-                onChange={handleItemsPerPageChange}
+            <div>
+              <span
+                className={
+                  course.status === "Draft"
+                    ? "btn-draft"
+                    : course.status === "Active"
+                    ? "btn-active"
+                    : "btn-Inactive"
+                }
               >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>{" "}
-              entries
+                {course.status}
+              </span>{" "}
             </div>
-
-            {/* Pagination controls */}
-            <div className="mt-4 flex justify-center">
-              <Pagination
-                current={currentPage}
-                total={courses.length}
-                pageSize={itemsPerPage}
-                onChange={handlePageChange}
-              />
+            <div className="flex gap-4">
+              <button className="p-2 border border-neutral-300">
+                <img src={edit_Black} alt="Edit" className="" />
+              </button>
+              <button className="p-2 border border-neutral-300">
+                <img src={delete_red} alt="Delete" className="h-4" />
+              </button>
             </div>
           </div>
-        </>
-      )}
-    </div>
+          <div className="mt-4 ml-1 flex">
+            <div className="flex flex-col w-1/3">
+              <div className="mb-1 text-sm font-semibold">Title</div>
+              <div className="text-sm text-neutral-500 font-light mb-1">
+                {course.course_title}
+              </div>
+            </div>
+            <div className="flex flex-col w-1/6">
+              <div className="mb-1 text-sm font-semibold">Type</div>
+              <div className="text-sm text-neutral-500 font-light mb-1">
+                {course.category}
+              </div>
+            </div>
+            <div className="flex flex-col w-1/6">
+              <div className="mb-1 text-sm font-semibold">Mandatory</div>
+              <div className="text-sm text-neutral-500 font-light mb-1">
+                {course.is_mandatory ? "Yes" : "No"}
+              </div>
+            </div>
+            <div className="flex flex-col w-1/6">
+              <div className="mb-1 text-sm font-semibold">Assignee</div>
+              <div className="text-sm text-neutral-500 font-light mb-1">
+                {course.assignee}
+              </div>
+            </div>
+            <div className="flex flex-col w-1/6">
+              <div className="mb-1 text-sm font-semibold">Duration</div>
+              <div className="text-sm text-neutral-500 font-light mb-1">
+                {course.duration}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
-export default Courses;
+export default CourseDetails;

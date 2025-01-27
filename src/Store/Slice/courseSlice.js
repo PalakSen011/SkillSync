@@ -3,8 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   courses: [],
   currentCourse: null,
-  currentModule: null,
-  currentLesson: null,
 };
 
 const coursesSlice = createSlice({
@@ -14,7 +12,7 @@ const coursesSlice = createSlice({
     addCourse: (state, action) => {
       const data = action.payload;
       const existingCourse = state.courses.find(
-        (course) => course.course_title === data.course_title
+        (course) => course && course.course_title === data.course_title
       );
 
       if (existingCourse) {
@@ -22,23 +20,55 @@ const coursesSlice = createSlice({
         return;
       }
 
-      // const newCourse = {
-      //   ...data,
-      //   modules: [createNewModule()],
-      // };
-
       state.courses.push(data);
       state.currentCourse = data;
-      state.currentModule = data.modules[0];
-      state.currentLesson = data.modules[0]?.lessons[0];
-      // console.log("courses", JSON.stringify(state.courses));
+    },
+    replaceCourseById: (state, action) => {
+      const { modId, testData } = action.payload;
+
+      console.log("🚀 ~ Payload:", action.payload);
+
+      // Find the index of the course with the given course_id
+      const index = state.courses.findIndex(
+        (course) => course && course.course_id === modId
+      );
+
+      if (index !== -1) {
+        // Verify if `modules` exists in the course object
+        if (Array.isArray(state.courses[index].modules.test)) {
+          console.log(
+            "🚀 ~ Current modules:",
+            JSON.stringify(state.courses[index].modules)
+          );
+
+          // Replace the course modules with the new data
+          state.courses[index].modules = testData;
+
+          console.log(
+            "🚀 ~ Updated modules:",
+            JSON.stringify(state.courses[index].modules)
+          );
+          console.log("Course replaced successfully");
+        } else {
+          console.error(
+            "🚀 ~ Error: The course does not have a valid `modules` property"
+          );
+        }
+      } else {
+        console.error("🚀 ~ Error: Course with the given ID not found");
+      }
+
+      // Optionally update `currentCourse` if it's the same course being replaced
+      if (state.currentCourse?.course_id === modId) {
+        state.currentCourse = { ...state.currentCourse, modules: testData };
+        console.log(
+          "🚀 ~ Updated currentCourse:",
+          JSON.stringify(state.currentCourse)
+        );
+      }
     },
   },
 });
 
-export const {
-  addCourse,
-  
-} = coursesSlice.actions;
-
+export const { addCourse, replaceCourseById } = coursesSlice.actions;
 export default coursesSlice.reducer;

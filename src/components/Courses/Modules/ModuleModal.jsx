@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../../../Common/InputField";
+import { toast } from "react-toastify";
 
 const ModuleModal = ({ moduleData, onClose, onSave }) => {
   const [moduleName, setModuleName] = useState(moduleData?.module_name || "");
@@ -15,6 +16,7 @@ const ModuleModal = ({ moduleData, onClose, onSave }) => {
       sequence: moduleNumber,
       type: "chapter",
     });
+    toast.success("Module saved successfully");
   };
 
   return (
@@ -34,7 +36,7 @@ const ModuleModal = ({ moduleData, onClose, onSave }) => {
           <div className="w-1/4 sm:w-1/3 text-sm text-neutral-500 font-medium m-1">
             <InputField
             className="w-1/4"
-              label="Number"
+              label="Module Number"
               value={moduleNumber}
               onChange={(e) => setModuleNumber(e.target.value)}
               type="number"

@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Pagination from "rc-pagination";
 import dropDownIcon from "../../Assets/caretIcon.svg";
 import "rc-pagination/assets/index.css";
+import { PATH_COURSE_DETAIL } from "../../Constants/RouteConstants";
 
 const Courses = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const courses = useSelector((state) => state.courses.courses); // Fetch courses from Redux store
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [itemsPerPage, setItemsPerPage] = useState(9); // Items per page
@@ -25,10 +28,17 @@ const Courses = () => {
     setCurrentPage(page);
   };
 
+  // Handle course click to navigate to course details
+  const handleCourseClick = (courseId) => {
+    navigate(PATH_COURSE_DETAIL.replace(":courseId", courseId));
+  };
+
   return (
     <div className="pt-2">
       {courses.length === 0 ? (
-        <div className="text-center text-gray-500 mt-4 text-xl">No courses are added yet. Click on Add New to Add One !</div>
+        <div className="text-center text-gray-500 mt-4 text-xl">
+          No courses are added yet. Click on Add New to Add One !
+        </div>
       ) : (
         <>
           <div className="overflow-x-auto">
@@ -53,7 +63,9 @@ const Courses = () => {
                       alt="caret icon"
                     />
                   </th>
-                  <th className="border-b p-5 hide-on-mobile">Course duration</th>
+                  <th className="border-b p-5 hide-on-mobile">
+                    Course duration
+                  </th>
                   <th className="border-b p-4 hide-on-mobile pr-6">Status</th>
                 </tr>
               </thead>
@@ -61,7 +73,8 @@ const Courses = () => {
                 {currentCourses.map((course, index) => (
                   <tr
                     key={index}
-                    className="hover:bg-gray-50 p-6 text-sm text-neutral-700"
+                    className="hover:bg-gray-50 p-6 text-sm text-neutral-700 cursor-pointer"
+                    onClick={() => handleCourseClick(course.course_id)}
                   >
                     <td className="border-b p-5 pl-6">{course.course_title}</td>
                     <td className="border-b p-5 hide-on-mobile">

@@ -1,13 +1,16 @@
-// Sign.js
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import logo from "../../../assets/logo.svg";
+
 import SignInForm from "./SignInForm";
 import ResetPasswordForm from "./ResetPasswordForm";
-import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
 import ForgotPassword from "./ForgotPassword";
 import ResetSuccessful from "../../../Common/ResetSuccessful";
+
+import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
 
 const SignIn = () => {
   const [isForgotModal, setIsForgotModalOpen] = useState(false);
@@ -16,20 +19,27 @@ const SignIn = () => {
   // Redux hooks
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
   // Extract the `type` (determines the screen to show) and `isAuthenticated` from the Redux store
   const type = useSelector((state) => state.type.type);
   const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
 
   // Redirect the user to the dashboard if they are authenticated
   useEffect(() => {
-    if (isAuthenticated) navigate("/dashboard");
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
   }, [isAuthenticated, navigate]);
 
   // Reset the authentication state when the `type` is not `resetPassword`
   useEffect(() => {
-    if (type !== "resetPassword") dispatch(resetAuthenticationState());
-  }, [type, dispatch]);
+    if (type !== "resetPassword") {
+      navigate("/sign-in");
+      dispatch(resetAuthenticationState());
+    } else {
+      navigate("/reset-password");
+      toast.info("Reset your password to regain access.");
+    }
+  }, [type, dispatch, navigate]);
 
   // Close all modals
   const handleCloseModal = () => {
@@ -51,7 +61,6 @@ const SignIn = () => {
           <h2 className="text-2xl font-semibold mb-2 text-green-400">
             {type !== "resetPassword" ? "Sign In" : "Reset Password"}
           </h2>
-
           {/* Page Subtitle */}
           <p className="mb-6 font-light text-white">
             {type !== "resetPassword"
@@ -80,4 +89,3 @@ const SignIn = () => {
 };
 
 export default SignIn;
- 

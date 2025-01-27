@@ -1,39 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+
 import Lesson from "../Lessons/Lesson";
 import ModuleModal from "./ModuleModal";
+import ConfirmationDelete from "../../../Common/ConfirmationDelete";
+
 import { edit_grey, trash, add_new } from "../../../Assets";
-import ConfirmationDelete from "../../../Common/ConfirmationDelete"; // Import ConfirmationDelete component
 
 const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
   const [moduleData, setModuleData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeModuleId, setActiveModuleId] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State to control the delete confirmation modal
-  const [moduleToDelete, setModuleToDelete] = useState(null); // Store the module to be deleted
-  const [modulesCount, setModulesCount] = useState(modules.length); // Track the count of modules
-  const [lessonsCount, setLessonsCount] = useState(0); // Track the count of lessons for the first module
-
-  const dispatch = useDispatch();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [moduleToDelete, setModuleToDelete] = useState(null);
 
   // Set the first module as active when the component renders
   useEffect(() => {
-    if (modules.length > 0) {
-      setActiveModuleId(modules[0].module_id);
-      setModulesCount(modules.length);
+    if (modules.length === 1) {
+      setActiveModuleId(modules[0]?.module_id || null);
     }
   }, [modules]);
 
+  // Handle the click event to add a new module
   const handleAddModuleClick = () => {
     setModuleData(null);
     setIsModalOpen(true);
   };
 
+  // Handle the click event to delete a module
   const handleDeleteModule = (id, moduleName) => {
     setModuleToDelete({ module_id: id, module_name: moduleName });
     setIsDeleteModalOpen(true); // Open the confirmation modal
   };
 
+  // Confirm the deletion of a module
   const confirmDelete = () => {
     // Perform the deletion after confirmation
     const updatedModules = modules.filter(
@@ -50,72 +49,74 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
     setIsDeleteModalOpen(false); // Close the delete confirmation modal
   };
 
+  // Handle the click event to select a module
   const handleModuleClick = (id) => {
     setActiveModuleId(id);
+
+    // Get the first lesson of the selected module and set it as active
+    const module = modules.find((module) => module.module_id === id);
+    if (module && module.lessons && module.lessons.length > 0) {
+      setActiveLessonId(module.lessons[0].lesson_id); // Set the first lesson as active
+    }
   };
 
+  // Handle the modal close event
   const handleModalClose = () => {
     setModuleData(null);
     setIsModalOpen(false);
   };
 
+  // Handle the click event to edit a module
   const handleEditModule = (module) => {
     setModuleData(module);
     setIsModalOpen(true);
   };
 
+  // Handle the save event for a module
   const handleSaveModule = (module) => {
-    const updatedModuleId = module.module_id || Date.now() + 1;
+    console.log("🚀 ~ handleSaveModule ~ module:", module);
 
-    // Update the lessonsCount based on the existing lessons count
-    setLessonsCount(module.lessons ? module.lessons.length : 0);
+    // Determine if it's a new or existing module
+    const isNewModule = !module.module_id;
 
-    // Add a default lesson if it's a new module (doesn't have a module_id)
-    const defaultLesson = {
-      lesson_id: Date.now() + 2,
-      lesson_name: `Lesson ${lessonsCount + 1}`,
-      duration: "",
-      sequence: lessonsCount + 1,
-      content: "",
-    };
+    const updatedModuleId = isNewModule ? Date.now() : module.module_id;
 
-    const defaultQuestion = {
-      question_id: Date.now() + 3,
-      question: "",
-      option1: { name: "", isCorrect: false },
-      option2: { name: "", isCorrect: false },
-      option3: { name: "", isCorrect: false },
-      option4: { name: "", isCorrect: false },
-      type: "",
-    };
-    const updatedModules = module.module_id
-      ? modules.map((mod) =>
-          mod.module_id === module.module_id
-            ? { ...module, module_id: updatedModuleId }
-            : mod
-        )
-      : [
-          ...modules,
-          {
-            module_id: updatedModuleId,
-            module_name: `Module ${modulesCount + 1}`,
-            sequence: modulesCount + 1,
-            type: "chapter",
-            lessons: [defaultLesson],
-            questions: [defaultQuestion],
-          },
-        ];
+    if (isNewModule) {
+      // Adding a new module
+      const defaultLesson = {
+        lesson_id: Date.now() + 2,
+        lesson_name: `Lesson 1`,
+        duration: "",
+        sequence: 1,
+        content: "",
+      };
 
-    setModules(updatedModules);
+      const newModule = {
+        module_id: updatedModuleId,
+        module_name: module.module_name,
+        sequence: "",
+        type: "chapter",
+        lessons: [defaultLesson],
+      };
 
-    // Set the newly added module as active
-    setActiveModuleId(updatedModuleId);
+      // Update modules and set the new module as active
+      setModules([...modules, newModule]);
+      setActiveModuleId(updatedModuleId);
+    } else {
+      // Editing an existing module
+      const updatedModules = modules.map((mod) =>
+        mod.module_id === module.module_id
+          ? { ...mod, module_name: module.module_name }
+          : mod
+      );
+      setModules(updatedModules);
+    }
 
-    setModuleData(null);
     setIsModalOpen(false);
-    setModulesCount(modulesCount + 1); // Increment the module count
+    setModuleData(null);
   };
 
+  // Add a lesson to the active module
   const addLessonToActiveModule = (newLesson) => {
     if (!activeModuleId) return;
 
@@ -130,6 +131,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
     setActiveModuleId(activeModuleId);
   };
 
+  // Delete a lesson from the active module
   const deleteLessonFromActiveModule = (lessonId) => {
     if (!activeModuleId) return;
 
@@ -145,10 +147,10 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
           : module
       )
     );
-
     setActiveModuleId(activeModuleId);
   };
 
+  // Update a lesson in the active module
   const updateLessonFromActiveModule = (updatedLesson) => {
     console.log(
       "🚀 ~ updateLessonFromActiveModule ~ updatedLesson:",
@@ -240,9 +242,10 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
 
       {isDeleteModalOpen && (
         <ConfirmationDelete
-          onClose={() => setIsDeleteModalOpen(false)}
+          onCancel={() => setIsDeleteModalOpen(false)}
           onConfirm={confirmDelete}
           moduleName={moduleToDelete?.module_name}
+          message={`Are you sure you want to delete the module "${moduleToDelete?.module_name}"?`}
         />
       )}
     </div>

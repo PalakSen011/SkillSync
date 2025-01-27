@@ -14,6 +14,7 @@ const InputField = React.forwardRef(
           id={id}
           type={type}
           ref={ref}
+          required
           className={`appearance-none border px-3 py-2 text-sm ${
             error
               ? "border-red-500"

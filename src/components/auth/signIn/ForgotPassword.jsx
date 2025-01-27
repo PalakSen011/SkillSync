@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import forgotPassword from "../../../assets/forgotPassword.svg";
-import resetPasswordImage from "../../../assets/sent-mail.gif";
 import { useDispatch, useSelector } from "react-redux";
+
+
 import { changeType } from "../../../Store/Slice/typeSlice";
-import { resetUserEmail, setUserEmail } from "../../../Store/Slice/usersSlice";
+import { setUserEmail } from "../../../Store/Slice/usersSlice";
+
+import { validateEmail } from "../../../utils/validation";
+
+import { sent_mail, forgotPassword } from "../../../Assets/index";
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
@@ -44,7 +48,7 @@ const ForgotPassword = ({ onClose }) => {
     dispatch(changeType("resetPassword"));
     onClose();
   };
-  
+
   // Handle close button click
   const handleCloseButton = () => {
     dispatch(changeType(""));
@@ -63,11 +67,7 @@ const ForgotPassword = ({ onClose }) => {
         {/* Dynamic Image based on modal type */}
         {type === "sentEmail" ? (
           <div className="flex items-center justify-center">
-            <img
-              className="w-1/3"
-              src={resetPasswordImage}
-              alt="Reset Password Image"
-            />
+            <img className="w-1/3" src={sent_mail} alt="Reset Password Image" />
           </div>
         ) : (
           <div>

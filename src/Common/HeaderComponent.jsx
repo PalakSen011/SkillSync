@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import logo from "../assets/logo.svg";
 import notification from "../assets/notification.svg";
 import dropDownIcon from "../assets/dropDownIcon.svg";
@@ -10,7 +11,9 @@ const   HeaderComp = () => {
   // Function to handle logout
   const handleLogout = () => {
     // localStorage.clear(); clearing localStorage
-    navigate("/");
+    console.log("Logged out");
+    navigate("/sign-in");
+    toast.success("Successfully logged out!");
   };
 
   return (

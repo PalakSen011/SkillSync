@@ -1,77 +1,83 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../../Store/Slice/usersSlice";
-import { validateEmail, validatePassword } from "../../../utils/validation";
-import show from "../../../assets/show.svg";
-import hide from "../../../assets/hide.svg";
+import { useForm, Controller } from "react-hook-form";
 
-const SignIn = ({ setIsForgotModalOpen }) => {
-  // State variables for managing form inputs and validation errors
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+import { loginUser } from "../../../Store/Slice/usersSlice";
+
+import { validateEmail, validatePassword } from "../../../utils/validation";
+
+import { show, hide } from "../../../Assets/index";
+import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
+
+const SignInForm = ({ setIsForgotModalOpen }) => {
+  const { control, handleSubmit, formState: { errors }, setError, clearErrors } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // Extracting authentication state from Redux
   const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
 
-  // Handle email input change and validate email
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setEmailError(validateEmail(e.target.value));
-  };
-
-  // Handle password input change and validate password
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    setPasswordError(validatePassword(e.target.value));
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(loginUser({ email, password }));
+  const onSubmit = (data) => {
+    dispatch(loginUser({ email: data.email, password: data.password }));
     if (!isAuthenticated) {
-      if (email === "") {
-        setEmailError("Email cannot be empty.");
+      if (data.email === "") {
+        setError("email", { type: "manual", message: "Email cannot be empty." });
       }
-      if (password === "") {
-        setPasswordError("Password cannot be empty.");
+      if (data.password === "") {
+        setError("password", { type: "manual", message: "Password cannot be empty." });
       } else {
-        setPasswordError("Invalid credentials.");
+        setError("password", { type: "manual", message: "Invalid credentials." });
       }
+    } else {
+      clearErrors();
+      navigate("/dashboard");
     }
   };
+
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       {/* Email Input Field */}
       <div className="mb-4">
-        <input
-          type="email"
-          id="email"
-          className="w-full px-4 py-2"
-          placeholder="Email"
-          value={email}
-          onChange={handleEmailChange}
-          required
+        <Controller
+          name="email"
+          control={control}
+          defaultValue=""
+          rules={{
+            required: "Email cannot be empty.",
+            validate: (value) => validateEmail(value) || true,
+          }}
+          render={({ field }) => (
+            <input
+              type="email"
+              id="email"
+              className="w-full px-4 py-2"
+              placeholder="Email"
+              {...field}
+            />
+          )}
         />
-        {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
       </div>
       {/* Password Input Field */}
       <div className="mb-4">
         <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            className="w-full px-4 py-2"
-            placeholder="Password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
+          <Controller
+            name="password"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: "Password cannot be empty.",
+              validate: (value) => validatePassword(value) || true,
+            }}
+            render={({ field }) => (
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                className="w-full px-4 py-2"
+                placeholder="Password"
+                {...field}
+              />
+            )}
           />
           {/* Toggle Password Visibility */}
           <button
@@ -86,13 +92,12 @@ const SignIn = ({ setIsForgotModalOpen }) => {
             />
           </button>
         </div>
-        {passwordError && (
-          <p className="text-red-500 text-sm">{passwordError}</p>
-        )}
+        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
       </div>
       {/* Forgot Password Button */}
       <div className="mb-4 text-right">
         <button
+          type="button"
           className="text-sm text-white hover:underline"
           onClick={() => setIsForgotModalOpen(true)}
         >
@@ -101,21 +106,21 @@ const SignIn = ({ setIsForgotModalOpen }) => {
       </div>
       {/* Sign In and Sign Up Buttons */}
       <div className="flex justify-between">
-        <Link
-          to="/dashboard"
+        <button
+          type="submit"
           className="p-8 py-2 border text-white border-green-600"
-          onClick={handleSubmit}
         >
           Sign In
-        </Link>
+        </button>
         <Link
-          to="/signup"
+          to={PATH_SIGNUP}
           className="p-8 py-2 border text-white border-green-600"
         >
           Sign Up
         </Link>
       </div>
-    </>
+    </form>
   );
 };
-export default SignIn;
+
+export default SignInForm;

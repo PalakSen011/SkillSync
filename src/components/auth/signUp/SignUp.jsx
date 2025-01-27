@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
 import { addUser } from "../../../Store/Slice/usersSlice";
-import logo from "../../../assets/logo.svg";
-import show from "../../../assets/show.svg";
-import hide from "../../../assets/hide.svg";
+
+import { logo, show, hide } from "../../../Assets/index";
+
 import {
   validateEmail,
   validatePassword,
@@ -12,83 +15,25 @@ import {
 } from "../../../utils/validation";
 
 const SignUp = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const Users = useSelector((state) => state.users.Users);
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-    if (e.target.value.trim() === "") {
-      setNameError("Name is required.");
-    } else {
-      setNameError("");
-    }
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
+  const password = watch("password", "");
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setEmailError(validateEmail(e.target.value));
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    setPasswordError(validatePassword(e.target.value));
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-    setConfirmPasswordError(validateConfirmPassword(password, e.target.value));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    let hasError = false;
-
-    if (!name.trim()) {
-      setNameError("Name is required.");
-      hasError = true;
-    }
-    if (!email.trim()) {
-      setEmailError("Email is required.");
-      hasError = true;
-    }
-    if (!password.trim()) {
-      setPasswordError("Password is required.");
-      hasError = true;
-    }
-    if (!confirmPassword.trim()) {
-      setConfirmPasswordError("Confirm Password is required.");
-      hasError = true;
-    }
-
-    if (
-      !hasError &&
-      !nameError &&
-      !emailError &&
-      !passwordError &&
-      !confirmPasswordError
-    ) {
-      // Dispatch addUser action to store user data
-      dispatch(
-        addUser({
-          name,
-          email,
-          password,
-        })
-      );
-      navigate("/");
-    }
+  const onSubmit = (data) => {
+    dispatch(
+      addUser({ name: data.name, email: data.email, password: data.password })
+    );
+    navigate("/sign-in");
+    toast.success("Account created successfully. Please sign in.");
   };
 
   return (
@@ -105,7 +50,7 @@ const SignUp = () => {
             Create an account to access courses.
           </p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             {/* Name Field */}
             <div className="mb-4">
               <input
@@ -113,11 +58,11 @@ const SignUp = () => {
                 id="name"
                 className="w-full px-4 py-2"
                 placeholder="Name"
-                value={name}
-                onChange={handleNameChange}
-                required
+                {...register("name", { required: "Name is required." })}
               />
-              {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
             </div>
 
             {/* Email Field */}
@@ -127,12 +72,13 @@ const SignUp = () => {
                 id="email"
                 className="w-full px-4 py-2"
                 placeholder="Email"
-                value={email}
-                onChange={handleEmailChange}
-                required
+                {...register("email", {
+                  required: "Email is required.",
+                  validate: (value) => validateEmail(value) || true,
+                })}
               />
-              {emailError && (
-                <p className="text-red-500 text-sm">{emailError}</p>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
 
@@ -144,9 +90,10 @@ const SignUp = () => {
                   id="password"
                   className="w-full px-4 py-2"
                   placeholder="Password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  required
+                  {...register("password", {
+                    required: "Password is required.",
+                    validate: (value) => validatePassword(value) || true,
+                  })}
                 />
                 <button
                   type="button"
@@ -160,8 +107,10 @@ const SignUp = () => {
                   />
                 </button>
               </div>
-              {passwordError && (
-                <p className="text-red-500 text-sm">{passwordError}</p>
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
@@ -173,13 +122,15 @@ const SignUp = () => {
                   id="confirmPassword"
                   className="w-full px-4 py-2"
                   placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange}
-                  required
+                  {...register("confirmPassword", {
+                    required: "Confirm Password is required.",
+                    validate: (value) =>
+                      validateConfirmPassword(password, value) || true,
+                  })}
                 />
                 <button
                   type="button"
-                  className="absolute top-3 right-2 text-gray-500"
+                  className="absolute top-3 right-2"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   <img
@@ -191,8 +142,10 @@ const SignUp = () => {
                   />
                 </button>
               </div>
-              {confirmPasswordError && (
-                <p className="text-red-500 text-sm">{confirmPasswordError}</p>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm">
+                  {errors.confirmPassword.message}
+                </p>
               )}
             </div>
 
@@ -209,4 +162,5 @@ const SignUp = () => {
     </div>
   );
 };
+
 export default SignUp;

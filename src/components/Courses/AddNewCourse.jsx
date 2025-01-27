@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Header from "./Header";
 import AddModule from "./Modules/AddModule";
-import { addCourse } from "../../Store/Slice/courseSlice";
 import CourseInputField from "../../Common/CourseInputField";
 import DropdownField from "../../Common/DropdownField";
+
+import { addCourse, replaceCourseById } from "../../Store/Slice/courseSlice";
 
 import { statusOptions, categoryOptions } from "../../Constants/Options";
 
@@ -20,7 +21,7 @@ const AddNewCourse = ({ onBackClick }) => {
   });
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  const targetCourse = useSelector((state) => state.courses.courses);
+  // const targetCourse = useSelector((state) => state.courses.currentCourse);
   const {
     register,
     handleSubmit,
@@ -47,7 +48,7 @@ const AddNewCourse = ({ onBackClick }) => {
       modules: [
         {
           module_id: Date.now() + Math.random(),
-          module_name: `Module ${modulesCount + 1}`,
+          module_name: `Module 1`,
           sequence: modulesCount + 1,
           type: "chapter",
           lessons: [
@@ -62,10 +63,19 @@ const AddNewCourse = ({ onBackClick }) => {
 
           test: [
             {
-              question_id: Date.now() + Math.random(),
-              question: "",
-              options: [{}],
-              type: "",
+              questions: [
+                { 
+                  id: "",
+                  question: "",
+                  options: [
+                    { option_id: "", option: "", isCorrect: false },
+                    { option_id: "", option: "", isCorrect: false },
+                    { option_id: "", option: "", isCorrect: false },
+                    { option_id: "", option: "", isCorrect: false },
+                  ],
+                  type:"test",
+                },
+              ],
             },
           ],
         },
@@ -87,15 +97,20 @@ const AddNewCourse = ({ onBackClick }) => {
   };
 
   const updateTestInCourseDetails = (moduleId, testData) => {
-    console.log("🚀 ~ updateTestInCourseDetails ~ testData:", testData);
-    setCourseDetails((prevDetails) => ({
-      ...prevDetails,
-      modules: prevDetails.modules.map((module) =>
-        module.module_id === moduleId ? { ...module, test: testData } : module
-      ),
-    }));
-    dispatch(addCourse(courseDetails));
-    console.log("🚀 ~ AddNewCourse ~ targetCourse:", targetCourse);
+    // Update the state with the new module test data
+    setCourseDetails((prevDetails) => {
+      const updatedDetails = {
+        ...prevDetails,
+        modules: prevDetails.modules.map((module) =>
+          module.module_id === moduleId ? { ...module, test: testData } : module
+        ),
+      };
+      const modId = updatedDetails.course_id;
+
+      // Dispatch the updated details outside the state update
+      dispatch(replaceCourseById({ modId, testData }));
+      return updatedDetails;
+    });
   };
 
   return (
@@ -138,11 +153,7 @@ const AddNewCourse = ({ onBackClick }) => {
               label="Category"
               required
               error={errors.category}
-              options={[
-                { label: "Training", value: "Training" },
-                { label: "Workshop", value: "Workshop" },
-                { label: "Seminar", value: "Seminar" },
-              ]}
+              options={categoryOptions}
               {...register("category", { required: "Category is required" })}
               onChange={(e) => handleFieldChange("category", e.target.value)} // Update state on change
             />
@@ -151,11 +162,7 @@ const AddNewCourse = ({ onBackClick }) => {
               label="Status"
               required
               error={errors.status}
-              options={[
-                { label: "Draft", value: "Draft" },
-                { label: "Active", value: "Active", disabled: true },
-                { label: "Inactive", value: "Inactive", disabled: true },
-              ]}
+              options={statusOptions}
               {...register("status", { required: "Status is required" })}
               onChange={(e) => handleFieldChange("status", e.target.value)} // Update state on change
             />

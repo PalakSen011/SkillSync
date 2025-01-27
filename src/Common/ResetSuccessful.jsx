@@ -64,7 +64,7 @@ const ResetSuccessful = ({ onClose }) => {
         {showSignIn && (
           <button
             onClick={handleSignIn}
-            className="bg-green-600 text-white px-6 py-2 mt-4"
+            className="btn-secondary "
           >
             Sign In
           </button>

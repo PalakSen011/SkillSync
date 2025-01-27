@@ -1,11 +1,12 @@
-// Lesson.js
-import React, { useState } from "react";
-import { trash, add_new } from "../../../Assets/index.js";
-import AddLesson from "./AddLesson.jsx";
-import AddTest from "../Test/AddTest.jsx";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import ConfirmationDelete from "../../../Common/ConfirmationDelete.jsx";
-import LessonModal from "./LessonModal.jsx";
+
+import { trash, add_new } from "../../../Assets/index";
+
+import AddLesson from "./AddLesson";
+import AddTest from "../Test/AddTest";
+import ConfirmationDelete from "../../../Common/ConfirmationDelete";
+import LessonModal from "./LessonModal";
 
 const Lesson = ({
   lessons,
@@ -15,13 +16,20 @@ const Lesson = ({
   updateLesson,
   updateTestInCourseDetails,
 }) => {
-  console.log("🚀 ~ moduleDeatils:", moduleDetails)
   const [showModal, setShowModal] = useState(false);
   const [isAddTest, setIsAddTest] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [lessonToDelete, setLessonToDelete] = useState(null);
   const [activeLessonId, setActiveLessonId] = useState(null);
   const [activeLessonData, setActiveLessonData] = useState(null);
+
+  useEffect(() => {
+    // Set the first lesson as active by default when lessons are loaded
+    if (!activeLessonId && lessons.length > 0) {
+      setActiveLessonId(lessons[0].lesson_id); // Set the first lesson as active
+      setActiveLessonData(lessons[0]); // Set the first lesson data as active
+    }
+  }, [lessons]);
 
   const {
     register,
@@ -30,15 +38,18 @@ const Lesson = ({
     formState: { errors },
   } = useForm();
 
+  // Open the modal to add a new lesson
   const openModal = () => {
     setShowModal(true);
   };
 
+  // Close the modal
   const closeModal = () => {
     setShowModal(false);
     reset();
   };
 
+  // Handle adding a new lesson
   const handleAddLesson = (data) => {
     if (!data.lessonName) {
       setError("Lesson name is required");
@@ -61,11 +72,13 @@ const Lesson = ({
     closeModal();
   };
 
+  // Handle deleting a lesson
   const handleDeleteLesson = (lessonId) => {
     setLessonToDelete(lessonId);
     setShowDeleteModal(true);
   };
 
+  // Confirm the deletion of a lesson
   const confirmDelete = () => {
     if (lessonToDelete && deleteLesson) {
       deleteLesson(lessonToDelete);
@@ -74,16 +87,19 @@ const Lesson = ({
     setLessonToDelete(null);
   };
 
+  // Cancel the deletion of a lesson
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setLessonToDelete(null);
   };
 
+  // Toggle between lesson and test view
   const toggleView = (view) => {
     setIsAddTest(view === "test");
     setActiveLessonId(view === "lesson" ? activeLessonId : null); // Clear active lesson when switching to Test
   };
 
+  // Handle clicking on a lesson to set it as active
   const handleLessonClick = (lessonId) => {
     setActiveLessonId(lessonId);
     const selectedLesson = lessons.find(
@@ -98,8 +114,8 @@ const Lesson = ({
   };
 
   const handleSaveTest = (testData) => {
-    console.log("🚀 ~ handleSaveTest ~ testData:", testData)
     updateTestInCourseDetails(activeLessonId, testData);
+    setIsAddTest(false);
   };
 
   return (
@@ -120,7 +136,7 @@ const Lesson = ({
                 <div className="text-xs text-neutral-500 pb-2">
                   Lesson {index + 1}
                 </div>
-                <div className="text-sm">{lesson.lesson_name}</div>
+                <div className="text-sm ">{lesson.lesson_name}</div>
               </div>
               <button onClick={() => handleDeleteLesson(lesson.lesson_id)}>
                 <img src={trash} alt="trashicon" className="h-4" />
