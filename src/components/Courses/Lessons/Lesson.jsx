@@ -26,8 +26,8 @@ const Lesson = ({
   useEffect(() => {
     // Set the first lesson as active by default when lessons are loaded
     if (!activeLessonId && lessons.length > 0) {
-      setActiveLessonId(lessons[0].lesson_id); // Set the first lesson as active
-      setActiveLessonData(lessons[0]); // Set the first lesson data as active
+      setActiveLessonId(lessons[0].lesson_id); 
+      setActiveLessonData(lessons[0]);
     }
   }, [lessons]);
 
@@ -65,8 +65,8 @@ const Lesson = ({
     };
 
     addLesson(newLesson);
-    setActiveLessonId(newLesson.lesson_id); // Set the new lesson as active
-    setActiveLessonData(newLesson); // Populate the active lesson data
+    setActiveLessonId(newLesson.lesson_id);
+    setActiveLessonData(newLesson);
     reset();
     setIsAddTest(false);
     closeModal();

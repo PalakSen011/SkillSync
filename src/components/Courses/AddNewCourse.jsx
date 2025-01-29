@@ -10,8 +10,15 @@ import DropdownField from "../../Common/DropdownField";
 import { addCourse, replaceCourseById } from "../../Store/Slice/courseSlice";
 
 import { statusOptions, categoryOptions } from "../../Constants/Options";
+import { useParams } from "react-router-dom";
 
 const AddNewCourse = ({ onBackClick }) => {
+  const { courseId } = useParams();
+  const course = useSelector((state) =>
+    state.courses.courses.find(
+      (course) => course.course_id === parseInt(courseId)
+    )
+  );
   const [courseDetails, setCourseDetails] = useState({
     title: "",
     category: "",
@@ -29,6 +36,19 @@ const AddNewCourse = ({ onBackClick }) => {
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    if (course) {
+      setCourseDetails({
+        title: course.course_title,
+        category: course.category,
+        status: course.status,
+        mandatory: course.is_mandatory,
+        modules: course.modules,
+      });
+    }
+  }, [course]);
+
+  
   const onSubmit = (data) => {
     // Calculate modulesCount and lessonsCount dynamically
     const modulesCount = courseDetails.modules.length;
@@ -64,7 +84,7 @@ const AddNewCourse = ({ onBackClick }) => {
           test: [
             {
               questions: [
-                { 
+                {
                   id: "",
                   question: "",
                   options: [
@@ -73,7 +93,7 @@ const AddNewCourse = ({ onBackClick }) => {
                     { option_id: "", option: "", isCorrect: false },
                     { option_id: "", option: "", isCorrect: false },
                   ],
-                  type:"test",
+                  type: "test",
                 },
               ],
             },

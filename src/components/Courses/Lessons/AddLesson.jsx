@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import InputField from "../../../Common/InputField";
 
 const AddLesson = ({ lessonData, onSave }) => {
+  
   const [lessonDetails, setLessonDetails] = useState({
     lessonName: "",
     duration: "",

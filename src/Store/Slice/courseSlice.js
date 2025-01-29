@@ -67,8 +67,17 @@ const coursesSlice = createSlice({
         );
       }
     },
+    deleteCourse: (state, action) => {
+      const courseId = action.payload;
+      state.courses = state.courses.filter(
+        (course) => course.course_id !== courseId
+      );
+      // Optionally reset currentCourse if the deleted course was the current one
+      if (state.currentCourse?.course_id === courseId) {
+        state.currentCourse = null;
+      }
+    },
   },
 });
-
-export const { addCourse, replaceCourseById } = coursesSlice.actions;
+export const { addCourse, replaceCourseById,deleteCourse } = coursesSlice.actions;
 export default coursesSlice.reducer;

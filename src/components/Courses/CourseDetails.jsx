@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { edit_module, delete_red, edit_Black } from "../../Assets/index";
-
+import { delete_red, edit_Black } from "../../Assets/index";
+import Lesson from "./Lessons/Lesson";
+import { deleteCourse } from "../../Store/Slice/courseSlice";
+import { useDispatch } from "react-redux";
+import {
+  PATH_COURSES,
+  PATH_ADD_NEW_COURSE,
+} from "../../Constants/RouteConstants";
+import ConfirmationDelete from "../../Common/ConfirmationDelete";
 const CourseDetails = () => {
+  const [activeTab, setActiveTab] = useState("details");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const course = useSelector((state) =>
     state.courses.courses.find(
       (course) => course.course_id === parseInt(courseId)
@@ -18,7 +28,29 @@ const CourseDetails = () => {
 
   // Handle back button click to navigate to the course list
   const handleBackClick = () => {
-    navigate("/courses");
+    navigate(PATH_COURSES);
+  };
+
+  // Handle delete button click
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  // Handle confirm delete
+  const handleConfirmDelete = () => {
+    dispatch(deleteCourse(course.course_id)); // Delete the course
+    navigate(PATH_COURSES); // Navigate back to the course list
+  };
+
+  // Handle cancel delete
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+  // Handle edit button click
+  const handleEditClick = () => {
+    console.log("Edit clicked");
+    // navigate({ PATH_ADD_NEW_COURSE });
+    navigate(`/edit-course/${courseId}`); // Navigate to the edit page with courseId
   };
 
   return (
@@ -34,8 +66,8 @@ const CourseDetails = () => {
           </button>
         </div>
       </div>
-      <div className="min-w-full font-sm mt-4 p-5 bg-white">
-        <div className="min-w-full font-sm mt-4 p-5 bg-white">
+      <div className="min-w-full  mt-4  bg-white">
+        <div className="min-w-full  mt-4 p-6 bg-white">
           <div className="flex justify-between">
             <div>
               <span
@@ -51,10 +83,16 @@ const CourseDetails = () => {
               </span>{" "}
             </div>
             <div className="flex gap-4">
-              <button className="p-2 border border-neutral-300">
+              <button
+                className="p-2 border border-neutral-300"
+                onClick={handleEditClick}
+              >
                 <img src={edit_Black} alt="Edit" className="" />
               </button>
-              <button className="p-2 border border-neutral-300">
+              <button
+                className="p-2 border border-neutral-300"
+                onClick={handleDeleteClick}
+              >
                 <img src={delete_red} alt="Delete" className="h-4" />
               </button>
             </div>
@@ -72,27 +110,46 @@ const CourseDetails = () => {
                 {course.category}
               </div>
             </div>
+
             <div className="flex flex-col w-1/6">
-              <div className="mb-1 text-sm font-semibold">Mandatory</div>
+              <div className="mb-1 text-sm font-semibold">Category</div>
               <div className="text-sm text-neutral-500 font-light mb-1">
-                {course.is_mandatory ? "Yes" : "No"}
-              </div>
-            </div>
-            <div className="flex flex-col w-1/6">
-              <div className="mb-1 text-sm font-semibold">Assignee</div>
-              <div className="text-sm text-neutral-500 font-light mb-1">
-                {course.assignee}
-              </div>
-            </div>
-            <div className="flex flex-col w-1/6">
-              <div className="mb-1 text-sm font-semibold">Duration</div>
-              <div className="text-sm text-neutral-500 font-light mb-1">
-                {course.duration}
+                {course.category}
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div className="flex mt-6 gap-6 text-slate-800">
+        <div
+          className={`py-3 px-14 bg-white font-semibold ${
+            activeTab === "details"
+              ? "text-green-500 border-b-2 border-b-green-500"
+              : "hover:text-green-500 hover:border-b-2 border-b-transparent"
+          }`}
+        >
+          <button onClick={() => setActiveTab("details")}>Details</button>
+        </div>
+        <div
+          className={`py-3 px-10 bg-white font-semibold ${
+            activeTab === "assignees"
+              ? "text-green-500 border-b-2 border-b-green-500"
+              : "hover:text-green-500 hover:border-b-2 border-b-transparent"
+          }`}
+        >
+          <button onClick={() => setActiveTab("assignees")}>
+            Assignees (28)
+          </button>
+        </div>
+      </div>
+      <div className="bg-white flex">{/* <Lesson /> */}</div>
+      {showDeleteModal && (
+        <ConfirmationDelete
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          message="Are you sure you want to delete this course?"
+        />
+      )}
     </>
   );
 };

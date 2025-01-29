@@ -45,10 +45,12 @@ const App = () => {
               <Route path={PATH_USER_MANAGEMENT} element={<UserManagement />} />
               <Route path={PATH_COURSES} element={<CourseList />} />
               <Route path={PATH_ADD_NEW_COURSE} element={<AddNewCourse />} />
+              
               <Route
                 path={PATH_COURSE_DETAIL}
                 element={<CourseDetail />}
-              />{" "}
+              />
+              <Route path="/edit-course/:courseId" element={<AddNewCourse />} />
               {/* Add CourseDetail route */}
             </Route>
 
