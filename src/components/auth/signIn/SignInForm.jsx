@@ -3,35 +3,64 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 
-import { loginUser } from "../../../Store/Slice/usersSlice";
+import { loginUser, setisAuthenticated, setUser } from "../../../Store/Slice/usersSlice";
 
 import { validateEmail, validatePassword } from "../../../utils/validation";
 
 import { show, hide } from "../../../Assets/index";
 import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
-  const { control, handleSubmit, formState: { errors }, setError, clearErrors } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    clearErrors,
+  } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
 
-  const onSubmit = (data) => {
-    dispatch(loginUser({ email: data.email, password: data.password }));
-    if (!isAuthenticated) {
-      if (data.email === "") {
-        setError("email", { type: "manual", message: "Email cannot be empty." });
-      }
-      if (data.password === "") {
-        setError("password", { type: "manual", message: "Password cannot be empty." });
-      } else {
-        setError("password", { type: "manual", message: "Invalid credentials." });
-      }
-    } else {
-      clearErrors();
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/login/",
+        data
+      );
+      console.log(response);
+      dispatch(setUser(response.data));
+      dispatch(setisAuthenticated());
       navigate("/dashboard");
+      toast.success("Signed In Successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Invalid Email or Password");
     }
+    // dispatch(loginUser({ email: data.email, password: data.password }));
+    // if (!isAuthenticated) {
+    //   navigate("/dashboard");
+    //   // if (data.email === "") {
+    //   //   setError("email", {
+    //   //     type: "manual",
+    //   //     message: "Email cannot be empty.",
+    //   //   });
+    //   // }
+    //   // if (data.password === "") {
+    //   //   setError("password", {
+    //   //     type: "manual",
+    //   //     message: "Password cannot be empty.",
+    //   //   });
+    //   // } else {
+    //   //   setError("password", {
+    //   //     type: "manual",
+    //   //     message: "Invalid credentials.",
+    //   //   });
+
+    // } else {
   };
 
   return (
@@ -56,7 +85,9 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             />
           )}
         />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
       </div>
       {/* Password Input Field */}
       <div className="mb-4">
@@ -92,7 +123,9 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             />
           </button>
         </div>
-        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
       </div>
       {/* Forgot Password Button */}
       <div className="mb-4 text-right">

@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import axios from "axios";
 
 import { changeType } from "../../../Store/Slice/typeSlice";
 import { setUserEmail } from "../../../Store/Slice/usersSlice";
-
 import { validateEmail } from "../../../utils/validation";
-
 import { sent_mail, forgotPassword } from "../../../Assets/index";
+import { toast } from "react-toastify";
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
-  // Redux selectors and dispatcher
   const type = useSelector((state) => state.type.type);
   const userEmail = useSelector((state) => state.users.userEmail);
-  const userEmailError = useSelector((state) => state.users.userEmailError);
   const dispatch = useDispatch();
 
   // Handle email input change and validate email
@@ -26,69 +23,67 @@ const ForgotPassword = ({ onClose }) => {
   };
 
   // Handle "Send" button click
-  const handleSendClick = () => {
-    if (email.length > 0) {
-      dispatch(setUserEmail(email));
-    } else {
+  const handleSendClick = async () => {
+    if (!email) {
       setEmailError("Email cannot be empty.");
+      return;
+    }
+    if (emailError) return;
+
+    try {
+      const response = await axios.post(
+        "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/forgot-password/",
+        { email }
+      );
+      console.log("🚀 ~ handleSendClick ~ response", response);
+      toast.success(response.data.message);
+      dispatch(setUserEmail(email));
+      dispatch(changeType("sentEmail"));
+    } catch (error) {
+      console.log("🚀 ~ handleSendClick ~ error", error);
+      toast.error(error?.message || "Something went wrong");
+      // setEmailError("Something went wrong. Please try again.");
     }
   };
-
-  // Effect to handle changes in email state or errors
-  useEffect(() => {
-    if (userEmailError) {
-      setEmailError("Email not found. Please enter a valid registered email.");
-    } else if (userEmail) {
-      dispatch(changeType("sentEmail"));
-    }
-  }, [userEmailError, userEmail]);
-
   // Handle "Reset" button click
   const handleResetClick = () => {
     dispatch(changeType("resetPassword"));
     onClose();
   };
+  // Handle successful email submission
+  // useEffect(() => {
+  //   if (userEmail) {
+  //     dispatch(changeType("sentEmail"));
+  //   }
+  // }, [userEmail, dispatch]);
 
-  // Handle close button click
-  const handleCloseButton = () => {
-    dispatch(changeType(""));
-    onClose();
-  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
       <div className="bg-white p-10 w-1/3 flex flex-col items-center relative">
         {/* Close Button */}
         <button
           className="absolute top-2 right-5 text-xl font-semibold"
-          onClick={handleCloseButton}
+          onClick={onClose}
         >
           X
         </button>
-        {/* Dynamic Image based on modal type */}
+
+        {/* Dynamic Image */}
+        <img
+          className={type === "sentEmail" ? "w-1/3" : "w-80"}
+          src={type === "sentEmail" ? sent_mail : forgotPassword}
+          alt="Password Reset"
+        />
+
+        {/* Content Based on Type */}
         {type === "sentEmail" ? (
-          <div className="flex items-center justify-center">
-            <img className="w-1/3" src={sent_mail} alt="Reset Password Image" />
-          </div>
-        ) : (
-          <div>
-            <img
-              className="w-80"
-              src={forgotPassword}
-              alt="Forgot Password Image"
-            />
-          </div>
-        )}
-        {/* Dynamic Content based on modal type */}
-        {type === "sentEmail" ? (
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center">
             <h2 className="text-lg p-3 text-center">
-              Please click on the link sent to your registered email to reset
-              your password.
+              Please check your registered email to reset your password.
             </h2>
-            <p className="text-gray-500 w-full text-center text-xl pb-4">
+            <p className="text-gray-500 text-xl pb-4">
               {"(C*******@gmail.com)"} {/* Example email */}
             </p>
-            {/* Reset Button */}
             <button
               onClick={handleResetClick}
               className="bg-green-600 text-white px-8 py-2"
@@ -98,23 +93,23 @@ const ForgotPassword = ({ onClose }) => {
           </div>
         ) : (
           <>
-            {/* Email Input Field */}
-            <div className="mb-4">
+            {/* Email Input */}
+            <div className="mb-4 w-full">
               <h2 className="text-lg pb-3">
-                Enter your email to get your reset link!
+                Enter your email to get a reset link!
               </h2>
               <input
                 type="email"
                 className="w-full px-4 py-2 border border-gray-400"
-                placeholder="carol.davic21@gmail.com"
+                placeholder="Enter your email"
                 value={email}
                 onChange={handleEmailChange}
-                required
               />
               {emailError && (
                 <p className="text-red-500 text-sm">{emailError}</p>
               )}
             </div>
+
             {/* Send Button */}
             <button
               onClick={handleSendClick}
@@ -128,4 +123,5 @@ const ForgotPassword = ({ onClose }) => {
     </div>
   );
 };
+
 export default ForgotPassword;

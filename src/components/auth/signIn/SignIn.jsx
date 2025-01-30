@@ -11,6 +11,7 @@ import ForgotPassword from "./ForgotPassword";
 import ResetSuccessful from "../../../Common/ResetSuccessful";
 
 import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
+import { changeType } from "../../../Store/Slice/typeSlice";
 
 const SignIn = () => {
   const [isForgotModal, setIsForgotModalOpen] = useState(false);
@@ -45,6 +46,7 @@ const SignIn = () => {
   const handleCloseModal = () => {
     setIsForgotModalOpen(false);
     setIsResetSuccessfulModal(false);
+    dispatch(changeType("sign-in"));
   };
 
   return (

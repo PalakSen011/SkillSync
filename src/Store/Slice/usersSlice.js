@@ -5,6 +5,7 @@ const initialState = {
   Users: [], // List of users, persisted via redux-persist
   isAuthenticated: false,
   loggedInUser: null,
+  message: "",
   userEmail: "",
   userEmailError: false,
 };
@@ -22,6 +23,16 @@ const usersSlice = createSlice({
       state.Users.push(newUser);
     },
 
+    setisAuthenticated: (state) => {
+      state.isAuthenticated = !state.isAuthenticated;
+    },
+    setUser: (state, action) => {
+      state.loggedInUser = action.payload;
+      console.log("🚀 ~ state.loggedInUser:", state.loggedInUser);
+    },
+    setMessages: (state, action) => {
+      state.message = action.payload;
+    },
     // Action to authenticate a user based on email and password
     loginUser: (state, action) => {
       const { email, password } = action.payload;
@@ -65,8 +76,8 @@ const usersSlice = createSlice({
     // Action to reset a user's password
     resetPassword: (state, action) => {
       const { userEmail, newPassword } = action.payload;
-      console.log("🚀 ~ userEmail:", userEmail)
-      console.log("🚀 ~ newPassword:", newPassword)
+      console.log("🚀 ~ userEmail:", userEmail);
+      console.log("🚀 ~ newPassword:", newPassword);
       const userIndex = state.Users.findIndex(
         (user) => user.email === userEmail
       );
@@ -95,6 +106,8 @@ export const {
   setUserEmail,
   resetPassword,
   resetAuthenticationState,
+  setisAuthenticated,
+  setUser,
   resetUserEmail,
 } = usersSlice.actions;
 

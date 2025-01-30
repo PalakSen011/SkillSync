@@ -3,20 +3,14 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 import { addUser } from "../../../Store/Slice/usersSlice";
 
 import { logo, show, hide } from "../../../Assets/index";
 
-import {
-  validateEmail,
-  validatePassword,
-  validateConfirmPassword,
-} from "../../../utils/validation";
-
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,16 +22,36 @@ const SignUp = () => {
   } = useForm();
   const password = watch("password", "");
 
-  const onSubmit = (data) => {
-    dispatch(
-      addUser({ name: data.name, email: data.email, password: data.password })
+  const validatePhoneNumber = (value) => {
+    return (
+      /^[789]\d{9}$/.test(value) ||
+      "Phone number must start with 7, 8, or 9 and be 10 digits long."
     );
-    navigate("/sign-in");
-    toast.success("Account created successfully. Please sign in.");
+  };
+
+  const onSubmit = async (data) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
+    try {
+      const response = await axios.post(
+        "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/signup/",
+        data
+        // { headers: { "Content-Type": "application/json" } }
+      );
+      console.log("🚀 ~ onSubmit ~ response:", response);
+
+      toast.success(response.data.message);
+      // dispatch(
+      //   addUser({ name: data.name, email: data.email, password: data.password })
+      // );
+      navigate("/sign-in");
+    } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error);
+      toast.error(error?.message || "Something went wrong");
+    }
   };
 
   return (
-    <div className="overflow-hidden h-screen bg-cover bg-center bg-[url('./assets/authBackground.svg')]">
+    <div className=" bg-cover bg-center bg-[url('./assets/authBackground.svg')]">
       <div>
         <img className="p-5" src={logo} alt="skill sync logo" />
       </div>
@@ -51,49 +65,110 @@ const SignUp = () => {
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Name Field */}
+            {/* First Name */}
             <div className="mb-4">
               <input
                 type="text"
-                id="name"
                 className="w-full px-4 py-2"
-                placeholder="Name"
-                {...register("name", { required: "Name is required." })}
+                placeholder="First Name"
+                {...register("first_name", {
+                  required: "First name is required.",
+                })}
               />
-              {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              {errors.first_name && (
+                <p className="text-red-500 text-sm">
+                  {errors.first_name.message}
+                </p>
               )}
             </div>
 
-            {/* Email Field */}
+            {/* Last Name */}
+            <div className="mb-4">
+              <input
+                type="text"
+                className="w-full px-4 py-2"
+                placeholder="Last Name"
+                {...register("last_name", {
+                  required: "Last name is required.",
+                })}
+              />
+              {errors.last_name && (
+                <p className="text-red-500 text-sm">
+                  {errors.last_name.message}
+                </p>
+              )}
+            </div>
+
+            {/* Email */}
             <div className="mb-4">
               <input
                 type="email"
-                id="email"
                 className="w-full px-4 py-2"
                 placeholder="Email"
-                {...register("email", {
-                  required: "Email is required.",
-                  validate: (value) => validateEmail(value) || true,
-                })}
+                {...register("email", { required: "Email is required." })}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
 
-            {/* Password Field */}
+            {/* Phone Number */}
+            <div className="mb-4">
+              <input
+                type="text"
+                className="w-full px-4 py-2"
+                placeholder="Phone Number"
+                {...register("phone_number", {
+                  required: "Phone number is required.",
+                  validate: validatePhoneNumber,
+                })}
+              />
+              {errors.phone_number && (
+                <p className="text-red-500 text-sm">
+                  {errors.phone_number.message}
+                </p>
+              )}
+            </div>
+
+            {/* Gender Selection */}
+            <div className="mb-4">
+              <select
+                className="w-full px-4 py-2"
+                {...register("gender", { required: "Gender is required." })}
+              >
+                <option value="">Select Gender</option>
+                <option value="CHRELgT">Male</option>
+                <option value="CHEfbqz">Female</option>
+                <option value="CHN0hVk">Other</option>
+              </select>
+              {errors.gender && (
+                <p className="text-red-500 text-sm">{errors.gender.message}</p>
+              )}
+            </div>
+
+            {/* Role Selection */}
+            <div className="mb-4">
+              <select
+                className="w-full px-4 py-2"
+                {...register("role", { required: "Role is required." })}
+              >
+                <option value="">Select Role</option>
+                <option value="CHA6xgL">HR</option>
+                <option value="">Manager</option>
+              </select>
+              {errors.role && (
+                <p className="text-red-500 text-sm">{errors.role.message}</p>
+              )}
+            </div>
+
+            {/* Password Field (Optional) */}
             <div className="mb-4">
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  id="password"
                   className="w-full px-4 py-2"
-                  placeholder="Password"
-                  {...register("password", {
-                    required: "Password is required.",
-                    validate: (value) => validatePassword(value) || true,
-                  })}
+                  placeholder="Password (Optional)"
+                  {...register("password")}
                 />
                 <button
                   type="button"
@@ -107,46 +182,6 @@ const SignUp = () => {
                   />
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            {/* Confirm Password Field */}
-            <div className="mb-4">
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirmPassword"
-                  className="w-full px-4 py-2"
-                  placeholder="Confirm Password"
-                  {...register("confirmPassword", {
-                    required: "Confirm Password is required.",
-                    validate: (value) =>
-                      validateConfirmPassword(password, value) || true,
-                  })}
-                />
-                <button
-                  type="button"
-                  className="absolute top-3 right-2"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  <img
-                    src={showConfirmPassword ? show : hide}
-                    alt={
-                      showConfirmPassword ? "Hide password" : "Show password"
-                    }
-                    className="w-5 h-5"
-                  />
-                </button>
-              </div>
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-sm">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
             </div>
 
             {/* Submit Button */}
