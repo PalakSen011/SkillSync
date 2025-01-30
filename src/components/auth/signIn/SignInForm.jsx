@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 
-import { loginUser, setisAuthenticated, setUser } from "../../../Store/Slice/usersSlice";
+import {
+  loginUser,
+  setisAuthenticated,
+  setUser,
+} from "../../../Store/Slice/usersSlice";
 
 import { validateEmail, validatePassword } from "../../../utils/validation";
 
@@ -26,13 +30,15 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
   const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
 
   const onSubmit = async (data) => {
+    console.log("🚀 ~ data:", data);
     try {
       const response = await axios.post(
         "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/login/",
         data
       );
       console.log(response);
-      dispatch(setUser(response.data));
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("uidb64", "VVJNbkZXcw");
       dispatch(setisAuthenticated());
       navigate("/dashboard");
       toast.success("Signed In Successfully");
@@ -40,27 +46,6 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
       console.log(error);
       toast.error("Invalid Email or Password");
     }
-    // dispatch(loginUser({ email: data.email, password: data.password }));
-    // if (!isAuthenticated) {
-    //   navigate("/dashboard");
-    //   // if (data.email === "") {
-    //   //   setError("email", {
-    //   //     type: "manual",
-    //   //     message: "Email cannot be empty.",
-    //   //   });
-    //   // }
-    //   // if (data.password === "") {
-    //   //   setError("password", {
-    //   //     type: "manual",
-    //   //     message: "Password cannot be empty.",
-    //   //   });
-    //   // } else {
-    //   //   setError("password", {
-    //   //     type: "manual",
-    //   //     message: "Invalid credentials.",
-    //   //   });
-
-    // } else {
   };
 
   return (

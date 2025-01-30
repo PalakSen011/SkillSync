@@ -7,6 +7,8 @@ import {
   validateConfirmPassword,
 } from "../../../utils/validation";
 import { show, hide } from "../../../Assets/index";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   const {
@@ -24,6 +26,9 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   const userEmail = useSelector((state) => state.users.userEmail);
   const password = watch("password", "");
 
+  // Retrieve uidb64 and token from localStorage or URL params
+  //  / or get it from URL params
+  // const headers = { Authorization: `Token ${token}` };
   // Function to handle onChange event
   const handlePasswordChange = (field) => (e) => {
     const value = e.target.value;
@@ -39,10 +44,56 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
     }
   };
 
-  const onSubmit = (data) => {
-    // Dispatch action to reset the password
-    dispatch(resetPassword({ userEmail, newPassword: data.password }));
-    setIsResetSuccessfulModal(true);
+  const onSubmit = async (data) => {
+    console.log("🚀 Submitting Data:", data);
+
+    // Retrieve uidb64 and token from localStorage
+    const uidb64 = localStorage.getItem("uidb64"); // Make sure it's correctly stored
+    const token = localStorage.getItem("token"); // Ensure token is valid
+
+    // Ensure uidb64 exists before making the request
+    if (!uidb64 || !token) {
+      toast.error("Invalid or missing credentials.");
+      return;
+    }
+
+    // Prepare the request payload
+    const payload = {
+      uidb64: uidb64,
+      new_password: data.password,
+      confirm_password: data.confirmPassword,
+    };
+
+    console.log("🚀 Payload being sent:", payload);
+
+    try {
+      const response = await axios.post(
+        "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/reset-password/",
+        payload,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      console.log("🚀 Response:", response);
+
+      // If request is successful
+      toast.success(
+        response.data.message || "Password has been reset successfully."
+      );
+      setIsResetSuccessfulModal(true);
+    } catch (error) {
+      console.error(
+        "❌ Error resetting password:",
+        error.response?.data || error.message
+      );
+      toast.error(
+        error.response?.data?.error ||
+          "An error occurred while resetting the password."
+      );
+    }
   };
 
   return (

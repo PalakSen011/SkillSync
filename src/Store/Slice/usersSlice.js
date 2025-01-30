@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   Users: [], // List of users, persisted via redux-persist
   isAuthenticated: false,
-  loggedInUser: null,
+  loggedInUser: "",
   message: "",
   userEmail: "",
   userEmailError: false,
@@ -27,9 +27,15 @@ const usersSlice = createSlice({
       state.isAuthenticated = !state.isAuthenticated;
     },
     setUser: (state, action) => {
-      state.loggedInUser = action.payload;
-      console.log("🚀 ~ state.loggedInUser:", state.loggedInUser);
+      const { userData, email } = action.payload;
+      state.loggedInUser = {
+        user_id: userData.user_id, // This should contain the user ID
+        token: userData.token, // This should contain the token
+        email: email,
+      };
+      state.userEmail = email;
     },
+
     setMessages: (state, action) => {
       state.message = action.payload;
     },

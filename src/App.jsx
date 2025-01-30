@@ -29,6 +29,8 @@ import {
   PATH_COURSE_DETAIL,
 } from "./Constants/RouteConstants.js";
 
+// const uidb64 = "VVJNbkZXcw";
+// const token = "ad35dd2d13c5572a3884d82f8d5bd726f9bba59e";
 const App = () => {
   return (
     <Provider store={appStore}>
@@ -38,18 +40,18 @@ const App = () => {
             {/* Public Routes */}
             <Route path="/sign-in" element={<SignIn />} />
             <Route path={PATH_SIGNUP} element={<SignUp />} />
-            <Route path={PATH_RESET_PASSWORD} element={<SignIn />} />
+            <Route
+              path="/reset-password"
+              element={<SignIn />}
+            />
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path={PATH_DASHBOARD} element={<Dashboard />} />
               <Route path={PATH_USER_MANAGEMENT} element={<UserManagement />} />
               <Route path={PATH_COURSES} element={<CourseList />} />
               <Route path={PATH_ADD_NEW_COURSE} element={<AddNewCourse />} />
-              
-              <Route
-                path={PATH_COURSE_DETAIL}
-                element={<CourseDetail />}
-              />
+
+              <Route path={PATH_COURSE_DETAIL} element={<CourseDetail />} />
               <Route path="/edit-course/:courseId" element={<AddNewCourse />} />
               {/* Add CourseDetail route */}
             </Route>

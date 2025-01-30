@@ -20,9 +20,16 @@ const SignIn = () => {
   // Redux hooks
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   // Extract the `type` (determines the screen to show) and `isAuthenticated` from the Redux store
   const type = useSelector((state) => state.type.type);
   const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
+
+  // Extract user data from Redux store based on userEmail
+  const user_id = localStorage.getItem("uidb64");
+  console.log("🚀 ~ SignIn ~ uidb64:", user_id);
+  const token = localStorage.getItem("token");
+  console.log("🚀 ~ SignIn ~ token:", token);
 
   // Redirect the user to the dashboard if they are authenticated
   useEffect(() => {
@@ -36,17 +43,17 @@ const SignIn = () => {
     if (type !== "resetPassword") {
       navigate("/sign-in");
       dispatch(resetAuthenticationState());
-    } else {
-      navigate("/reset-password");
+    } else if (user_id && token) {
+      // Navigate to the reset password page if both uidb64 and token exist
+      navigate(`/reset-password/?uidb64=${user_id}&token=${token}`);
       toast.info("Reset your password to regain access.");
     }
-  }, [type, dispatch, navigate]);
+  }, [type, dispatch, navigate, user_id, token]);
 
   // Close all modals
   const handleCloseModal = () => {
     setIsForgotModalOpen(false);
     setIsResetSuccessfulModal(false);
-    dispatch(changeType("sign-in"));
   };
 
   return (
