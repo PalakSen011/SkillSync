@@ -50,75 +50,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
     return;
   }
 
-  // Prepare the request payload
-  // const payload = {
-  //   uidb64: uidb64,
-  //   new_password: data.password,
-  //   confirm_password: data.confirmPassword,
-  // };
-
-  const onSubmit = async (data) => {
-    if (!uidb64 || !token) {
-      toast.error("Invalid or missing credentials.");
-      return;
-    }
-    setIsSubmitting(true); // Indicate the API request is in progress
-    try {
-      const response = await resetPassword(
-        {
-          uidb64,
-          new_password: data.password,
-          confirm_password: data.confirmPassword,
-        },
-        token
-      );
-      toast.success(
-        response.data.message || "Password has been reset successfully."
-      );
-      setIsResetSuccessfulModal(true);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.error ||
-          "An error occurred while resetting the password."
-      );
-    }
-  };
-  // Function to handle form submission
-  // const onSubmit = async (data) => {
-  //   console.log("🚀 Submitting Data:", data);
-
-  //   console.log("🚀 Payload being sent:", payload);
-
-  //   try {
-  //     const response = await axios.post(
-  //       "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/reset-password/",
-  //       payload,
-  //       {
-  //         headers: {
-  //           Authorization: `Token ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     console.log("🚀 Response:", response);
-
-  //     // If request is successful
-  //     toast.success(
-  //       response.data.message || "Password has been reset successfully."
-  //     );
-  //     setIsResetSuccessfulModal(true);
-  //   } catch (error) {
-  //     console.error(
-  //       "❌ Error resetting password:",
-  //       error.response?.data || error.message
-  //     );
-  //     toast.error(
-  //       error.response?.data?.error ||
-  //         "An error occurred while resetting the password."
-  //     );
-  //   }
-  // };
-
+ 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Password Input */}

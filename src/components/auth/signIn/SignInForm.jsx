@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
+import { setisAuthenticated, setUser } from "../../../Store/Slice/usersSlice";
 import { validateEmail, validatePassword } from "../../../utils/validation";
 import { show, hide } from "../../../Assets/index";
 import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
+import axios from "axios";
 import { toast } from "react-toastify";
-import { loginUser } from "../../../Api/authApi"; 
-
+import { loginUser } from "../../../Api/authApi";
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
     control,
@@ -28,19 +28,14 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     setIsSubmitting(true); // Indicate the API request is in progress
 
     try {
-      const response = await loginUser(data); 
+      const response = await loginUser(data); // Use the loginUser action for API call
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("uidb64", "VVJNbkZXcw");
       dispatch(setisAuthenticated());
       navigate("/dashboard");
       toast.success("Signed In Successfully");
     } catch (error) {
-      // Improved error handling
-      if (error.response && error.response.data) {
-        toast.error(error.response.data.detail || "Something went wrong.");
-      } else {
-        toast.error("Network error. Please try again.");
-      }
+      toast.error("Invalid Email or Password");
     } finally {
       setIsSubmitting(false); // Reset state after API call completes
     }
@@ -56,7 +51,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
           defaultValue=""
           rules={{
             required: "Email cannot be empty.",
-            validate: (value) => validateEmail(value) || "Invalid email format.",
+            validate: (value) => validateEmail(value) || true,
           }}
           render={({ field }) => (
             <input
@@ -66,10 +61,6 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
               placeholder="Email"
               {...field}
               disabled={isSubmitting} // Disable input while submitting
-              onChange={(e) => {
-                clearErrors("email"); // Clear specific error on change
-                field.onChange(e);
-              }}
             />
           )}
         />
@@ -87,7 +78,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             defaultValue=""
             rules={{
               required: "Password cannot be empty.",
-              validate: (value) => validatePassword(value) || "Password is too weak.",
+              validate: (value) => validatePassword(value) || true,
             }}
             render={({ field }) => (
               <input
