@@ -7,7 +7,7 @@ import { validateEmail, validatePassword } from "../../../utils/validation";
 import { show, hide } from "../../../Assets/index";
 import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
 import { toast } from "react-toastify";
-import { loginUser } from "../../../Api/apiInstance"; // Use the apiInstance for API calls
+import { loginUser } from "../../../Api/authApi"; 
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
@@ -28,7 +28,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     setIsSubmitting(true); // Indicate the API request is in progress
 
     try {
-      const response = await loginUser(data); // Use loginUser action for API call
+      const response = await loginUser(data); 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("uidb64", "VVJNbkZXcw");
       dispatch(setisAuthenticated());
