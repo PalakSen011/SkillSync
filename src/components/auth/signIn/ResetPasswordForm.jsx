@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { resetPassword } from "../../../Store/Slice/usersSlice";
+import { toast } from "react-toastify";
+import { resetPassword } from "../../../Api/authApi";
+import { show, hide } from "../../../Assets/index";
 import {
   validatePassword,
   validateConfirmPassword,
 } from "../../../utils/validation";
-import { show, hide } from "../../../Assets/index";
-import { toast } from "react-toastify";
-import axios from "axios";
 
 const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   const {
@@ -21,14 +20,12 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   } = useForm({ mode: "onChange" });
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track API call status
 
   const dispatch = useDispatch();
   const userEmail = useSelector((state) => state.users.userEmail);
   const password = watch("password", "");
 
-  // Retrieve uidb64 and token from localStorage or URL params
-  //  / or get it from URL params
-  // const headers = { Authorization: `Token ${token}` };
   // Function to handle onChange event
   const handlePasswordChange = (field) => (e) => {
     const value = e.target.value;
@@ -43,58 +40,84 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
       clearErrors("password");
     }
   };
+  // Retrieve uidb64 and token from localStorage
+  const uidb64 = localStorage.getItem("uidb64");
+  const token = localStorage.getItem("token");
+
+  // Ensure uidb64 exists before making the request
+  if (!uidb64 || !token) {
+    toast.error("Invalid or missing credentials.");
+    return;
+  }
+
+  // Prepare the request payload
+  // const payload = {
+  //   uidb64: uidb64,
+  //   new_password: data.password,
+  //   confirm_password: data.confirmPassword,
+  // };
 
   const onSubmit = async (data) => {
-    console.log("🚀 Submitting Data:", data);
-
-    // Retrieve uidb64 and token from localStorage
-    const uidb64 = localStorage.getItem("uidb64"); // Make sure it's correctly stored
-    const token = localStorage.getItem("token"); // Ensure token is valid
-
-    // Ensure uidb64 exists before making the request
     if (!uidb64 || !token) {
       toast.error("Invalid or missing credentials.");
       return;
     }
-
-    // Prepare the request payload
-    const payload = {
-      uidb64: uidb64,
-      new_password: data.password,
-      confirm_password: data.confirmPassword,
-    };
-
-    console.log("🚀 Payload being sent:", payload);
-
+    setIsSubmitting(true); // Indicate the API request is in progress
     try {
-      const response = await axios.post(
-        "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/reset-password/",
-        payload,
+      const response = await resetPassword(
         {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
+          uidb64,
+          new_password: data.password,
+          confirm_password: data.confirmPassword,
+        },
+        token
       );
-
-      console.log("🚀 Response:", response);
-
-      // If request is successful
       toast.success(
         response.data.message || "Password has been reset successfully."
       );
       setIsResetSuccessfulModal(true);
     } catch (error) {
-      console.error(
-        "❌ Error resetting password:",
-        error.response?.data || error.message
-      );
       toast.error(
         error.response?.data?.error ||
           "An error occurred while resetting the password."
       );
     }
   };
+  // Function to handle form submission
+  // const onSubmit = async (data) => {
+  //   console.log("🚀 Submitting Data:", data);
+
+  //   console.log("🚀 Payload being sent:", payload);
+
+  //   try {
+  //     const response = await axios.post(
+  //       "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/reset-password/",
+  //       payload,
+  //       {
+  //         headers: {
+  //           Authorization: `Token ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     console.log("🚀 Response:", response);
+
+  //     // If request is successful
+  //     toast.success(
+  //       response.data.message || "Password has been reset successfully."
+  //     );
+  //     setIsResetSuccessfulModal(true);
+  //   } catch (error) {
+  //     console.error(
+  //       "❌ Error resetting password:",
+  //       error.response?.data || error.message
+  //     );
+  //     toast.error(
+  //       error.response?.data?.error ||
+  //         "An error occurred while resetting the password."
+  //     );
+  //   }
+  // };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -200,7 +223,14 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
         type="submit"
         className="p-8 py-2 border text-white border-green-600"
       >
-        Reset
+        {isSubmitting ? (
+          <>
+            <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
+            Resetting...
+          </>
+        ) : (
+          "Reset"
+        )}
       </button>
     </form>
   );

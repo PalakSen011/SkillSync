@@ -1,5 +1,3 @@
-const uidb64 = "VVJNbkZXcw";
-const token = "ad35dd2d13c5572a3884d82f8d5bd726f9bba59e";
 export const PATH_SIGNUP = "/sign-up";
 export const PATH_DASHBOARD = "/dashboard";
 export const PATH_RESET_PASSWORD = `/reset-password`;

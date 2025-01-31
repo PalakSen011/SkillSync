@@ -114,9 +114,10 @@ const Lesson = ({
   };
 
   const handleSaveTest = (testData) => {
-    updateTestInCourseDetails(activeLessonId, testData);
+    updateTestInCourseDetails(testData);
     setIsAddTest(false);
   };
+    console.log("🚀 ~ handleSaveTest ~ activeLessonId:", activeLessonId)
 
   return (
     <>

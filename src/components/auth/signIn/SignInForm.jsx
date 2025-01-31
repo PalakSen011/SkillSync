@@ -1,20 +1,13 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-
-import {
-  loginUser,
-  setisAuthenticated,
-  setUser,
-} from "../../../Store/Slice/usersSlice";
-
+import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
 import { validateEmail, validatePassword } from "../../../utils/validation";
-
 import { show, hide } from "../../../Assets/index";
 import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { loginUser } from "../../../Api/apiInstance"; // Use the apiInstance for API calls
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
@@ -25,26 +18,31 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     clearErrors,
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track API call status
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ data:", data);
+    if (isSubmitting) return; // Prevent multiple submissions
+
+    setIsSubmitting(true); // Indicate the API request is in progress
+
     try {
-      const response = await axios.post(
-        "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/login/",
-        data
-      );
-      console.log(response);
+      const response = await loginUser(data); // Use loginUser action for API call
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("uidb64", "VVJNbkZXcw");
       dispatch(setisAuthenticated());
       navigate("/dashboard");
       toast.success("Signed In Successfully");
     } catch (error) {
-      console.log(error);
-      toast.error("Invalid Email or Password");
+      // Improved error handling
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.detail || "Something went wrong.");
+      } else {
+        toast.error("Network error. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false); // Reset state after API call completes
     }
   };
 
@@ -58,7 +56,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
           defaultValue=""
           rules={{
             required: "Email cannot be empty.",
-            validate: (value) => validateEmail(value) || true,
+            validate: (value) => validateEmail(value) || "Invalid email format.",
           }}
           render={({ field }) => (
             <input
@@ -67,6 +65,11 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
               className="w-full px-4 py-2"
               placeholder="Email"
               {...field}
+              disabled={isSubmitting} // Disable input while submitting
+              onChange={(e) => {
+                clearErrors("email"); // Clear specific error on change
+                field.onChange(e);
+              }}
             />
           )}
         />
@@ -74,6 +77,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
           <p className="text-red-500 text-sm">{errors.email.message}</p>
         )}
       </div>
+
       {/* Password Input Field */}
       <div className="mb-4">
         <div className="relative">
@@ -83,7 +87,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             defaultValue=""
             rules={{
               required: "Password cannot be empty.",
-              validate: (value) => validatePassword(value) || true,
+              validate: (value) => validatePassword(value) || "Password is too weak.",
             }}
             render={({ field }) => (
               <input
@@ -92,6 +96,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
                 className="w-full px-4 py-2"
                 placeholder="Password"
                 {...field}
+                disabled={isSubmitting} // Disable input while submitting
               />
             )}
           />
@@ -100,6 +105,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             type="button"
             className="absolute top-3 right-2"
             onClick={() => setShowPassword(!showPassword)}
+            disabled={isSubmitting} // Disable button while submitting
           >
             <img
               src={showPassword ? show : hide}
@@ -112,24 +118,36 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
       </div>
+
       {/* Forgot Password Button */}
       <div className="mb-4 text-right">
         <button
           type="button"
           className="text-sm text-white hover:underline"
           onClick={() => setIsForgotModalOpen(true)}
+          disabled={isSubmitting} // Disable while submitting
         >
           Forgot password?
         </button>
       </div>
+
       {/* Sign In and Sign Up Buttons */}
       <div className="flex justify-between">
         <button
           type="submit"
-          className="p-8 py-2 border text-white border-green-600"
+          className="p-8 py-2 border text-white border-green-600 flex items-center justify-center"
+          disabled={isSubmitting} // Disable button while submitting
         >
-          Sign In
+          {isSubmitting ? (
+            <>
+              <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
+              Signing In...
+            </>
+          ) : (
+            "Sign In"
+          )}
         </button>
+
         <Link
           to={PATH_SIGNUP}
           className="p-8 py-2 border text-white border-green-600"

@@ -19,6 +19,7 @@ const AddNewCourse = ({ onBackClick }) => {
       (course) => course.course_id === parseInt(courseId)
     )
   );
+
   const [courseDetails, setCourseDetails] = useState({
     title: "",
     category: "",
@@ -45,67 +46,72 @@ const AddNewCourse = ({ onBackClick }) => {
         mandatory: course.is_mandatory,
         modules: course.modules,
       });
+      setShow(true);
     }
   }, [course]);
 
-  
   const onSubmit = (data) => {
     // Calculate modulesCount and lessonsCount dynamically
-    const modulesCount = courseDetails.modules.length;
-    const lessonsCount = courseDetails.modules.reduce(
-      (total, module) => total + (module.lessons ? module.lessons.length : 0),
-      0
-    );
+    if (courseId) {
+      setShow(true);
+      return;
+    } else {
+      const modulesCount = courseDetails.modules.length;
+      const lessonsCount = courseDetails.modules.reduce(
+        (total, module) => total + (module.lessons ? module.lessons.length : 0),
+        0
+      );
 
-    const course = {
-      course_id: Date.now(),
-      course_title: courseDetails.title,
-      category: courseDetails.category,
-      status: courseDetails.status,
-      is_mandatory: courseDetails.mandatory,
-      assignee: "John Doe",
-      duration: "30 hours",
-      modules: [
-        {
-          module_id: Date.now() + Math.random(),
-          module_name: `Module 1`,
-          sequence: modulesCount + 1,
-          type: "chapter",
-          lessons: [
-            {
-              lesson_id: Date.now() + Math.random(),
-              lesson_name: `Lesson ${lessonsCount + 1}`,
-              duration: "",
-              sequence: lessonsCount + 1,
-              content: "",
-            },
-          ],
+      const course = {
+        course_id: Date.now(),
+        course_title: courseDetails.title,
+        category: courseDetails.category,
+        status: courseDetails.status,
+        is_mandatory: courseDetails.mandatory,
+        assignee: "John Doe",
+        duration: "30 hours",
+        modules: [
+          {
+            module_id: Date.now() + Math.random(),
+            module_name: `Module 1`,
+            sequence: modulesCount + 1,
+            type: "chapter",
+            lessons: [
+              {
+                lesson_id: Date.now() + Math.random(),
+                lesson_name: `Lesson ${lessonsCount + 1}`,
+                duration: "",
+                sequence: lessonsCount + 1,
+                content: "",
+              },
+            ],
 
-          test: [
-            {
-              questions: [
-                {
-                  id: "",
-                  question: "",
-                  options: [
-                    { option_id: "", option: "", isCorrect: false },
-                    { option_id: "", option: "", isCorrect: false },
-                    { option_id: "", option: "", isCorrect: false },
-                    { option_id: "", option: "", isCorrect: false },
-                  ],
-                  type: "test",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
+            test: [
+              {
+                questions: [
+                  {
+                    id: "",
+                    question: "",
+                    options: [
+                      { option_id: "", option: "", isCorrect: false },
+                      { option_id: "", option: "", isCorrect: false },
+                      { option_id: "", option: "", isCorrect: false },
+                      { option_id: "", option: "", isCorrect: false },
+                    ],
+                    type: "test",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
 
-    console.log("Final Course Details: ", course);
-    dispatch(addCourse(course));
-    setCourseDetails(course);
-    setShow(true);
+      console.log("Final Course Details: ", course);
+      dispatch(addCourse(course));
+      setCourseDetails(course);
+      setShow(true);
+    }
   };
   console.log("Updated courseDetails:", courseDetails);
 
@@ -116,19 +122,23 @@ const AddNewCourse = ({ onBackClick }) => {
     }));
   };
 
-  const updateTestInCourseDetails = (moduleId, testData) => {
+  const updateTestInCourseDetails = (testData, activeModuleId) => {
+    console.log("🚀 ~ updateTestInCourseDetails ~ testData:", testData);
+    console.log("🚀 ~ updateTestInCourseDetails ~ moduleId:", activeModuleId);
     // Update the state with the new module test data
     setCourseDetails((prevDetails) => {
       const updatedDetails = {
         ...prevDetails,
         modules: prevDetails.modules.map((module) =>
-          module.module_id === moduleId ? { ...module, test: testData } : module
+          module.module_id === activeModuleId
+            ? { ...module, test: testData }
+            : module
         ),
       };
-      const modId = updatedDetails.course_id;
+      const modId = updatedDetails.module_id;
 
       // Dispatch the updated details outside the state update
-      dispatch(replaceCourseById({ modId, testData }));
+      dispatch(replaceCourseById({ activeModuleId, testData }));
       return updatedDetails;
     });
   };
@@ -151,7 +161,6 @@ const AddNewCourse = ({ onBackClick }) => {
             </label>
           </div>
         </div>
-
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center gap-4 mt-3">
             {/* Title Field */}
@@ -195,6 +204,10 @@ const AddNewCourse = ({ onBackClick }) => {
             </button>
           </div>
         </form>
+        {console.log(
+          "🚀 ~ AddNewCourse ~ courseDetails.modules:",
+          courseDetails.modules
+        )}{" "}
       </div>
 
       {/* Add Module Component */}

@@ -8,9 +8,11 @@ import axios from "axios";
 import { addUser } from "../../../Store/Slice/usersSlice";
 
 import { logo, show, hide } from "../../../Assets/index";
+import { signUpUser } from "../../../Api/authApi";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track API submission status
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,28 +32,23 @@ const SignUp = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
-    try {
-      const response = await axios.post(
-        "https://skill-sync-be-dev-c4b597280ca7.herokuapp.com/api/admin-panel/signup/",
-        data
-        // { headers: { "Content-Type": "application/json" } }
-      );
-      console.log("🚀 ~ onSubmit ~ response:", response);
+    if (isSubmitting) return; // Prevent multiple submissions
 
+    setIsSubmitting(true); // Indicate API request is in progress
+
+    try {
+      const response = await signUpUser(data); // Use SignUp action for API call
       toast.success(response.data.message);
-      // dispatch(
-      //   addUser({ name: data.name, email: data.email, password: data.password })
-      // );
       navigate("/sign-in");
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error);
       toast.error(error?.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false); // Reset state after API call completes
     }
   };
 
   return (
-    <div className=" bg-cover bg-center bg-[url('./assets/authBackground.svg')]">
+    <div className="bg-cover bg-center bg-[url('./assets/authBackground.svg')]">
       <div>
         <img className="p-5" src={logo} alt="skill sync logo" />
       </div>
@@ -74,6 +71,7 @@ const SignUp = () => {
                 {...register("first_name", {
                   required: "First name is required.",
                 })}
+                disabled={isSubmitting} // Disable input while submitting
               />
               {errors.first_name && (
                 <p className="text-red-500 text-sm">
@@ -91,6 +89,7 @@ const SignUp = () => {
                 {...register("last_name", {
                   required: "Last name is required.",
                 })}
+                disabled={isSubmitting} // Disable input while submitting
               />
               {errors.last_name && (
                 <p className="text-red-500 text-sm">
@@ -106,6 +105,7 @@ const SignUp = () => {
                 className="w-full px-4 py-2"
                 placeholder="Email"
                 {...register("email", { required: "Email is required." })}
+                disabled={isSubmitting} // Disable input while submitting
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -122,6 +122,7 @@ const SignUp = () => {
                   required: "Phone number is required.",
                   validate: validatePhoneNumber,
                 })}
+                disabled={isSubmitting} // Disable input while submitting
               />
               {errors.phone_number && (
                 <p className="text-red-500 text-sm">
@@ -135,6 +136,7 @@ const SignUp = () => {
               <select
                 className="w-full px-4 py-2"
                 {...register("gender", { required: "Gender is required." })}
+                disabled={isSubmitting} // Disable input while submitting
               >
                 <option value="">Select Gender</option>
                 <option value="CHRELgT">Male</option>
@@ -151,10 +153,11 @@ const SignUp = () => {
               <select
                 className="w-full px-4 py-2"
                 {...register("role", { required: "Role is required." })}
+                disabled={isSubmitting} // Disable input while submitting
               >
                 <option value="">Select Role</option>
                 <option value="CHA6xgL">HR</option>
-                <option value="">Manager</option>
+                <option value="CHLG9xg">Fresher</option>
               </select>
               {errors.role && (
                 <p className="text-red-500 text-sm">{errors.role.message}</p>
@@ -169,11 +172,13 @@ const SignUp = () => {
                   className="w-full px-4 py-2"
                   placeholder="Password (Optional)"
                   {...register("password")}
+                  disabled={isSubmitting} // Disable input while submitting
                 />
                 <button
                   type="button"
                   className="absolute top-3 right-2"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={isSubmitting} // Disable button while submitting
                 >
                   <img
                     src={showPassword ? show : hide}
@@ -187,9 +192,17 @@ const SignUp = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 border text-white border-green-600"
+              className="w-full py-2 border text-white border-green-600 flex items-center justify-center"
+              disabled={isSubmitting} // Disable button while submitting
             >
-              Sign Up
+              {isSubmitting ? (
+                <>
+                  <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
+                  Signing Up...
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </form>
         </div>

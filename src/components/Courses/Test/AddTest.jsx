@@ -1,17 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputField from "../../../Common/InputField";
 import DropdownField from "../../../Common/DropdownField";
 import { info, add_new, add_green, copy, trash } from "../../../Assets/index";
 import { optionTypes } from "../../../Constants/Options";
 
 const AddTest = ({ moduleDetails, onSave }) => {
+  console.log("🚀 ~ AddTest ~ moduleDetails:", moduleDetails);
   const [questions, setQuestions] = useState([
     { id: Date.now(), question: "", type: "", options: [] },
   ]);
-  console.log("🚀 ~ AddTest ~ questions:", questions);
   const [errors, setErrors] = useState({});
 
-  // Handle adding a new question
+  useEffect(() => {
+    if (moduleDetails?.test && Array.isArray(moduleDetails.test)) {
+      const formattedQuestions = moduleDetails.test.map((q) => {
+        const optionsArray =
+          q.options && Array.isArray(q.options)
+            ? q.options.map((opt) => ({
+                id: opt.option_id || Date.now() + Math.random(),
+                label: opt.option || "", // Ensure the option text is populated here
+                isCorrect: opt.isCorrect || false, // Assuming `isCorrect` is part of the options
+              }))
+            : []; // Fallback to empty array if options is not defined or not an array
+
+        return {
+          id: q.id || Date.now(),
+          question: q.question || "", // Ensure question is populated
+          type: q.type || "", // Ensure type is populated
+          options: optionsArray, // Options should now be set correctly
+        };
+      });
+      setQuestions(formattedQuestions); // Update the questions state
+    } else {
+      // In case moduleDetails.test is undefined or not an array, initialize with empty questions
+      setQuestions([{ id: Date.now(), question: "", type: "", options: [] }]);
+    }
+  }, [moduleDetails]);
+
   const handleAddQuestion = () => {
     setQuestions((prev) => [
       ...prev,
@@ -19,12 +44,10 @@ const AddTest = ({ moduleDetails, onSave }) => {
     ]);
   };
 
-  // Handle deleting a question
   const handleDeleteQuestion = (id) => {
     setQuestions((prev) => prev.filter((question) => question.id !== id));
   };
 
-  // Handle copying a question
   const handleCopyQuestion = (id) => {
     setQuestions((prev) => {
       const questionToCopy = prev.find((q) => q.id === id);
@@ -43,14 +66,12 @@ const AddTest = ({ moduleDetails, onSave }) => {
     });
   };
 
-  // Handle changing the question text
   const handleQuestionChange = (id, value) => {
     setQuestions((prev) =>
       prev.map((q) => (q.id === id ? { ...q, question: value } : q))
     );
   };
 
-  // Handle changing the question type
   const handleTypeChange = (id, type) => {
     setQuestions((prev) =>
       prev.map((q) => (q.id === id ? { ...q, type, options: [] } : q))
@@ -58,7 +79,6 @@ const AddTest = ({ moduleDetails, onSave }) => {
     setErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
-  // Handle adding an option to a question
   const handleAddOption = (id) => {
     const question = questions.find((q) => q.id === id);
     if (!question.type) {
@@ -86,7 +106,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
                 ...question.options,
                 {
                   id: Date.now(),
-                  label: "",
+                  name: "",
                   isCorrect: false,
                 },
               ],
@@ -94,10 +114,9 @@ const AddTest = ({ moduleDetails, onSave }) => {
           : question
       )
     );
-    setErrors((prev) => ({ ...prev, [id]: "" })); // Clear error if successfully added
+    setErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
-  // Handle changing the option text
   const handleOptionChange = (questionId, optionId, label) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -113,7 +132,6 @@ const AddTest = ({ moduleDetails, onSave }) => {
     );
   };
 
-  // Handle selecting the correct option
   const handleOptionSelect = (questionId, optionId) => {
     setQuestions((prev) =>
       prev.map((q) =>
@@ -131,21 +149,21 @@ const AddTest = ({ moduleDetails, onSave }) => {
     );
   };
 
-  // Save the test data
   const saveTest = () => {
     const formattedQuestions = questions.map((q) => ({
-      ...q,
+      id: q.id,
+      question: q.question,
+      type: q.type,
       options: q.options.map((opt, index) => ({
-        [`option${index + 1}`]: {
-          name: opt.label,
-          isCorrect: opt.isCorrect,
-        },
+        id: opt.id || Date.now() + Math.random(), // Assign a dynamic ID if not already present
+        label: opt.label,
+        isCorrect: opt.isCorrect,
       })),
     }));
-
+  
     onSave(formattedQuestions);
   };
-
+  
   return (
     <div className="m-5 w-full">
       <div className="gap-1 flex">
@@ -155,7 +173,6 @@ const AddTest = ({ moduleDetails, onSave }) => {
         </p>
       </div>
 
-      {/* Scrollable container for question blocks */}
       <div className="mt-4 max-h-[400px] overflow-y-auto border border-neutral-300 p-4">
         {questions.map((question) => (
           <div
@@ -172,7 +189,6 @@ const AddTest = ({ moduleDetails, onSave }) => {
                     handleQuestionChange(question.id, e.target.value)
                   }
                   required
-                  className=""
                 />
               </div>
               <DropdownField
@@ -201,7 +217,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
                   className="w-4 h-4"
                 />
                 <InputField
-                  id={`option-label-${option.id}`}
+                  id={`option-${option.id}`}
                   label=""
                   placeholder="Enter option text"
                   value={option.label}
