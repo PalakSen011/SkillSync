@@ -15,6 +15,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
       (course) => course.course_id === parseInt(courseId)
     )
   );
+  console.log("🚀 ~ AddModule ~ course:", course);
   // State for managing modules and UI
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [moduleData, setModuleData] = useState(null);
@@ -22,15 +23,6 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [moduleToDelete, setModuleToDelete] = useState(null);
 
-  // Initialize with first module or course modules
-  // useEffect(() => {
-  //   if (modules.length === 1) {
-  //     setActiveModuleId(modules[0]?.module_id);
-  //   } else if (modules.length === 0 && course?.modules?.length > 0) {
-  //     setModules(course.modules);
-  //     setActiveModuleId(course.modules[0]?.module_id);
-  //   }
-  // }, [modules, course, setModules]);
   useEffect(() => {
     if (modules.length === 1) {
       setActiveModuleId(modules[0]?.module_id);
@@ -180,7 +172,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
 
   // Test Management
   const handleSaveTest = (testData) => {
-    updateTestInCourseDetails(testData, activeModuleId);
+    updateTestInCourseDetails(testData, );
   };
 
   return (

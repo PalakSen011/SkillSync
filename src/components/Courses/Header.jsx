@@ -1,11 +1,19 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { publishCourse } from "../../Store/Slice/courseSlice"; // Import the action
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleBack = () => {
-    navigate("/courses", { replace: false });
+    navigate("/courses",);
+  };
+
+  const handlePublish = () => {
+    dispatch(publishCourse()); // Dispatch the publishCourse action
+    navigate("/courses", );
   };
 
   return (
@@ -15,7 +23,12 @@ const Header = () => {
         <button className="btn-primary flex items-end" onClick={handleBack}>
           Back
         </button>
-        <button className="btn-secondary flex items-end">Publish</button>
+        <button
+          className="btn-secondary flex items-end"
+          onClick={handlePublish}
+        >
+          Publish
+        </button>
       </div>
     </div>
   );

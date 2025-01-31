@@ -24,34 +24,27 @@ const coursesSlice = createSlice({
       state.currentCourse = data;
     },
     replaceCourseById: (state, action) => {
-      const { modId, testData } = action.payload;
+      const { courseDetails } = action.payload;
 
-      console.log("🚀 ~ Payload:", action.payload);
+      // Check if the course with the same ID exists
+      const courseIndex = state.courses.findIndex(
+        (course) => course.course_id === courseDetails.course_id
+      );
 
-      // Check if currentCourse exists and has modules
-      if (state.currentCourse && Array.isArray(state.currentCourse.modules)) {
-        // Find the index of the module within currentCourse using modId
-        const moduleIndex = state.currentCourse.modules.findIndex(
-          (module) => module && module.module_id === modId
+      if (courseIndex !== -1) {
+        state.courses[courseIndex] = {
+          ...state.courses[courseIndex],
+          ...courseDetails,
+        };
+
+        console.log(
+          "🚀 ~ Updated course:",
+          JSON.stringify(state.courses[courseIndex])
         );
-
-        if (moduleIndex !== -1) {
-          // Replace the module with the new data (testData)
-          state.currentCourse.modules[moduleIndex] = {
-            ...state.currentCourse.modules[moduleIndex],
-            ...testData,
-          };
-
-          console.log(
-            "🚀 ~ Updated module:",
-            JSON.stringify(state.currentCourse.modules[moduleIndex])
-          );
-          console.log("Module replaced successfully");
-        } else {
-          console.error("🚀 ~ Error: Module with the given ID not found");
-        }
+        state.currentCourse = state.courses[courseIndex];
+        console.log("Course replaced successfully");
       } else {
-        console.error("🚀 ~ Error: 'currentCourse' or 'modules' is not valid");
+        console.error("🚀 ~ Error: Course with the given ID not found");
       }
     },
 
@@ -65,8 +58,22 @@ const coursesSlice = createSlice({
         state.currentCourse = null;
       }
     },
+    publishCourse: (state) => {
+      if (state.currentCourse) {
+        // Find the course in the courses array and update its status
+        const courseIndex = state.courses.findIndex(
+          (course) => course.course_id === state.currentCourse.course_id
+        );
+
+        if (courseIndex !== -1) {
+          // Update the status of the course
+          state.courses[courseIndex].status = "Active";
+        }
+      }
+    },
   },
 });
-export const { addCourse, replaceCourseById, deleteCourse } =
+
+export const { addCourse, replaceCourseById, deleteCourse, publishCourse } =
   coursesSlice.actions;
 export default coursesSlice.reducer;

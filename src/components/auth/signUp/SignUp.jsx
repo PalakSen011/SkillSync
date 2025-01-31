@@ -6,9 +6,9 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 import { addUser } from "../../../Store/Slice/usersSlice";
-
 import { logo, show, hide } from "../../../Assets/index";
 import { signUpUser } from "../../../Api/authApi";
+import InputField from "../../../Common/InputField"; // Import InputField component
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,18 +32,16 @@ const SignUp = () => {
   };
 
   const onSubmit = async (data) => {
-    if (isSubmitting) return; // Prevent multiple submissions
-
-    setIsSubmitting(true); // Indicate API request is in progress
-
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
-      const response = await signUpUser(data); // Use SignUp action for API call
+      const response = await signUpUser(data);
       toast.success(response.data.message);
       navigate("/sign-in");
     } catch (error) {
       toast.error(error?.message || "Something went wrong");
     } finally {
-      setIsSubmitting(false); // Reset state after API call completes
+      setIsSubmitting(false);
     }
   };
 
@@ -63,80 +61,63 @@ const SignUp = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name */}
-            <div className="mb-4">
-              <input
-                type="text"
-                className="w-full px-4 py-2"
-                placeholder="First Name"
-                {...register("first_name", {
-                  required: "First name is required.",
-                })}
-                disabled={isSubmitting} // Disable input while submitting
-              />
-              {errors.first_name && (
-                <p className="text-red-500 text-sm">
-                  {errors.first_name.message}
-                </p>
-              )}
-            </div>
+            <InputField
+              label="First Name"
+              required={true}
+              placeholder="First Name"
+              id="first_name"
+              value=""
+              onChange={(e) => register("first_name").onChange(e)}
+            />
+            {errors.first_name && (
+              <p className="text-red-500 text-sm">{errors.first_name.message}</p>
+            )}
 
             {/* Last Name */}
-            <div className="mb-4">
-              <input
-                type="text"
-                className="w-full px-4 py-2"
-                placeholder="Last Name"
-                {...register("last_name", {
-                  required: "Last name is required.",
-                })}
-                disabled={isSubmitting} // Disable input while submitting
-              />
-              {errors.last_name && (
-                <p className="text-red-500 text-sm">
-                  {errors.last_name.message}
-                </p>
-              )}
-            </div>
+            <InputField
+              label="Last Name"
+              required={true}
+              placeholder="Last Name"
+              id="last_name"
+              value=""
+              onChange={(e) => register("last_name").onChange(e)}
+            />
+            {errors.last_name && (
+              <p className="text-red-500 text-sm">{errors.last_name.message}</p>
+            )}
 
             {/* Email */}
-            <div className="mb-4">
-              <input
-                type="email"
-                className="w-full px-4 py-2"
-                placeholder="Email"
-                {...register("email", { required: "Email is required." })}
-                disabled={isSubmitting} // Disable input while submitting
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
-            </div>
+            <InputField
+              label="Email"
+              required={true}
+              placeholder="Email"
+              id="email"
+              value=""
+              onChange={(e) => register("email").onChange(e)}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
 
             {/* Phone Number */}
-            <div className="mb-4">
-              <input
-                type="text"
-                className="w-full px-4 py-2"
-                placeholder="Phone Number"
-                {...register("phone_number", {
-                  required: "Phone number is required.",
-                  validate: validatePhoneNumber,
-                })}
-                disabled={isSubmitting} // Disable input while submitting
-              />
-              {errors.phone_number && (
-                <p className="text-red-500 text-sm">
-                  {errors.phone_number.message}
-                </p>
-              )}
-            </div>
+            <InputField
+              label="Phone Number"
+              required={true}
+              placeholder="Phone Number"
+              id="phone_number"
+              value=""
+              onChange={(e) => register("phone_number").onChange(e)}
+            />
+            {errors.phone_number && (
+              <p className="text-red-500 text-sm">{errors.phone_number.message}</p>
+            )}
 
             {/* Gender Selection */}
             <div className="mb-4">
               <select
                 className="w-full px-4 py-2"
                 {...register("gender", { required: "Gender is required." })}
-                disabled={isSubmitting} // Disable input while submitting
+                disabled={isSubmitting}
               >
                 <option value="">Select Gender</option>
                 <option value="CHRELgT">Male</option>
@@ -153,11 +134,11 @@ const SignUp = () => {
               <select
                 className="w-full px-4 py-2"
                 {...register("role", { required: "Role is required." })}
-                disabled={isSubmitting} // Disable input while submitting
+                disabled={isSubmitting}
               >
                 <option value="">Select Role</option>
                 <option value="CHA6xgL">HR</option>
-                <option value="CHLG9xg">Fresher</option>
+                <option value="CHWIISR">Developer</option>
               </select>
               {errors.role && (
                 <p className="text-red-500 text-sm">{errors.role.message}</p>
@@ -172,13 +153,13 @@ const SignUp = () => {
                   className="w-full px-4 py-2"
                   placeholder="Password (Optional)"
                   {...register("password")}
-                  disabled={isSubmitting} // Disable input while submitting
+                  disabled={isSubmitting}
                 />
                 <button
                   type="button"
                   className="absolute top-3 right-2"
                   onClick={() => setShowPassword(!showPassword)}
-                  disabled={isSubmitting} // Disable button while submitting
+                  disabled={isSubmitting}
                 >
                   <img
                     src={showPassword ? show : hide}
@@ -193,7 +174,7 @@ const SignUp = () => {
             <button
               type="submit"
               className="w-full py-2 border text-white border-green-600 flex items-center justify-center"
-              disabled={isSubmitting} // Disable button while submitting
+              disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>

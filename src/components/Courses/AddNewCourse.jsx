@@ -19,7 +19,6 @@ const AddNewCourse = ({ onBackClick }) => {
       (course) => course.course_id === parseInt(courseId)
     )
   );
-
   const [courseDetails, setCourseDetails] = useState({
     title: "",
     category: "",
@@ -29,7 +28,6 @@ const AddNewCourse = ({ onBackClick }) => {
   });
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  // const targetCourse = useSelector((state) => state.courses.currentCourse);
   const {
     register,
     handleSubmit,
@@ -39,55 +37,55 @@ const AddNewCourse = ({ onBackClick }) => {
 
   useEffect(() => {
     if (course) {
+      console.log("🚀 ~ useEffect ~ course:", course);
       setCourseDetails({
-        title: course.course_title,
-        category: course.category,
-        status: course.status,
-        mandatory: course.is_mandatory,
-        modules: course.modules,
+        title: course.course_title || "",
+        category: course.category || "",
+        status: course.status || "Draft",
+        mandatory: course.is_mandatory || false,
+        modules: course.modules?.length > 0 ? course.modules : [], // Retain modules
       });
+
+      setValue("title", course.course_title || "");
+      setValue("category", course.category || " ");
+      setValue("status", course.status || "Draft");
       setShow(true);
     }
-  }, [course]);
+  }, [course, setValue]);
 
   const onSubmit = (data) => {
-    // Calculate modulesCount and lessonsCount dynamically
-    if (courseId) {
-      setShow(true);
-      return;
-    } else {
-      const modulesCount = courseDetails.modules.length;
-      const lessonsCount = courseDetails.modules.reduce(
-        (total, module) => total + (module.lessons ? module.lessons.length : 0),
-        0
-      );
+    const modulesCount = courseDetails.modules.length;
+    const lessonsCount = courseDetails.modules.reduce(
+      (total, module) => total + (module.lessons ? module.lessons.length : 0),
+      0
+    );
 
-      const course = {
-        course_id: Date.now(),
-        course_title: courseDetails.title,
-        category: courseDetails.category,
-        status: courseDetails.status,
-        is_mandatory: courseDetails.mandatory,
-        assignee: "John Doe",
-        duration: "30 hours",
-        modules: [
-          {
-            module_id: Date.now() + Math.random(),
-            module_name: `Module 1`,
-            sequence: modulesCount + 1,
-            type: "chapter",
-            lessons: [
-              {
-                lesson_id: Date.now() + Math.random(),
-                lesson_name: `Lesson ${lessonsCount + 1}`,
-                duration: "",
-                sequence: lessonsCount + 1,
-                content: "",
-              },
-            ],
-
-            test: [
-              {
+    const updatedCourse = {
+      course_id: courseId || Date.now(),
+      course_title: courseDetails.title,
+      category: courseDetails.category,
+      status: courseDetails.status,
+      is_mandatory: courseDetails.mandatory,
+      assignee: "John Doe",
+      duration: "30 hours",
+      modules: courseId
+        ? courseDetails.modules
+        : [
+            {
+              module_id: Date.now() + Math.random(),
+              module_name: "Module 1",
+              sequence: modulesCount + 1,
+              type: "chapter",
+              lessons: [
+                {
+                  lesson_id: Date.now() + Math.random(),
+                  lesson_name: `Lesson ${lessonsCount + 1}`,
+                  duration: "",
+                  sequence: lessonsCount + 1,
+                  content: "",
+                },
+              ],
+              test: {
                 questions: [
                   {
                     id: "",
@@ -102,17 +100,15 @@ const AddNewCourse = ({ onBackClick }) => {
                   },
                 ],
               },
-            ],
-          },
-        ],
-      };
+            },
+          ],
+    };
 
-      console.log("Final Course Details: ", course);
-      dispatch(addCourse(course));
-      setCourseDetails(course);
-      setShow(true);
-    }
+    dispatch(addCourse(updatedCourse));
+    setCourseDetails(updatedCourse);
+    setShow(true);
   };
+
   console.log("Updated courseDetails:", courseDetails);
 
   const handleFieldChange = (field, value) => {
@@ -138,7 +134,7 @@ const AddNewCourse = ({ onBackClick }) => {
       const modId = updatedDetails.module_id;
 
       // Dispatch the updated details outside the state update
-      dispatch(replaceCourseById({ activeModuleId, testData }));
+      dispatch(replaceCourseById({ courseDetails, testData }));
       return updatedDetails;
     });
   };
@@ -184,7 +180,7 @@ const AddNewCourse = ({ onBackClick }) => {
               error={errors.category}
               options={categoryOptions}
               {...register("category", { required: "Category is required" })}
-              onChange={(e) => handleFieldChange("category", e.target.value)} // Update state on change
+              onChange={(e) => handleFieldChange("category", e.target.value)}
             />
             <DropdownField
               id="status"
@@ -193,7 +189,7 @@ const AddNewCourse = ({ onBackClick }) => {
               error={errors.status}
               options={statusOptions}
               {...register("status", { required: "Status is required" })}
-              onChange={(e) => handleFieldChange("status", e.target.value)} // Update state on change
+              onChange={(e) => handleFieldChange("status", e.target.value)}
             />
           </div>
 

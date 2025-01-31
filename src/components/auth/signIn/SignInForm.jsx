@@ -23,9 +23,8 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    if (isSubmitting) return; // Prevent multiple submissions
-
-    setIsSubmitting(true); // Indicate the API request is in progress
+    if (isSubmitting) return; 
+    setIsSubmitting(true); 
 
     try {
       const response = await loginUser(data); // Use the loginUser action for API call
