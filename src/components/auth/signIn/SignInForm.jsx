@@ -20,8 +20,9 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); // Track API call status
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  const navigate = useNavigate(); 
+  
+  // Handle form submission
   const onSubmit = async (data) => {
     if (isSubmitting) return; 
     setIsSubmitting(true); 

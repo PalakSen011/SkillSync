@@ -6,9 +6,9 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 import { addUser } from "../../../Store/Slice/usersSlice";
+
 import { logo, show, hide } from "../../../Assets/index";
 import { signUpUser } from "../../../Api/authApi";
-import InputField from "../../../Common/InputField"; // Import InputField component
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -61,56 +61,73 @@ const SignUp = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name */}
-            <InputField
-              label="First Name"
-              required={true}
-              placeholder="First Name"
-              id="first_name"
-              value=""
-              onChange={(e) => register("first_name").onChange(e)}
-            />
-            {errors.first_name && (
-              <p className="text-red-500 text-sm">{errors.first_name.message}</p>
-            )}
+            <div className="mb-4">
+              <input
+                type="text"
+                className="w-full px-4 py-2"
+                placeholder="First Name"
+                {...register("first_name", {
+                  required: "First name is required.",
+                })}
+                disabled={isSubmitting}
+              />
+              {errors.first_name && (
+                <p className="text-red-500 text-sm">
+                  {errors.first_name.message}
+                </p>
+              )}
+            </div>
 
             {/* Last Name */}
-            <InputField
-              label="Last Name"
-              required={true}
-              placeholder="Last Name"
-              id="last_name"
-              value=""
-              onChange={(e) => register("last_name").onChange(e)}
-            />
-            {errors.last_name && (
-              <p className="text-red-500 text-sm">{errors.last_name.message}</p>
-            )}
+            <div className="mb-4">
+              <input
+                type="text"
+                className="w-full px-4 py-2"
+                placeholder="Last Name"
+                {...register("last_name", {
+                  required: "Last name is required.",
+                })}
+                disabled={isSubmitting}
+              />
+              {errors.last_name && (
+                <p className="text-red-500 text-sm">
+                  {errors.last_name.message}
+                </p>
+              )}
+            </div>
 
             {/* Email */}
-            <InputField
-              label="Email"
-              required={true}
-              placeholder="Email"
-              id="email"
-              value=""
-              onChange={(e) => register("email").onChange(e)}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
+            <div className="mb-4">
+              <input
+                type="email"
+                className="w-full px-4 py-2"
+                placeholder="Email"
+                {...register("email", { required: "Email is required." })}
+                disabled={isSubmitting}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
 
             {/* Phone Number */}
-            <InputField
-              label="Phone Number"
-              required={true}
-              placeholder="Phone Number"
-              id="phone_number"
-              value=""
-              onChange={(e) => register("phone_number").onChange(e)}
-            />
-            {errors.phone_number && (
-              <p className="text-red-500 text-sm">{errors.phone_number.message}</p>
-            )}
+            <div className="mb-4">
+              <input
+                type="text"
+                className="w-full px-4 py-2"
+                placeholder="Phone Number"
+                {...register("phone_number", {
+                  required: "Phone number is required.",
+                  validate: validatePhoneNumber,
+                })}
+                disabled={isSubmitting}
+              />
+              {errors.phone_number && (
+                <p className="text-red-500 text-sm">
+                  {errors.phone_number.message}
+                </p>
+              )}
+            </div>
 
             {/* Gender Selection */}
             <div className="mb-4">
