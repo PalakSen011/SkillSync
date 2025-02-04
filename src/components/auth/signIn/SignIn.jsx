@@ -3,21 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import logo from "../../../assets/logo.svg";
-import bgImage from "../../../assets/authBackground.svg"; // Import the background image
-
+import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
+import { logo, authBackground } from "../../../Assets/index";
 import SignInForm from "./SignInForm";
 import ResetPasswordForm from "./ResetPasswordForm";
 import ForgotPassword from "./ForgotPassword";
 import ResetSuccessful from "../../../Common/ResetSuccessful";
 
-import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
-import { changeType } from "../../../Store/Slice/typeSlice";
-
 const SignIn = () => {
   const [isForgotModal, setIsForgotModalOpen] = useState(false);
   const [isResetSuccessfulModal, setIsResetSuccessfulModal] = useState(false);
-  const [isBgLoaded, setIsBgLoaded] = useState(false); // Track background image loading
+  const [isBgLoaded, setIsBgLoaded] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,9 +47,8 @@ const SignIn = () => {
 
   return (
     <div className="relative h-screen overflow-hidden">
-      {/* Background Image (Hidden for Preloading) */}
       <img
-        src={bgImage}
+        src={authBackground}
         alt="Background"
         className="hidden"
         onLoad={() => setIsBgLoaded(true)}
@@ -71,7 +66,7 @@ const SignIn = () => {
         className={`h-screen bg-cover bg-center transition-opacity duration-500 ${
           isBgLoaded ? "opacity-100" : "opacity-0"
         }`}
-        style={{ backgroundImage: `url(${bgImage})` }}
+        style={{ backgroundImage: `url(${authBackground})` }}
       >
         {/* Logo */}
         <div>
@@ -101,7 +96,9 @@ const SignIn = () => {
         </div>
 
         {isForgotModal && <ForgotPassword onClose={handleCloseModal} />}
-        {isResetSuccessfulModal && <ResetSuccessful onClose={handleCloseModal} />}
+        {isResetSuccessfulModal && (
+          <ResetSuccessful onClose={handleCloseModal} />
+        )}
       </div>
     </div>
   );

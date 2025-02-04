@@ -4,10 +4,10 @@ export const statusOptions = [
   { value: "Inactive", label: "Inactive", disabled: true },
 ];
 export const categoryOptions = [
-  { label: "Select category", value: "", disabled: true },
-  { label: "Training", value: "Training" },
-  { label: "Workshop", value: "Workshop" },
-  { label: "Seminar", value: "Seminar" },
+  { label: "", value: "", dsiabled: true },
+  { value: "Training", label: "Training" },
+  { value: "Workshop", label: "Workshop" },
+  { value: "Seminar", label: "Seminar" },
 ];
 
 export const optionTypes = [

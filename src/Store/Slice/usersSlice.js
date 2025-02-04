@@ -23,8 +23,8 @@ const usersSlice = createSlice({
       state.Users.push(newUser);
     },
 
-    setisAuthenticated: (state) => {
-      state.isAuthenticated = !state.isAuthenticated;
+    setisAuthenticated: (state,action) => {
+      state.isAuthenticated = action.payload;
     },
     setUser: (state, action) => {
       const { userData, email } = action.payload;

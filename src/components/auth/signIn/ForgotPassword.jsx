@@ -38,9 +38,9 @@ const ForgotPassword = ({ onClose }) => {
       dispatch(setUserEmail(email));
       dispatch(changeType("sentEmail"));
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(error?.response?.data?.email[0] || "Something went wrong");
     } finally {
-      setIsSubmitting(false); // Reset state after API call completes
+      setIsSubmitting(false); 
     }
   };
 
@@ -81,7 +81,7 @@ const ForgotPassword = ({ onClose }) => {
         ) : (
           <>
             <div className="mb-4 w-full">
-              <h2 className="text-lg pb-3">
+              <h2 className="text-lg pb-3 text-center">
                 Enter your email to get a reset link!
               </h2>
               <input

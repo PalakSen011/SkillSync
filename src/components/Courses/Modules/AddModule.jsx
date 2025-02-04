@@ -15,7 +15,6 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
       (course) => course.course_id === parseInt(courseId)
     )
   );
-  console.log("🚀 ~ AddModule ~ course:", course);
   // State for managing modules and UI
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [moduleData, setModuleData] = useState(null);
@@ -172,7 +171,8 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
 
   // Test Management
   const handleSaveTest = (testData) => {
-    updateTestInCourseDetails(testData, );
+    console.log("🚀 ~ handleSaveTest ~ testData:", testData)
+    updateTestInCourseDetails(activeModuleId,testData);
   };
 
   return (

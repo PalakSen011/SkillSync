@@ -54,8 +54,8 @@ const Courses = () => {
                       alt="caret icon"
                     />
                   </th>
-                  <th className="border-b p-5 hide-on-mobile">Category</th>
-                  <th className="flex border-b p-5 hide-on-mobile">
+                  <th className="border-b p-5 ">Category</th>
+                  <th className="flex border-b p-5 ">
                     <span>No of assignees</span>
                     <img
                       className="pt-1 pl-2"
@@ -63,10 +63,10 @@ const Courses = () => {
                       alt="caret icon"
                     />
                   </th>
-                  <th className="border-b p-5 hide-on-mobile">
+                  <th className="border-b p-5 ">
                     Course duration
                   </th>
-                  <th className="border-b p-4 hide-on-mobile pr-6">Status</th>
+                  <th className="border-b p-4  pr-6">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -77,17 +77,17 @@ const Courses = () => {
                     onClick={() => handleCourseClick(course.course_id)}
                   >
                     <td className="border-b p-5 pl-6">{course.course_title}</td>
-                    <td className="border-b p-5 hide-on-mobile">
+                    <td className="border-b p-5 ">
                       {course.is_mandatory ? "Yes" : "No"}
                     </td>
-                    <td className="border-b p-5 hide-on-mobile">
+                    <td className="border-b p-5 ">
                       {course.category}
                     </td>
-                    <td className="border-b p-5 hide-on-mobile">
+                    <td className="border-b p-5 ">
                       {course.assignee}
                     </td>
                     <td className="border-b p-5">{course.duration}</td>
-                    <td className="border-b p-4 hide-on-mobile pr-6">
+                    <td className="border-b p-4  pr-6">
                       <span
                         className={
                           course.status === "Draft"

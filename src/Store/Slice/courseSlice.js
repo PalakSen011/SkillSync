@@ -13,7 +13,7 @@ const coursesSlice = createSlice({
       const data = action.payload;
       const existingCourse = state.courses.find(
         (course) => course && course.course_title === data.course_title
-      );
+      ); 
 
       if (existingCourse) {
         console.log("Course already exists");
@@ -25,11 +25,13 @@ const coursesSlice = createSlice({
     },
     replaceCourseById: (state, action) => {
       const { courseDetails } = action.payload;
+      console.log("🚀 ~ courseDetails:", courseDetails)
 
       // Check if the course with the same ID exists
       const courseIndex = state.courses.findIndex(
         (course) => course.course_id === courseDetails.course_id
       );
+      console.log("🚀 ~ courseIndex:", courseIndex)
 
       if (courseIndex !== -1) {
         state.courses[courseIndex] = {
@@ -42,6 +44,7 @@ const coursesSlice = createSlice({
           JSON.stringify(state.courses[courseIndex])
         );
         state.currentCourse = state.courses[courseIndex];
+        console.log("🚀 ~ currentCourse:", state.currentCourse)
         console.log("Course replaced successfully");
       } else {
         console.error("🚀 ~ Error: Course with the given ID not found");

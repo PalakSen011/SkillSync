@@ -117,7 +117,6 @@ const Lesson = ({
     updateTestInCourseDetails(testData);
     setIsAddTest(false);
   };
-    console.log("🚀 ~ handleSaveTest ~ activeLessonId:", activeLessonId)
 
   return (
     <>

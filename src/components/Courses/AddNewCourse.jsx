@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 import Header from "./Header";
 import AddModule from "./Modules/AddModule";
@@ -10,15 +11,20 @@ import DropdownField from "../../Common/DropdownField";
 import { addCourse, replaceCourseById } from "../../Store/Slice/courseSlice";
 
 import { statusOptions, categoryOptions } from "../../Constants/Options";
-import { useParams } from "react-router-dom";
+
+import { generateUpdatedCourse } from "../../Utils/courseUtils";
 
 const AddNewCourse = ({ onBackClick }) => {
+  const dispatch = useDispatch();
   const { courseId } = useParams();
+  const [show, setShow] = useState(false);
+
   const course = useSelector((state) =>
     state.courses.courses.find(
       (course) => course.course_id === parseInt(courseId)
     )
   );
+
   const [courseDetails, setCourseDetails] = useState({
     title: "",
     category: "",
@@ -26,91 +32,74 @@ const AddNewCourse = ({ onBackClick }) => {
     mandatory: false,
     modules: [],
   });
-  const [show, setShow] = useState(false);
-  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm();
 
   useEffect(() => {
     if (course) {
-      console.log("🚀 ~ useEffect ~ course:", course);
       setCourseDetails({
-        title: course.course_title || "",
-        category: course.category || "",
-        status: course.status || "Draft",
-        mandatory: course.is_mandatory || false,
-        modules: course.modules?.length > 0 ? course.modules : [], // Retain modules
+        title: course.course_title,
+        category: course.category,
+        status: course.status,
+        mandatory: course.is_mandatory,
+        modules: course.modules,
       });
-
-      setValue("title", course.course_title || "");
-      setValue("category", course.category || " ");
-      setValue("status", course.status || "Draft");
       setShow(true);
     }
-  }, [course, setValue]);
+  }, [course]);
 
-  const onSubmit = (data) => {
-    const modulesCount = courseDetails.modules.length;
-    const lessonsCount = courseDetails.modules.reduce(
+  // Function to submit the form
+  const onSubmit = () => {
+    const trimmedTitle = courseDetails.title.trim();
+    const updatedDetails = { ...courseDetails, title: trimmedTitle };
+
+    const modulesCount = updatedDetails.modules.length;
+    const lessonsCount = updatedDetails.modules.reduce(
       (total, module) => total + (module.lessons ? module.lessons.length : 0),
       0
     );
 
-    const updatedCourse = {
-      course_id: courseId || Date.now(),
-      course_title: courseDetails.title,
-      category: courseDetails.category,
-      status: courseDetails.status,
-      is_mandatory: courseDetails.mandatory,
-      assignee: "John Doe",
-      duration: "30 hours",
-      modules: courseId
-        ? courseDetails.modules
-        : [
-            {
-              module_id: Date.now() + Math.random(),
-              module_name: "Module 1",
-              sequence: modulesCount + 1,
-              type: "chapter",
-              lessons: [
-                {
-                  lesson_id: Date.now() + Math.random(),
-                  lesson_name: `Lesson ${lessonsCount + 1}`,
-                  duration: "",
-                  sequence: lessonsCount + 1,
-                  content: "",
-                },
-              ],
-              test: {
-                questions: [
-                  {
-                    id: "",
-                    question: "",
-                    options: [
-                      { option_id: "", option: "", isCorrect: false },
-                      { option_id: "", option: "", isCorrect: false },
-                      { option_id: "", option: "", isCorrect: false },
-                      { option_id: "", option: "", isCorrect: false },
-                    ],
-                    type: "test",
-                  },
-                ],
-              },
-            },
-          ],
-    };
+    const updatedCourse = generateUpdatedCourse(
+      courseId,
+      updatedDetails,
+      modulesCount,
+      lessonsCount
+    );
 
+    console.log("🚀 ~ onSubmit ~ updatedCourse:", updatedCourse);
     dispatch(addCourse(updatedCourse));
     setCourseDetails(updatedCourse);
     setShow(true);
-  };
+};
 
-  console.log("Updated courseDetails:", courseDetails);
 
+  // const onSubmit = () => {
+  //   const trimmedTitle = courseDetails.title.trim();
+
+  //   const modulesCount = courseDetails.modules.length;
+  //   const lessonsCount = courseDetails.modules.reduce(
+  //     (total, module) => total + (module.lessons ? module.lessons.length : 0),
+  //     0
+  //   );
+
+  //   const updatedCourse = generateUpdatedCourse(
+  //     courseId,
+  //     { ...courseDetails, title: trimmedTitle },
+  //     modulesCount,
+  //     lessonsCount
+  //   );
+
+  //   console.log("🚀 ~ onSubmit ~ updatedCourse:", updatedCourse);
+  //   dispatch(addCourse(updatedCourse));
+  //   setCourseDetails(updatedCourse);
+  //   setShow(true);
+  // };
+
+
+  // Function to handle field change
   const handleFieldChange = (field, value) => {
     setCourseDetails((prev) => ({
       ...prev,
@@ -118,23 +107,21 @@ const AddNewCourse = ({ onBackClick }) => {
     }));
   };
 
-  const updateTestInCourseDetails = (testData, activeModuleId) => {
-    console.log("🚀 ~ updateTestInCourseDetails ~ testData:", testData);
-    console.log("🚀 ~ updateTestInCourseDetails ~ moduleId:", activeModuleId);
-    // Update the state with the new module test data
+  // Function to update test in course details
+  const updateTestInCourseDetails = (moduleId, testData) => {
+    console.log("🚀 ~ updateTestInCourseDetails ~ testData:", testData)
     setCourseDetails((prevDetails) => {
       const updatedDetails = {
         ...prevDetails,
         modules: prevDetails.modules.map((module) =>
-          module.module_id === activeModuleId
-            ? { ...module, test: testData }
-            : module
+          module.module_id === moduleId ? { ...module, test: testData } : module
         ),
       };
-      const modId = updatedDetails.module_id;
-
-      // Dispatch the updated details outside the state update
+      const modId = updatedDetails.course_id;
+      console.log("🚀 ~ setCourseDetails ~ updatedDetails:", updatedDetails);
+      console.log("🚀 ~ setCourseDetails ~ modId:", modId);
       dispatch(replaceCourseById({ courseDetails, testData }));
+      console.log("🚀 ~ setCourseDetails ~ updatedDetails:", updatedDetails);
       return updatedDetails;
     });
   };
@@ -157,9 +144,9 @@ const AddNewCourse = ({ onBackClick }) => {
             </label>
           </div>
         </div>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center gap-4 mt-3">
-            {/* Title Field */}
             <CourseInputField
               id="courseTitle"
               label="Title"
@@ -172,7 +159,6 @@ const AddNewCourse = ({ onBackClick }) => {
               <p className="text-red-500 text-sm">{errors.title.message}</p>
             )}
 
-            {/* Category Dropdown */}
             <DropdownField
               id="category"
               label="Category"
@@ -193,20 +179,13 @@ const AddNewCourse = ({ onBackClick }) => {
             />
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-end mt-5">
             <button type="submit" className="btn-secondary flex items-end">
               Save
             </button>
           </div>
         </form>
-        {console.log(
-          "🚀 ~ AddNewCourse ~ courseDetails.modules:",
-          courseDetails.modules
-        )}{" "}
       </div>
-
-      {/* Add Module Component */}
 
       {show && (
         <AddModule
@@ -218,4 +197,5 @@ const AddNewCourse = ({ onBackClick }) => {
     </>
   );
 };
+
 export default AddNewCourse;
