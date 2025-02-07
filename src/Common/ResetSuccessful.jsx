@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import password from "../assets/password.gif";
+
 import { useDispatch, useSelector } from "react-redux";
+
+import {password} from "../Assets/index";
+
 import { changeType } from "../Store/Slice/typeSlice";
 
 const ResetSuccessful = ({ onClose }) => {
   const [countdown, setCountdown] = useState(10);
   const [showSignIn, setShowSignIn] = useState(false);
-  const navigator = useNavigate();
   const dispatch = useDispatch();
-  const type = useSelector((state) => state.type.type);
 
   useEffect(() => {
     if (countdown <= 0) {

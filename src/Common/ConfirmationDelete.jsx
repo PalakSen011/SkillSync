@@ -1,6 +1,6 @@
 import React from "react";
 
-const ConfirmationDelete = ({ onCancel, onConfirm, moduleName, message }) => {
+const ConfirmationDelete = ({ onCancel, onConfirm,  message }) => {
   return (
     <div className="fixed inset-0  bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white  p-8 shadow-lg max-w-xl w-1/3 ">

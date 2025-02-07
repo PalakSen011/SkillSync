@@ -1,21 +1,26 @@
 import React, { useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
-import { changeType } from "../../../Store/Slice/typeSlice";
-import { setUserEmail } from "../../../Store/Slice/usersSlice";
-import { validateEmail } from "../../../utils/validation";
+import { toast } from "react-toastify";
+
 import {
   sent_mail,
   forgotPassword as forgotPasswordImg,
 } from "../../../Assets/index";
-import { toast } from "react-toastify";
-import { forgotPassword } from "../../../Api/authApi"; // Import from authApi
+
+import { changeType } from "../../../Store/Slice/typeSlice";
+import { setUserEmail } from "../../../Store/Slice/usersSlice";
+
+import { forgotPassword } from "../../../Api/authApi";
+
+import { validateEmail } from "../../../utils/validation";
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track API call status
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const type = useSelector((state) => state.type.type);
+  const type = useSelector((state) => state?.type?.type);
   const dispatch = useDispatch();
 
   const handleEmailChange = (e) => {
@@ -30,23 +35,23 @@ const ForgotPassword = ({ onClose }) => {
     }
     if (emailError) return;
 
-    setIsSubmitting(true); // Indicate the API request is in progress
+    setIsSubmitting(true);
 
     try {
       const response = await forgotPassword(email);
-      toast.success(response.data.message);
+      toast.success(response?.data?.message);
       dispatch(setUserEmail(email));
       dispatch(changeType("sentEmail"));
     } catch (error) {
-      toast.error(error?.response?.data?.email[0] || "Something went wrong");
+      toast.error(error?.response?.data?.email?.[0] || "Something went wrong");
     } finally {
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
     }
   };
 
   const handleResetClick = () => {
     dispatch(changeType("resetPassword"));
-    onClose();
+    onClose?.();
   };
 
   return (
@@ -90,7 +95,7 @@ const ForgotPassword = ({ onClose }) => {
                 placeholder="Enter your email"
                 value={email}
                 onChange={handleEmailChange}
-                disabled={isSubmitting} // Disable input while submitting
+                disabled={isSubmitting}
               />
               {emailError && (
                 <p className="text-red-500 text-sm">{emailError}</p>
@@ -100,7 +105,7 @@ const ForgotPassword = ({ onClose }) => {
             <button
               onClick={handleSendClick}
               className="bg-green-600 text-white px-8 py-2 flex items-center justify-center"
-              disabled={isSubmitting} // Disable button while submitting
+              disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>

@@ -82,8 +82,6 @@ const usersSlice = createSlice({
     // Action to reset a user's password
     resetPassword: (state, action) => {
       const { userEmail, newPassword } = action.payload;
-      console.log("🚀 ~ userEmail:", userEmail);
-      console.log("🚀 ~ newPassword:", newPassword);
       const userIndex = state.Users.findIndex(
         (user) => user.email === userEmail
       );

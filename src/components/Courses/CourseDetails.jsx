@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { delete_red, edit_Black } from "../../Assets/index";
-import Lesson from "./Lessons/Lesson";
-import { deleteCourse } from "../../Store/Slice/courseSlice";
+
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  PATH_COURSES,
-  PATH_ADD_NEW_COURSE,
-} from "../../Constants/RouteConstants";
+
+import { delete_red, edit_Black } from "../../Assets/index";
+
+import { deleteCourse } from "../../Store/Slice/courseSlice";
+
+import { PATH_COURSES } from "../../Constants/RouteConstants";
+
 import ConfirmationDelete from "../../Common/ConfirmationDelete";
 const CourseDetails = () => {
   const [activeTab, setActiveTab] = useState("details");
@@ -16,10 +17,10 @@ const CourseDetails = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const course = useSelector((state) =>
-    state.courses.courses.find(
-      (course) => course.course_id === parseInt(courseId)
-    )
+
+  const courses = useSelector((state) => state.courses.courses);
+  const course = courses.find(
+    (course) => course.course_id === parseInt(courseId)
   );
 
   if (!course) {
@@ -38,8 +39,8 @@ const CourseDetails = () => {
 
   // Handle confirm delete
   const handleConfirmDelete = () => {
-    dispatch(deleteCourse(course.course_id)); // Delete the course
-    navigate(PATH_COURSES); // Navigate back to the course list
+    dispatch(deleteCourse(course.course_id));
+    navigate(PATH_COURSES);
   };
 
   // Handle cancel delete
@@ -49,8 +50,7 @@ const CourseDetails = () => {
   // Handle edit button click
   const handleEditClick = () => {
     console.log("Edit clicked");
-    // navigate({ PATH_ADD_NEW_COURSE });
-    navigate(`/edit-course/${courseId}`); // Navigate to the edit page with courseId
+    navigate(`/edit-course/${courseId}`);
   };
 
   return (

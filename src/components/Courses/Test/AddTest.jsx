@@ -15,22 +15,19 @@ const AddTest = ({ moduleDetails, onSave }) => {
     if (moduleDetails?.test && Array.isArray(moduleDetails.test)) {
       const formattedQuestions = moduleDetails.test.map((q) => {
         const optionsArray =
-          q.options && Array.isArray(q.options)
-            ? q.options.map((opt) => ({
-                id: opt.option_id || Date.now() + Math.random(),
-                label: opt.option || "", // Ensure the option text is populated here
-                isCorrect: opt.isCorrect || false, // Assuming `isCorrect` is part of the options
-              }))
-            : []; // Fallback to empty array if options is not defined or not an array
-
+          q.options?.map((opt) => ({
+            id: opt.option_id || Date.now() + Math.random(),
+            label: opt.option || "",
+            isCorrect: opt.isCorrect || false,
+          })) || [];
         return {
           id: q.id || Date.now(),
-          question: q.question || "", // Ensure question is populated
-          type: q.type || "", // Ensure type is populated
-          options: optionsArray, // Options should now be set correctly
+          question: q.question || "",
+          type: q.type || "", 
+          options: optionsArray, 
         };
       });
-      setQuestions(formattedQuestions); // Update the questions state
+      setQuestions(formattedQuestions); 
     } else {
       // In case moduleDetails.test is undefined or not an array, initialize with empty questions
       setQuestions([{ id: Date.now(), question: "", type: "", options: [] }]);
@@ -50,16 +47,18 @@ const AddTest = ({ moduleDetails, onSave }) => {
 
   const handleCopyQuestion = (id) => {
     setQuestions((prev) => {
+      console.log("🚀 ~ setQuestions ~ prev:", prev)
       const questionToCopy = prev.find((q) => q.id === id);
       if (!questionToCopy) return prev;
 
       const copiedQuestion = {
         ...questionToCopy,
         id: Date.now(),
-        options: questionToCopy.options.map((opt) => ({
-          ...opt,
-          id: Date.now() + Math.random(),
-        })),
+        options:
+          questionToCopy.options?.map((opt) => ({
+            ...opt,
+            id: Date.now() + Math.random(),
+          })) || [],
       };
 
       return [...prev, copiedQuestion];
@@ -81,7 +80,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
 
   const handleAddOption = (id) => {
     const question = questions.find((q) => q.id === id);
-    if (!question.type) {
+    if (!question?.type) {
       setErrors((prev) => ({
         ...prev,
         [id]: "Please select a type before adding options.",
@@ -89,7 +88,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
       return;
     }
 
-    if (question.options.length >= 4) {
+    if (question?.options?.length >= 4) {
       setErrors((prev) => ({
         ...prev,
         [id]: "You can only add up to 4 options.",
@@ -123,7 +122,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
         q.id === questionId
           ? {
               ...q,
-              options: q.options.map((option) =>
+              options: q.options?.map((option) =>
                 option.id === optionId ? { ...option, label } : option
               ),
             }
@@ -138,7 +137,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
         q.id === questionId
           ? {
               ...q,
-              options: q.options.map((option) =>
+              options: q.options?.map((option) =>
                 option.id === optionId
                   ? { ...option, isCorrect: !option.isCorrect }
                   : option
@@ -154,16 +153,17 @@ const AddTest = ({ moduleDetails, onSave }) => {
       id: q.id,
       question: q.question,
       type: q.type,
-      options: q.options.map((opt, index) => ({
-        id: opt.id || Date.now() + Math.random(), // Assign a dynamic ID if not already present
-        label: opt.label,
-        isCorrect: opt.isCorrect,
-      })),
+      options:
+        q.options?.map((opt, index) => ({
+          id: opt.id || Date.now() + Math.random(), // Assign a dynamic ID if not already present
+          label: opt.label,
+          isCorrect: opt.isCorrect,
+        })) || [],
     }));
-  
+
     onSave(formattedQuestions);
   };
-  
+
   return (
     <div className="m-5 w-full">
       <div className="gap-1 flex">
@@ -203,7 +203,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
               />
             </div>
 
-            {question.options.map((option) => (
+            {question.options?.map((option) => (
               <div
                 key={option.id}
                 className="mt-4 ml-1 flex items-center gap-2"
@@ -233,12 +233,12 @@ const AddTest = ({ moduleDetails, onSave }) => {
               <img src={add_new} alt="add new icon" className="h-6" />
               <button
                 className={`text-sm ${
-                  question.options.length >= 4
+                  question.options?.length >= 4
                     ? "text-slate-500 cursor-not-allowed"
                     : "text-black"
                 }`}
                 onClick={() => handleAddOption(question.id)}
-                disabled={question.options.length >= 4}
+                disabled={question.options?.length >= 4}
               >
                 Add Option
               </button>

@@ -1,15 +1,28 @@
 import React, { useState } from "react";
+
 import { useForm, Controller } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { resetPassword } from "../../../Api/authApi";
+
 import { show, hide } from "../../../Assets/index";
+import { resetPassword } from "../../../Api/authApi";
 import {
   validatePassword,
   validateConfirmPassword,
 } from "../../../utils/validation";
 
 const ResetPassword = ({ setIsResetSuccessfulModal }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRePassword, setShowRePassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const uidb64 = localStorage.getItem("uidb64");
+  const token = localStorage.getItem("token");
+
+  if (!uidb64 || !token) {
+    toast.error("Invalid or missing credentials.");
+    return;
+  }
+
   const {
     control,
     handleSubmit,
@@ -18,15 +31,9 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
     setError,
     clearErrors,
   } = useForm({ mode: "onChange" });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showRePassword, setShowRePassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track API call status
-
-  // const dispatch = useDispatch();
-  // const userEmail = useSelector((state) => state.users.userEmail);
   const password = watch("password", "");
 
-  // Function to handle onChange event
+  // Function to handle onChange event of password field
   const handlePasswordChange = (field) => (e) => {
     const value = e.target.value;
     field.onChange(value);
@@ -40,14 +47,18 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
       clearErrors("password");
     }
   };
-  // Retrieve uidb64 and token from localStorage
-  const uidb64 = localStorage.getItem("uidb64");
-  const token = localStorage.getItem("token");
-
-  if (!uidb64 || !token) {
-    toast.error("Invalid or missing credentials.");
-    return;
-  }
+  // Function to handle onChange event of confirm password field
+  const handleConfirmPasswordChange = (field) => (e) => {
+    field.onChange(e);
+    if (validateConfirmPassword(password, e.target.value)) {
+      setError("confirmPassword", {
+        type: "manual",
+        message: validateConfirmPassword(password, e.target.value),
+      });
+    } else {
+      clearErrors("confirmPassword");
+    }
+  };
 
   // Handle form submission
   const onSubmit = async (data) => {
@@ -55,29 +66,27 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
       toast.error("Invalid or missing credentials.");
       return;
     }
-    setIsSubmitting(true); 
+    setIsSubmitting(true);
     try {
       const response = await resetPassword(
         {
           uidb64,
-          new_password: data.password,
-          confirm_password: data.confirmPassword,
+          new_password: data?.password,
+          confirm_password: data?.confirmPassword,
         },
         token
       );
       toast.success(
-        response.data.message || "Password has been reset successfully."
+        response?.data?.message || "Password has been reset successfully."
       );
       setIsResetSuccessfulModal(true);
     } catch (error) {
       toast.error(
-        error.response?.data?.error ||
+        error?.response?.data?.error ||
           "An error occurred while resetting the password."
       );
-      console.log("🚀 ~ onSubmit ~ error:", error)
     }
   };
-  
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -116,9 +125,8 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
             />
           </button>
         </div>
-        {/* Password validation error */}
         {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
+          <p className="text-red-500 text-sm">{errors?.password?.message}</p>
         )}
       </div>
 
@@ -141,24 +149,10 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
                 className="w-full px-4 py-2"
                 placeholder="Re-enter New Password"
                 {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                  if (validateConfirmPassword(password, e.target.value)) {
-                    setError("confirmPassword", {
-                      type: "manual",
-                      message: validateConfirmPassword(
-                        password,
-                        e.target.value
-                      ),
-                    });
-                  } else {
-                    clearErrors("confirmPassword");
-                  }
-                }}
+                onChange={handleConfirmPasswordChange(field)}
               />
             )}
           />
-          {/* Toggle show/hide confirmation password */}
           <button
             type="button"
             className="absolute top-3 right-2 text-gray-500"
@@ -171,10 +165,9 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
             />
           </button>
         </div>
-        {/* Confirm password validation error */}
         {errors.confirmPassword && (
           <p className="text-red-500 text-sm">
-            {errors.confirmPassword.message}
+            {errors?.confirmPassword?.message}
           </p>
         )}
       </div>

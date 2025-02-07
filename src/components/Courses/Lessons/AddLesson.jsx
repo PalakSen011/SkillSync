@@ -1,64 +1,34 @@
 import React, { useState, useEffect } from "react";
 
+const InitialLessonDetails = {
+  lesson_name: "",
+  duration: "",
+  sequence: "",
+  content: "",
+};
 const AddLesson = ({ lessonData, onSave }) => {
-  const [lessonName, setLessonName] = useState("");
-  const [duration, setDuration] = useState("");
-  const [lessonNumber, setLessonNumber] = useState("");
-  const [description, setDescription] = useState("");
+  const [lessonDetails, setLessonDetails] = useState(InitialLessonDetails);
 
   useEffect(() => {
     if (lessonData) {
-      setLessonName(lessonData?.lesson_name || "");
-      setDuration(lessonData?.duration || ""); // Fixed case sensitivity
-      setLessonNumber(lessonData?.sequence || "");
-      setDescription(lessonData?.content || "");
+      setLessonDetails({
+        lesson_name: lessonData?.lesson_name || "",
+        duration: lessonData?.duration || "",
+        sequence: lessonData?.sequence || "",
+        content: lessonData?.content || "",
+      });
     }
   }, [lessonData]);
 
-  // Handle input changes with latest state update
   const handleChange = (field, value) => {
-    let updatedLesson = {
-      lesson_id: lessonData?.lesson_id || null,
-      lesson_name: lessonName,
-      duration: duration,
-      sequence: lessonNumber,
-      content: description,
-    };
-
-    switch (field) {
-      case "lessonName":
-        setLessonName(value);
-        updatedLesson.lesson_name = value;
-        break;
-      case "duration":
-        setDuration(value);
-        updatedLesson.duration = value;
-        break;
-      case "lessonNumber":
-        setLessonNumber(value);
-        updatedLesson.sequence = value;
-        break;
-      case "description":
-        setDescription(value);
-        updatedLesson.content = value;
-        break;
-      default:
-        break;
-    }
-
-    // Ensure onSave is called with the latest state values
-    onSave(updatedLesson);
+    setLessonDetails((prevDetails) => ({
+      ...prevDetails,
+      [field]: value,
+    }));
   };
 
-  // Save button handler
   const handleSave = () => {
-    onSave({
-      lesson_id: lessonData?.lesson_id || null,
-      lesson_name: lessonName,
-      duration: duration,
-      sequence: lessonNumber,
-      content: description,
-    });
+    onSave({ lesson_id: lessonData?.lesson_id || null, ...lessonDetails });
   };
 
   return (
@@ -76,8 +46,8 @@ const AddLesson = ({ lessonData, onSave }) => {
             type="text"
             id="lessonName"
             className="border border-gray-300 px-3 py-2 text-sm"
-            value={lessonName}
-            onChange={(e) => handleChange("lessonName", e.target.value)}
+            value={lessonDetails.lesson_name}
+            onChange={(e) => handleChange("lesson_name", e.target.value)}
             placeholder="Enter lesson name"
           />
         </div>
@@ -94,7 +64,7 @@ const AddLesson = ({ lessonData, onSave }) => {
             type="text"
             id="duration"
             className="border border-gray-300 px-3 py-2 text-sm"
-            value={duration}
+            value={lessonDetails.duration}
             onChange={(e) => handleChange("duration", e.target.value)}
             placeholder="e.g., 50"
           />
@@ -112,8 +82,8 @@ const AddLesson = ({ lessonData, onSave }) => {
             type="number"
             id="lessonNumber"
             className="border border-gray-300 px-3 py-2 text-sm"
-            value={lessonNumber}
-            onChange={(e) => handleChange("lessonNumber", e.target.value)}
+            value={lessonDetails.sequence}
+            onChange={(e) => handleChange("sequence", e.target.value)}
             placeholder="e.g., 1"
           />
         </div>
@@ -130,8 +100,8 @@ const AddLesson = ({ lessonData, onSave }) => {
         <textarea
           id="description"
           className="border border-gray-300 px-3 py-2 text-sm w-full h-40 resize-none"
-          value={description}
-          onChange={(e) => handleChange("description", e.target.value)}
+          value={lessonDetails.content}
+          onChange={(e) => handleChange("content", e.target.value)}
           placeholder="Add a description for the lesson"
         ></textarea>
       </div>
@@ -140,7 +110,7 @@ const AddLesson = ({ lessonData, onSave }) => {
       <div className="flex justify-end mt-4">
         <button
           className="btn-secondary px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-          onClick={handleSave} // Fixed the missing onClick handler
+          onClick={handleSave}
         >
           Save
         </button>

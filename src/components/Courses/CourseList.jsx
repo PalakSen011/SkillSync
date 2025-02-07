@@ -1,15 +1,18 @@
 import React from "react";
-import CourseListTable from "./CourseListTable";
-import {filter,search} from "../../Assets/index"
+
 import { Link } from "react-router-dom";
+
+import CourseListTable from "./CourseListTable";
+
 import { PATH_ADD_NEW_COURSE } from "../../Constants/RouteConstants";
+
+import { filter, search } from "../../Assets/index";
 
 const CourseList = () => {
   return (
     <>
       <div className="text-xl font-semibold mb-5">All Courses</div>
       <div className="mt-3 flex items-center justify-between">
-        {/* Left Section (Search and Filter) */}
         <div className="flex  items-center gap-2">
           {/* Search Container */}
           <div className="relative  ">

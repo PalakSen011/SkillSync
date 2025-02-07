@@ -12,7 +12,7 @@ const Home = () => {
         <div className="flex-1 sticky">
           <HeaderComp />
           <div className=" flex flex-row  text-black">
-            <div class=" [box-shadow:1px_2px_12px_0px_rgba(0,_0,_0,_0.08)] w-1/4 h-screen bg-white">
+            <div className=" [box-shadow:1px_2px_12px_0px_rgba(0,_0,_0,_0.08)] w-1/4 h-screen bg-white">
               <SideBar />
             </div>
             <div className="p-6 w-full ">

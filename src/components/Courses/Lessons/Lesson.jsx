@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
+
 import { useForm } from "react-hook-form";
 
-import { trash, add_new } from "../../../Assets/index";
-
 import AddLesson from "./AddLesson";
+import LessonModal from "./LessonModal";
 import AddTest from "../Test/AddTest";
 import ConfirmationDelete from "../../../Common/ConfirmationDelete";
-import LessonModal from "./LessonModal";
 
+import { trash, add_new } from "../../../Assets/index";
 const Lesson = ({
   lessons,
   moduleDetails,
@@ -26,7 +26,7 @@ const Lesson = ({
   useEffect(() => {
     // Set the first lesson as active by default when lessons are loaded
     if (!activeLessonId && lessons.length > 0) {
-      setActiveLessonId(lessons[0].lesson_id); 
+      setActiveLessonId(lessons[0].lesson_id);
       setActiveLessonData(lessons[0]);
     }
   }, [lessons]);
@@ -96,7 +96,7 @@ const Lesson = ({
   // Toggle between lesson and test view
   const toggleView = (view) => {
     setIsAddTest(view === "test");
-    setActiveLessonId(view === "lesson" ? activeLessonId : null); // Clear active lesson when switching to Test
+    setActiveLessonId(view === "lesson" ? activeLessonId : null); 
   };
 
   // Handle clicking on a lesson to set it as active
@@ -106,7 +106,7 @@ const Lesson = ({
       (lesson) => lesson.lesson_id === lessonId
     );
     setActiveLessonData(selectedLesson);
-    setIsAddTest(false); // Switch back to Lesson view when selecting a lesson
+    setIsAddTest(false); 
   };
 
   const handleUpdateLesson = (updatedData) => {

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
 
+import { show, hide } from "../../../Assets/index";
 import { setisAuthenticated, setUser } from "../../../Store/Slice/usersSlice";
 import { validateEmail, validatePassword } from "../../../utils/validation";
-import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
-import { show, hide } from "../../../Assets/index";
-import { toast } from "react-toastify";
 import { loginUser } from "../../../Api/authApi";
+import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
+
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
     control,
@@ -27,7 +29,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
 
     try {
       const response = await loginUser(data); 
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response?.data?.token);
       localStorage.setItem("uidb64", "VVJNbkZXcw");
       dispatch(setisAuthenticated(true));
       navigate("/dashboard");

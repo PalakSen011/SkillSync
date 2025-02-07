@@ -8,7 +8,15 @@ const DropdownField = React.forwardRef(
           htmlFor={id}
           className="text-sm text-neutral-500 font-medium mb-1"
         >
-          {label} {required && <span className="text-red-500">*</span>}
+          {label && (
+            <label
+              htmlFor={id}
+              className="text-sm text-neutral-500 font-medium mb-1"
+            >
+              {label}
+              {required && <span className="text-red-500">*</span>}
+            </label>
+          )}{" "}
         </label>
         <select
           id={id}
@@ -33,3 +41,5 @@ const DropdownField = React.forwardRef(
 );
 
 export default DropdownField;
+
+0.3;

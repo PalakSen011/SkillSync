@@ -9,29 +9,30 @@ import CourseInputField from "../../Common/CourseInputField";
 import DropdownField from "../../Common/DropdownField";
 
 import { addCourse, replaceCourseById } from "../../Store/Slice/courseSlice";
-
 import { statusOptions, categoryOptions } from "../../Constants/Options";
-
 import { generateUpdatedCourse } from "../../Utils/courseUtils";
+
+// Define initial course details as a constant
+const InitialCourseDetails = {
+  title: "",
+  category: "",
+  status: "Draft",
+  mandatory: false,
+  modules: [],
+};
 
 const AddNewCourse = ({ onBackClick }) => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
   const [show, setShow] = useState(false);
 
-  const course = useSelector((state) =>
-    state.courses.courses.find(
-      (course) => course.course_id === parseInt(courseId)
-    )
+  const courses = useSelector((state) => state.courses?.courses || []);
+  const course = courses?.find(
+    (course) => course?.course_id === parseInt(courseId)
   );
 
-  const [courseDetails, setCourseDetails] = useState({
-    title: "",
-    category: "",
-    status: "Draft",
-    mandatory: false,
-    modules: [],
-  });
+  const [courseDetails, setCourseDetails] = useState(InitialCourseDetails);
+
   const {
     register,
     handleSubmit,
@@ -41,11 +42,11 @@ const AddNewCourse = ({ onBackClick }) => {
   useEffect(() => {
     if (course) {
       setCourseDetails({
-        title: course.course_title,
-        category: course.category,
-        status: course.status,
-        mandatory: course.is_mandatory,
-        modules: course.modules,
+        title: course?.course_title || "",
+        category: course?.category || "",
+        status: course?.status || "Draft",
+        mandatory: course?.is_mandatory || false,
+        modules: course?.modules || [],
       });
       setShow(true);
     }
@@ -53,12 +54,14 @@ const AddNewCourse = ({ onBackClick }) => {
 
   // Function to submit the form
   const onSubmit = () => {
-    const trimmedTitle = courseDetails.title.trim();
-    const updatedDetails = { ...courseDetails, title: trimmedTitle };
+    const updatedDetails = {
+      ...courseDetails,
+      title: courseDetails?.title?.trim() || "",
+    };
 
-    const modulesCount = updatedDetails.modules.length;
-    const lessonsCount = updatedDetails.modules.reduce(
-      (total, module) => total + (module.lessons ? module.lessons.length : 0),
+    const modulesCount = updatedDetails?.modules?.length || 0;
+    const lessonsCount = updatedDetails?.modules?.reduce(
+      (total, module) => total + (module?.lessons?.length || 0),
       0
     );
 
@@ -73,55 +76,36 @@ const AddNewCourse = ({ onBackClick }) => {
     dispatch(addCourse(updatedCourse));
     setCourseDetails(updatedCourse);
     setShow(true);
-};
-
-
-  // const onSubmit = () => {
-  //   const trimmedTitle = courseDetails.title.trim();
-
-  //   const modulesCount = courseDetails.modules.length;
-  //   const lessonsCount = courseDetails.modules.reduce(
-  //     (total, module) => total + (module.lessons ? module.lessons.length : 0),
-  //     0
-  //   );
-
-  //   const updatedCourse = generateUpdatedCourse(
-  //     courseId,
-  //     { ...courseDetails, title: trimmedTitle },
-  //     modulesCount,
-  //     lessonsCount
-  //   );
-
-  //   console.log("🚀 ~ onSubmit ~ updatedCourse:", updatedCourse);
-  //   dispatch(addCourse(updatedCourse));
-  //   setCourseDetails(updatedCourse);
-  //   setShow(true);
-  // };
-
+  };
 
   // Function to handle field change
   const handleFieldChange = (field, value) => {
+    const updatedValue = field === "mandatory" ? Boolean(value) : value;
+
     setCourseDetails((prev) => ({
       ...prev,
-      [field]: field === "mandatory" ? Boolean(value) : value,
+      [field]: updatedValue,
     }));
   };
 
   // Function to update test in course details
   const updateTestInCourseDetails = (moduleId, testData) => {
-    console.log("🚀 ~ updateTestInCourseDetails ~ testData:", testData)
+    // Generate updated course details
+    const getUpdatedDetails = (prevDetails) => ({
+      ...prevDetails,
+      modules:
+        prevDetails?.modules?.map((module) =>
+          module?.module_id === moduleId
+            ? { ...module, test: testData }
+            : module
+        ) || [],
+    });
+
     setCourseDetails((prevDetails) => {
-      const updatedDetails = {
-        ...prevDetails,
-        modules: prevDetails.modules.map((module) =>
-          module.module_id === moduleId ? { ...module, test: testData } : module
-        ),
-      };
-      const modId = updatedDetails.course_id;
+      const updatedDetails = getUpdatedDetails(prevDetails);
       console.log("🚀 ~ setCourseDetails ~ updatedDetails:", updatedDetails);
-      console.log("🚀 ~ setCourseDetails ~ modId:", modId);
-      dispatch(replaceCourseById({ courseDetails, testData }));
-      console.log("🚀 ~ setCourseDetails ~ updatedDetails:", updatedDetails);
+      dispatch(replaceCourseById({ courseDetails: updatedDetails }));
+      console.log("🚀 ~ setCourseDetails ~ courseDetails:", updatedDetails);
       return updatedDetails;
     });
   };
@@ -151,19 +135,17 @@ const AddNewCourse = ({ onBackClick }) => {
               id="courseTitle"
               label="Title"
               required
-              value={courseDetails.title}
+              errors={errors?.title}
+              value={courseDetails?.title}
               onChange={(e) => handleFieldChange("title", e.target.value)}
               className="flex flex-col w-1/2"
             />
-            {errors.title && (
-              <p className="text-red-500 text-sm">{errors.title.message}</p>
-            )}
 
             <DropdownField
               id="category"
               label="Category"
               required
-              error={errors.category}
+              error={errors?.category}
               options={categoryOptions}
               {...register("category", { required: "Category is required" })}
               onChange={(e) => handleFieldChange("category", e.target.value)}
@@ -172,7 +154,7 @@ const AddNewCourse = ({ onBackClick }) => {
               id="status"
               label="Status"
               required
-              error={errors.status}
+              error={errors?.status}
               options={statusOptions}
               {...register("status", { required: "Status is required" })}
               onChange={(e) => handleFieldChange("status", e.target.value)}
@@ -189,7 +171,7 @@ const AddNewCourse = ({ onBackClick }) => {
 
       {show && (
         <AddModule
-          modules={courseDetails.modules}
+          modules={courseDetails?.modules || []}
           setModules={(newModules) => handleFieldChange("modules", newModules)}
           updateTestInCourseDetails={updateTestInCourseDetails}
         />

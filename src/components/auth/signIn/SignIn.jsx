@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+
+import { logo, authBackground } from "../../../Assets/index";
 
 import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
-import { logo, authBackground } from "../../../Assets/index";
+import ResetSuccessful from "../../../Common/ResetSuccessful";
+
 import SignInForm from "./SignInForm";
 import ResetPasswordForm from "./ResetPasswordForm";
 import ForgotPassword from "./ForgotPassword";
-import ResetSuccessful from "../../../Common/ResetSuccessful";
 
 const SignIn = () => {
   const [isForgotModal, setIsForgotModalOpen] = useState(false);
@@ -36,7 +38,6 @@ const SignIn = () => {
       dispatch(resetAuthenticationState());
     } else if (user_id && token) {
       navigate(`/reset-password/?uidb64=${user_id}&token=${token}`);
-      toast.info("Reset your password to regain access.");
     }
   }, [type, dispatch, navigate, user_id, token]);
 
@@ -68,7 +69,6 @@ const SignIn = () => {
         }`}
         style={{ backgroundImage: `url(${authBackground})` }}
       >
-        {/* Logo */}
         <div>
           <img className="p-5" src={logo} alt="Skill Sync logo" />
         </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -6,14 +7,15 @@ import Lesson from "../Lessons/Lesson";
 import ModuleModal from "./ModuleModal";
 import ConfirmationDelete from "../../../Common/ConfirmationDelete";
 
+import { createNewModule } from "../../../Utils/moduleUtils";
+
 import { edit_grey, trash, add_new } from "../../../Assets";
 
 const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
   const { courseId } = useParams();
-  const course = useSelector((state) =>
-    state.courses.courses.find(
-      (course) => course.course_id === parseInt(courseId)
-    )
+  const courses = useSelector((state) => state.courses.courses);
+  const course = courses.find(
+    (course) => course.course_id === parseInt(courseId)
   );
   // State for managing modules and UI
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,7 +26,8 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
 
   useEffect(() => {
     if (modules.length === 1) {
-      setActiveModuleId(modules[0]?.module_id);
+      const activeId = modules[0]?.module_id;
+      setActiveModuleId(activeId);
     }
   }, [modules]);
 
@@ -33,72 +36,42 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
     setModuleData(null);
     setIsModalOpen(true);
   };
-
+  //function to handle save module
   const handleSaveModule = (moduleToSave) => {
-    const isNewModule = !moduleToSave.module_id;
+    const isNewModule = !moduleToSave?.module_id;
     const moduleId = isNewModule ? Date.now() : moduleToSave.module_id;
 
     if (isNewModule) {
-      const newModule = {
-        module_id: moduleId,
-        module_name: moduleToSave.module_name,
-        sequence: modules.length + 1,
-        type: "chapter",
-        lessons: [
-          {
-            lesson_id: Date.now(),
-            lesson_name: "Lesson 1",
-            duration: "",
-            sequence: 1,
-            content: "",
-          },
-        ],
-        test: [
-          {
-            questions: [
-              {
-                id: Date.now().toString(),
-                question: "",
-                options: Array(4).fill({
-                  option_id: "",
-                  option: "",
-                  isCorrect: false,
-                }),
-                type: "test",
-              },
-            ],
-          },
-        ],
-      };
-
+      const newModule = createNewModule(moduleToSave.module_name, modules);
       setModules([...modules, newModule]);
-      setActiveModuleId(moduleId);
+      setActiveModuleId(newModule.module_id);
     } else {
       const updatedModules = modules.map((mod) =>
-        mod.module_id === moduleToSave.module_id
+        mod.module_id === moduleId
           ? { ...mod, module_name: moduleToSave.module_name }
           : mod
       );
       setModules(updatedModules);
     }
-
+    // Reset modal state
     setIsModalOpen(false);
     setModuleData(null);
   };
 
+  //function to handle edit module
   const handleEditModule = (module) => {
     setModuleData(module);
     setIsModalOpen(true);
   };
-
+  //function to handle delete module
   const handleDeleteModule = (id, moduleName) => {
     setModuleToDelete({ module_id: id, module_name: moduleName });
     setIsDeleteModalOpen(true);
   };
-
+  //function to confirm delete
   const confirmDelete = () => {
     const updatedModules = modules.filter(
-      (mod) => mod.module_id !== moduleToDelete.module_id
+      (mod) => mod?.module_id !== moduleToDelete?.module_id
     );
 
     if (activeModuleId === moduleToDelete.module_id) {
@@ -113,66 +86,59 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
   // Lesson Management Functions
   const addLessonToModule = (newLesson) => {
     if (!activeModuleId) return;
-
-    setModules(
-      modules.map((module) =>
-        module.module_id === activeModuleId
-          ? {
-              ...module,
-              lessons: [
-                ...(module.lessons || []),
-                {
-                  ...newLesson,
-                  lesson_id: Date.now(),
-                  sequence: (module.lessons?.length || 0) + 1,
-                },
-              ],
-            }
-          : module
-      )
+    const addLesson = modules.map((module) =>
+      module.module_id === activeModuleId
+        ? {
+            ...module,
+            lessons: [
+              ...(module.lessons || []),
+              {
+                ...newLesson,
+                lesson_id: Date.now(),
+                sequence: (module.lessons?.length || 0) + 1,
+              },
+            ],
+          }
+        : module
     );
+    setModules(addLesson);
   };
-
+  //function to update lesson in module
   const updateLessonInModule = (updatedLesson) => {
     if (!activeModuleId) return;
-
-    setModules(
-      modules.map((module) =>
-        module.module_id === activeModuleId
-          ? {
-              ...module,
-              lessons: module.lessons?.map((lesson) =>
-                lesson.lesson_id === updatedLesson.lesson_id
-                  ? { ...lesson, ...updatedLesson }
-                  : lesson
-              ),
-            }
-          : module
-      )
+    const updateLessoninModule = modules.map((module) =>
+      module.module_id === activeModuleId
+        ? {
+            ...module,
+            lessons: module.lessons?.map((lesson) =>
+              lesson.lesson_id === updatedLesson.lesson_id
+                ? { ...lesson, ...updatedLesson }
+                : lesson
+            ),
+          }
+        : module
     );
+    setModules(updateLessonInModule);
   };
-
+  //function to delete lesson from module
   const deleteLessonFromModule = (lessonId) => {
     if (!activeModuleId) return;
-
-    setModules(
-      modules.map((module) =>
-        module.module_id === activeModuleId
-          ? {
-              ...module,
-              lessons: module.lessons?.filter(
-                (lesson) => lesson.lesson_id !== lessonId
-              ),
-            }
-          : module
-      )
+    const deleteLesson = modules.map((module) =>
+      module.module_id === activeModuleId
+        ? {
+            ...module,
+            lessons: module.lessons?.filter(
+              (lesson) => lesson.lesson_id !== lessonId
+            ),
+          }
+        : module
     );
+    setModules(deleteLesson);
   };
 
   // Test Management
   const handleSaveTest = (testData) => {
-    console.log("🚀 ~ handleSaveTest ~ testData:", testData)
-    updateTestInCourseDetails(activeModuleId,testData);
+    updateTestInCourseDetails(activeModuleId, testData);
   };
 
   return (
@@ -195,7 +161,6 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
               alt="edit"
               className="h-4 pl-1 cursor-pointer"
               onClick={(e) => {
-                e.stopPropagation();
                 handleEditModule(module);
               }}
             />
@@ -204,7 +169,6 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
               alt="trash"
               className="h-4 pl-1 cursor-pointer"
               onClick={(e) => {
-                e.stopPropagation();
                 handleDeleteModule(module.module_id, module.module_name);
               }}
             />
@@ -254,7 +218,6 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
         <ConfirmationDelete
           onCancel={() => setIsDeleteModalOpen(false)}
           onConfirm={confirmDelete}
-          moduleName={moduleToDelete?.module_name}
           message={`Are you sure you want to delete the module "${moduleToDelete?.module_name}"?`}
         />
       )}

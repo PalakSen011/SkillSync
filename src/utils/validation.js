@@ -15,3 +15,10 @@ export const validatePassword = (password) => {
 export const validateConfirmPassword = (password, confirmPassword) => {
   return password !== confirmPassword ? "Passwords do not match." : "";
 };
+
+export const validatePhoneNumber = (value) => {
+  return (
+    /^[789]\d{9}$/.test(value) ||
+    "Phone number must start with 7, 8, or 9 and be 10 digits long."
+  );
+};

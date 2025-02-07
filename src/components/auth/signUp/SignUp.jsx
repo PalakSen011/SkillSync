@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import axios from "axios";
-
-import { addUser } from "../../../Store/Slice/usersSlice";
 
 import { logo, show, hide } from "../../../Assets/index";
 import { signUpUser } from "../../../Api/authApi";
 
+import { validatePhoneNumber,validatePassword } from "../../../utils/validation";
+import { PasswordField } from "../../../Common/PasswordField";
+import SignUpInputField from "../../../Common/SignUpInputField";
+import { genderOptions, roleOptions } from "../../../Constants/Options";
+import DropdownField from "../../../Common/DropdownField";
+
 const SignUp = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track API submission status
-  const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -22,14 +23,7 @@ const SignUp = () => {
     formState: { errors },
     watch,
   } = useForm();
-  const password = watch("password", "");
-
-  const validatePhoneNumber = (value) => {
-    return (
-      /^[789]\d{9}$/.test(value) ||
-      "Phone number must start with 7, 8, or 9 and be 10 digits long."
-    );
-  };
+  // const password = watch("password", "");
 
   const onSubmit = async (data) => {
     if (isSubmitting) return;
@@ -61,131 +55,79 @@ const SignUp = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* First Name */}
-            <div className="mb-4">
-              <input
-                type="text"
-                className="w-full px-4 py-2"
-                placeholder="First Name"
-                {...register("first_name", {
-                  required: "First name is required.",
-                })}
-                disabled={isSubmitting}
-              />
-              {errors.first_name && (
-                <p className="text-red-500 text-sm">
-                  {errors.first_name.message}
-                </p>
-              )}
-            </div>
-
-            {/* Last Name */}
-            <div className="mb-4">
-              <input
-                type="text"
-                className="w-full px-4 py-2"
-                placeholder="Last Name"
-                {...register("last_name", {
-                  required: "Last name is required.",
-                })}
-                disabled={isSubmitting}
-              />
-              {errors.last_name && (
-                <p className="text-red-500 text-sm">
-                  {errors.last_name.message}
-                </p>
-              )}
-            </div>
-
-            {/* Email */}
-            <div className="mb-4">
-              <input
-                type="email"
-                className="w-full px-4 py-2"
-                placeholder="Email"
-                {...register("email", { required: "Email is required." })}
-                disabled={isSubmitting}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
-            </div>
-
-            {/* Phone Number */}
-            <div className="mb-4">
-              <input
-                type="text"
-                className="w-full px-4 py-2"
-                placeholder="Phone Number"
-                {...register("phone_number", {
-                  required: "Phone number is required.",
-                  validate: validatePhoneNumber,
-                })}
-                disabled={isSubmitting}
-              />
-              {errors.phone_number && (
-                <p className="text-red-500 text-sm">
-                  {errors.phone_number.message}
-                </p>
-              )}
-            </div>
-
-            {/* Gender Selection */}
-            <div className="mb-4">
-              <select
-                className="w-full px-4 py-2"
+            <SignUpInputField
+              type="text"
+              placeholder="First Name"
+              register={register}
+              name="first_name"
+              errors={errors}
+              disabled={isSubmitting}
+              validation={{ required: "First name is required." }}
+            />
+            <SignUpInputField
+              type="text"
+              placeholder="Last Name"
+              register={register}
+              name="last_name"
+              errors={errors}
+              disabled={isSubmitting}
+              validation={{ required: "Last name is required." }}
+            />
+            <SignUpInputField
+              type="email"
+              placeholder="Email"
+              register={register}
+              name="email"
+              errors={errors}
+              disabled={isSubmitting}
+              validation={{ required: "Email is required." }}
+            />
+            <SignUpInputField
+              type="text"
+              placeholder="Phone Number"
+              register={register}
+              name="phone_number"
+              errors={errors}
+              disabled={isSubmitting}
+              validation={{
+                required: "Phone number is required.",
+                validate: validatePhoneNumber,
+              }}
+            />
+            <div className="flex justify-between gap-4 mb-4 ">
+              {/* Gender Selection */}
+              <DropdownField
+                id="gender"
+                required
+                error={errors.gender}
+                options={genderOptions}
                 {...register("gender", { required: "Gender is required." })}
                 disabled={isSubmitting}
-              >
-                <option value="">Select Gender</option>
-                <option value="CHRELgT">Male</option>
-                <option value="CHEfbqz">Female</option>
-                <option value="CHN0hVk">Other</option>
-              </select>
-              {errors.gender && (
-                <p className="text-red-500 text-sm">{errors.gender.message}</p>
-              )}
-            </div>
-
-            {/* Role Selection */}
-            <div className="mb-4">
-              <select
-                className="w-full px-4 py-2"
+                className=" border-red-500 w-1/2"
+              />
+              {/* Role Selection */}
+              <DropdownField
+                id="role"
+                required
+                error={errors.role}
+                options={roleOptions}
                 {...register("role", { required: "Role is required." })}
                 disabled={isSubmitting}
-              >
-                <option value="">Select Role</option>
-                <option value="CHA6xgL">HR</option>
-                <option value="CHWIISR">Developer</option>
-              </select>
-              {errors.role && (
-                <p className="text-red-500 text-sm">{errors.role.message}</p>
-              )}
+                className="w-1/4"
+              />
             </div>
 
             {/* Password Field (Optional) */}
-            <div className="mb-4">
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="w-full px-4 py-2"
-                  placeholder="Password (Optional)"
-                  {...register("password")}
-                  disabled={isSubmitting}
-                />
-                <button
-                  type="button"
-                  className="absolute top-3 right-2"
-                  onClick={() => setShowPassword(!showPassword)}
-                  disabled={isSubmitting}
-                >
-                  <img
-                    src={showPassword ? show : hide}
-                    alt={showPassword ? "Hide password" : "Show password"}
-                    className="w-5 h-5"
-                  />
-                </button>
-              </div>
-            </div>
+            <PasswordField
+              register={register}
+              name="password"
+              errors={errors}
+              disabled={isSubmitting}
+              validation={{
+                required: "Password is required.",
+                validate: validatePassword,
+              }}
+            />
 
             {/* Submit Button */}
             <button

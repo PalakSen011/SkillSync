@@ -1,23 +1,14 @@
 import React from "react";
+
 import { Provider } from "react-redux";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import { ToastContainer } from "react-toastify";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 import "./App.css";
 
 import { appStore, persistor } from "./Store/appStore.js";
-
-import SignUp from "./Components/auth/signUp/SignUp";
-import SignIn from "./Components/Auth/SignIn/SignIn.jsx";
-import Dashboard from "./Components/dashboard/Dashboard.jsx";
-import UserManagement from "./Components/UserManegement/UserManagement.jsx";
-import AddNewCourse from "./Components/Courses/AddNewCourse.jsx";
-import CourseList from "./Components/Courses/CourseList.jsx";
-import CourseDetail from "./Components/Courses/CourseDetails.jsx";
-import ProtectedRoute from "./Common/ProtectedRoute.jsx";
-import NotFound from "./Common/NotFound.jsx";
 
 import {
   PATH_SIGNIN,
@@ -30,6 +21,18 @@ import {
   PATH_COURSE_DETAIL,
   PATH_EDIT_COURSE,
 } from "./Constants/RouteConstants.js";
+
+import ProtectedRoute from "./Common/ProtectedRoute.jsx";
+import NotFound from "./Common/NotFound.jsx";
+
+import SignUp from "./Components/Auth/signUp/SignUp";
+import SignIn from "./Components/Auth/SignIn/SignIn.jsx";
+import Dashboard from "./Components/dashboard/Dashboard.jsx";
+import UserManagement from "./Components/UserManegement/UserManagement.jsx";
+import AddNewCourse from "./Components/Courses/AddNewCourse.jsx";
+import CourseList from "./Components/Courses/CourseList.jsx";
+import CourseDetail from "./Components/Courses/CourseDetails.jsx";
+
 const App = () => {
   return (
     <Provider store={appStore}>
@@ -40,7 +43,7 @@ const App = () => {
             <Route path={PATH_SIGNIN} element={<SignIn />} />
             <Route path={PATH_SIGNUP} element={<SignUp />} />
             <Route path={PATH_RESET_PASSWORD} element={<SignIn />} />
-            
+
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path={PATH_DASHBOARD} element={<Dashboard />} />
