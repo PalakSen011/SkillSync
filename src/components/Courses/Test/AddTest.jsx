@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+
 import InputField from "../../../Common/InputField";
 import DropdownField from "../../../Common/DropdownField";
-import { info, add_new, add_green, copy, trash } from "../../../Assets/index";
 import { optionTypes } from "../../../Constants/Options";
+
+import { info, add_new, add_green, copy, trash } from "../../../Assets/index";
 
 const AddTest = ({ moduleDetails, onSave }) => {
   console.log("🚀 ~ AddTest ~ moduleDetails:", moduleDetails);

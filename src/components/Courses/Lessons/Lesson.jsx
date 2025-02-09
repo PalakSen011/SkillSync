@@ -8,6 +8,7 @@ import AddTest from "../Test/AddTest";
 import ConfirmationDelete from "../../../Common/ConfirmationDelete";
 
 import { trash, add_new } from "../../../Assets/index";
+
 const Lesson = ({
   lessons,
   moduleDetails,
@@ -164,7 +165,7 @@ const Lesson = ({
           <AddTest moduleDetails={moduleDetails} onSave={handleSaveTest} />
         ) : (
           <AddLesson
-            lessonData={activeLessonData} // Pass active lesson data to AddLesson
+            lessonData={activeLessonData} 
             onSave={handleUpdateLesson}
           />
         )}
