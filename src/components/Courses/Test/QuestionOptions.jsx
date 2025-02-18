@@ -1,7 +1,7 @@
 import React from "react";
 import InputField from "../../../Common/InputField";
 
-const QuestionOptions = ({ question, handleOptionChange, handleOptionSelect }) => {
+const  QuestionOptions = ({ question, handleOptionChange, handleOptionSelect }) => {
   return (
     <>
       {question.options?.map((option) => (

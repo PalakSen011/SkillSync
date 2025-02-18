@@ -6,10 +6,10 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { show, hide } from "../../../Assets/index";
-import { setisAuthenticated, setUser } from "../../../Store/Slice/usersSlice";
+import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
 import { validateEmail, validatePassword } from "../../../utils/validation";
 import { loginUser } from "../../../Api/authApi";
-import { PATH_SIGNUP } from "../../../Constants/RouteConstants";
+import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
@@ -32,7 +32,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
       localStorage.setItem("token", response?.data?.token);
       localStorage.setItem("uidb64", "VVJNbkZXcw");
       dispatch(setisAuthenticated(true));
-      navigate("/dashboard");
+      navigate(PATH_DASHBOARD);
       toast.success("Signed In Successfully");
     } catch (error) {
       toast.error("Invalid Email or Password");
@@ -64,8 +64,8 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             />
           )}
         />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        {errors?.email && (
+          <p className="text-red-500 text-sm">{errors?.email?.message}</p>
         )}
       </div>
 
@@ -105,8 +105,8 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             />
           </button>
         </div>
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        {errors?.password && (
+          <p className="text-red-500 text-sm">{errors?.password?.message}</p>
         )}
       </div>
 

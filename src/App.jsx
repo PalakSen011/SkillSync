@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "./App.css";
 
-import { appStore, persistor } from "./Store/appStore.js";
+import { appStore, persistor } from "./Store/appStore";
 
 import {
   PATH_SIGNIN,
@@ -20,18 +20,14 @@ import {
   PATH_USER_MANAGEMENT,
   PATH_COURSE_DETAIL,
   PATH_EDIT_COURSE,
-} from "./Constants/RouteConstants.js";
+} from "./Constants/RouteConstants";
 
-import ProtectedRoute from "./Common/ProtectedRoute.jsx";
-import NotFound from "./Common/NotFound.jsx";
+import { ProtectedRoute, NotFound } from "./Common";
 
-import SignUp from "./Components/Auth/signUp/SignUp";
-import SignIn from "./Components/Auth/SignIn/SignIn.jsx";
-import Dashboard from "./Components/dashboard/Dashboard.jsx";
-import UserManagement from "./Components/UserManegement/UserManagement.jsx";
-import AddNewCourse from "./Components/Courses/AddNewCourse.jsx";
-import CourseList from "./Components/Courses/CourseList.jsx";
-import CourseDetail from "./Components/Courses/CourseDetails.jsx";
+import Dashboard from "./Components/dashboard/Dashboard";
+import UserManagement from "./Components/UserManegement/UserManagement";
+import { SignIn, SignUp } from "./Components/Auth";
+import { CourseList, AddNewCourse, CourseDetails } from "./Components/Courses";
 
 const App = () => {
   return (
@@ -50,7 +46,7 @@ const App = () => {
               <Route path={PATH_USER_MANAGEMENT} element={<UserManagement />} />
               <Route path={PATH_COURSES} element={<CourseList />} />
               <Route path={PATH_ADD_NEW_COURSE} element={<AddNewCourse />} />
-              <Route path={PATH_COURSE_DETAIL} element={<CourseDetail />} />
+              <Route path={PATH_COURSE_DETAIL} element={<CourseDetails />} />
               <Route path={PATH_EDIT_COURSE} element={<AddNewCourse />} />
             </Route>
 

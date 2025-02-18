@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-
 import {
   sent_mail,
   forgotPassword as forgotPasswordImg,
 } from "../../../Assets/index";
-
 import { changeType } from "../../../Store/Slice/typeSlice";
 import { setUserEmail } from "../../../Store/Slice/usersSlice";
-
 import { forgotPassword } from "../../../Api/authApi";
-
 import { validateEmail } from "../../../utils/validation";
+import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants"; // Import constants
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
@@ -24,13 +20,13 @@ const ForgotPassword = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setEmailError(validateEmail(e.target.value));
+    setEmail(e.target?.value);
+    setEmailError(validateEmail(e.target?.value));
   };
 
   const handleSendClick = async () => {
     if (!email) {
-      setEmailError("Email cannot be empty.");
+      setEmailError(MESSAGE_CONSTANTS.EMAIL_EMPTY);
       return;
     }
     if (emailError) return;
@@ -43,7 +39,9 @@ const ForgotPassword = ({ onClose }) => {
       dispatch(setUserEmail(email));
       dispatch(changeType("sentEmail"));
     } catch (error) {
-      toast.error(error?.response?.data?.email?.[0] || "Something went wrong");
+      toast.error(
+        error?.response?.data?.email?.[0] || MESSAGE_CONSTANTS.ERROR_DEFAULT
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -73,26 +71,26 @@ const ForgotPassword = ({ onClose }) => {
         {type === "sentEmail" ? (
           <div className="flex flex-col items-center">
             <h2 className="text-lg p-3 text-center">
-              Please check your registered email to reset your password.
+              {MESSAGE_CONSTANTS.EMAIL_CHECK}
             </h2>
             <p className="text-gray-500 text-xl pb-4">(C*******@gmail.com)</p>
             <button
               onClick={handleResetClick}
               className="bg-green-600 text-white px-8 py-2"
             >
-              Reset
+              {MESSAGE_CONSTANTS.RESET_BUTTON}
             </button>
           </div>
         ) : (
           <>
             <div className="mb-4 w-full">
               <h2 className="text-lg pb-3 text-center">
-                Enter your email to get a reset link!
+                {MESSAGE_CONSTANTS.ENTER_EMAIL}
               </h2>
               <input
                 type="email"
                 className="w-full px-4 py-2 border border-gray-400"
-                placeholder="Enter your email"
+                placeholder={MESSAGE_CONSTANTS.EMAIL_PLACEHOLDER}
                 value={email}
                 onChange={handleEmailChange}
                 disabled={isSubmitting}
@@ -110,10 +108,10 @@ const ForgotPassword = ({ onClose }) => {
               {isSubmitting ? (
                 <>
                   <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
-                  Sending...
+                  {MESSAGE_CONSTANTS.SENDING_BUTTON}
                 </>
               ) : (
-                "Send"
+                MESSAGE_CONSTANTS.SEND_BUTTON
               )}
             </button>
           </>

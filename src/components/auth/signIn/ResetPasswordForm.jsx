@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -9,17 +8,18 @@ import {
   validatePassword,
   validateConfirmPassword,
 } from "../../../utils/validation";
+import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 
 const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const uidb64 = localStorage.getItem("uidb64");
-  const token = localStorage.getItem("token");
+  const uidb64 = localStorage?.getItem("uidb64");
+  const token = localStorage?.getItem("token");
 
   if (!uidb64 || !token) {
-    toast.error("Invalid or missing credentials.");
+    toast.error(MESSAGE_CONSTANTS.INVALID_CREDENTIALS);
     return;
   }
 
@@ -31,30 +31,27 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
     setError,
     clearErrors,
   } = useForm({ mode: "onChange" });
+
   const password = watch("password", "");
 
-  // Function to handle onChange event of password field
+  // Handle password change validation
   const handlePasswordChange = (field) => (e) => {
-    const value = e.target.value;
+    const value = e.target?.value;
     field.onChange(value);
     const error = validatePassword(value);
     if (error) {
-      setError("password", {
-        type: "manual",
-        message: error,
-      });
+      setError("password", { type: "manual", message: error });
     } else {
       clearErrors("password");
     }
   };
-  // Function to handle onChange event of confirm password field
+
+  // Handle confirm password change validation
   const handleConfirmPasswordChange = (field) => (e) => {
     field.onChange(e);
-    if (validateConfirmPassword(password, e.target.value)) {
-      setError("confirmPassword", {
-        type: "manual",
-        message: validateConfirmPassword(password, e.target.value),
-      });
+    const error = validateConfirmPassword(password, e.target?.value);
+    if (error) {
+      setError("confirmPassword", { type: "manual", message: error });
     } else {
       clearErrors("confirmPassword");
     }
@@ -63,9 +60,10 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
   // Handle form submission
   const onSubmit = async (data) => {
     if (!uidb64 || !token) {
-      toast.error("Invalid or missing credentials.");
+      toast.error(MESSAGE_CONSTANTS.INVALID_CREDENTIALS);
       return;
     }
+
     setIsSubmitting(true);
     try {
       const response = await resetPassword(
@@ -77,14 +75,15 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
         token
       );
       toast.success(
-        response?.data?.message || "Password has been reset successfully."
+        response?.data?.message || MESSAGE_CONSTANTS.PASSWORD_RESET_SUCCESS
       );
       setIsResetSuccessfulModal(true);
     } catch (error) {
       toast.error(
-        error?.response?.data?.error ||
-          "An error occurred while resetting the password."
+        error?.response?.data?.error || MESSAGE_CONSTANTS.PASSWORD_RESET_ERROR
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -98,7 +97,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
             control={control}
             defaultValue=""
             rules={{
-              required: "Password cannot be empty.",
+              required: MESSAGE_CONSTANTS.PASSWORD_EMPTY,
               validate: (value) => validatePassword(value) || true,
             }}
             render={({ field }) => (
@@ -106,7 +105,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 className="w-full px-4 py-2"
-                placeholder="Password"
+                placeholder={MESSAGE_CONSTANTS.PASSWORD_PLACEHOLDER}
                 {...field}
                 onChange={handlePasswordChange(field)}
               />
@@ -138,7 +137,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
             control={control}
             defaultValue=""
             rules={{
-              required: "Confirm Password cannot be empty.",
+              required: MESSAGE_CONSTANTS.CONFIRM_PASSWORD_EMPTY,
               validate: (value) =>
                 validateConfirmPassword(password, value) || true,
             }}
@@ -147,7 +146,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
                 type={showRePassword ? "text" : "password"}
                 id="confirmPassword"
                 className="w-full px-4 py-2"
-                placeholder="Re-enter New Password"
+                placeholder={MESSAGE_CONSTANTS.CONFIRM_PASSWORD_PLACEHOLDER}
                 {...field}
                 onChange={handleConfirmPasswordChange(field)}
               />
@@ -171,6 +170,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
           </p>
         )}
       </div>
+
       {/* Submit Button */}
       <button
         type="submit"
@@ -179,10 +179,10 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
         {isSubmitting ? (
           <>
             <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
-            Resetting...
+            {MESSAGE_CONSTANTS.RESETTING_BUTTON}
           </>
         ) : (
-          "Reset"
+          MESSAGE_CONSTANTS.RESET_BUTTON
         )}
       </button>
     </form>

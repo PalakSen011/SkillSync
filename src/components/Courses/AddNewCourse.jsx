@@ -90,7 +90,6 @@ const AddNewCourse = ({ onBackClick }) => {
 
   // Function to update test in course details
   const updateTestInCourseDetails = (moduleId, testData) => {
-    // Generate updated course details
     const getUpdatedDetails = (prevDetails) => ({
       ...prevDetails,
       modules:
@@ -103,7 +102,6 @@ const AddNewCourse = ({ onBackClick }) => {
 
     setCourseDetails((prevDetails) => {
       const updatedDetails = getUpdatedDetails(prevDetails);
-      console.log("🚀 ~ setCourseDetails ~ updatedDetails:", updatedDetails);
       dispatch(replaceCourseById({ courseDetails: updatedDetails }));
       console.log("🚀 ~ setCourseDetails ~ courseDetails:", updatedDetails);
       return updatedDetails;

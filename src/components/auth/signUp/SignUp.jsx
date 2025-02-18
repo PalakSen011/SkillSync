@@ -4,14 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { logo, show, hide } from "../../../Assets/index";
+import { logo,} from "../../../Assets/index";
 import { signUpUser } from "../../../Api/authApi";
 
 import { validatePhoneNumber,validatePassword } from "../../../utils/validation";
-import { PasswordField } from "../../../Common/PasswordField";
-import SignUpInputField from "../../../Common/SignUpInputField";
 import { genderOptions, roleOptions } from "../../../Constants/Options";
-import DropdownField from "../../../Common/DropdownField";
+import { PasswordField, SignUpInputField,DropdownField } from "../../../Common";
 
 const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +28,7 @@ const SignUp = () => {
     setIsSubmitting(true);
     try {
       const response = await signUpUser(data);
-      toast.success(response.data.message);
+      toast.success(response?.data?.message);
       navigate("/sign-in");
     } catch (error) {
       toast.error(error?.message || "Something went wrong");
@@ -99,7 +97,7 @@ const SignUp = () => {
               <DropdownField
                 id="gender"
                 required
-                error={errors.gender}
+                error={errors?.gender}
                 options={genderOptions}
                 {...register("gender", { required: "Gender is required." })}
                 disabled={isSubmitting}
@@ -109,7 +107,7 @@ const SignUp = () => {
               <DropdownField
                 id="role"
                 required
-                error={errors.role}
+                error={errors?.role}
                 options={roleOptions}
                 {...register("role", { required: "Role is required." })}
                 disabled={isSubmitting}

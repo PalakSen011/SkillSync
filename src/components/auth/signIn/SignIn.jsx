@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { logo, authBackground } from "../../../Assets/index";
-
 import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
 import ResetSuccessful from "../../../Common/ResetSuccessful";
 
-import SignInForm from "./SignInForm";
-import ResetPasswordForm from "./ResetPasswordForm";
-import ForgotPassword from "./ForgotPassword";
+import {
+  PATH_SIGNIN,
+  PATH_DASHBOARD,
+  PATH_RESET_PASSWORD,
+} from "../../../Constants/RouteConstants";
+import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
+
+import { SignInForm, ResetPasswordForm, ForgotPassword } from "../index";
 
 const SignIn = () => {
   const [isForgotModal, setIsForgotModalOpen] = useState(false);
@@ -20,24 +23,26 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const type = useSelector((state) => state.type.type);
-  const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
+  const type = useSelector((state) => state.type?.type);
+  const isAuthenticated = useSelector((state) => state.users?.isAuthenticated);
 
   const user_id = localStorage.getItem("uidb64");
   const token = localStorage.getItem("token");
 
+  const isSignInMode = type !== "resetPassword";
+
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      navigate(PATH_DASHBOARD);
     }
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    if (type !== "resetPassword") {
-      navigate("/sign-in");
+    if (isSignInMode) {
+      navigate(PATH_SIGNIN);
       dispatch(resetAuthenticationState());
     } else if (user_id && token) {
-      navigate(`/reset-password/?uidb64=${user_id}&token=${token}`);
+      navigate(`${PATH_RESET_PASSWORD}/?uidb64=${user_id}&token=${token}`);
     }
   }, [type, dispatch, navigate, user_id, token]);
 
@@ -50,7 +55,7 @@ const SignIn = () => {
     <div className="relative h-screen overflow-hidden">
       <img
         src={authBackground}
-        alt="Background"
+        alt={MESSAGE_CONSTANTS.BACKGROUND_ALT_TEXT}
         className="hidden"
         onLoad={() => setIsBgLoaded(true)}
       />
@@ -70,22 +75,28 @@ const SignIn = () => {
         style={{ backgroundImage: `url(${authBackground})` }}
       >
         <div>
-          <img className="p-5" src={logo} alt="Skill Sync logo" />
+          <img
+            className="p-5"
+            src={logo}
+            alt={MESSAGE_CONSTANTS.LOGO_ALT_TEXT}
+          />
         </div>
 
         {/* Main Content Section */}
         <div className="min-h-screen relative">
           <div className="absolute top-36 left-8 sm:left-16 md:top-24 md:left-36 lg:top-36 lg:left-48 w-full max-w-sm">
             <h2 className="text-2xl font-semibold mb-2 text-green-400">
-              {type !== "resetPassword" ? "Sign In" : "Reset Password"}
+              {isSignInMode
+                ? MESSAGE_CONSTANTS.SIGN_IN_TITLE
+                : MESSAGE_CONSTANTS.RESET_PASSWORD_TITLE}
             </h2>
             <p className="mb-6 font-light text-white">
-              {type !== "resetPassword"
-                ? "Admin Login: Access Your Dashboard"
-                : "Reset your password to regain access."}
+              {isSignInMode
+                ? MESSAGE_CONSTANTS.SIGN_IN_DESCRIPTION
+                : MESSAGE_CONSTANTS.RESET_PASSWORD_DESCRIPTION}
             </p>
 
-            {type !== "resetPassword" ? (
+            {isSignInMode ? (
               <SignInForm setIsForgotModalOpen={setIsForgotModalOpen} />
             ) : (
               <ResetPasswordForm

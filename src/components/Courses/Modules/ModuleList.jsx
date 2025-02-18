@@ -1,8 +1,6 @@
 import React from "react";
-import edit_module from "../../assets/edit-grey.png";
-import add_new from "../../assets/add-new.png";
-import trash from "../../assets/trash.png";
-import Module from ".";
+import { edit_module, add_new, trash } from "../../../Assets/index";
+
 
 const ModuleList = ({ modules, onAddClick, onDeleteClick }) => (
   <div className="min-w-full mt-4 h-screen bg-white">
@@ -38,7 +36,7 @@ const ModuleList = ({ modules, onAddClick, onDeleteClick }) => (
       </button>
     </div>
     <hr className="h-px border bg-neutral-500" />
-    <Module />
+    {/* <Module /> */}
   </div>
 );
 
