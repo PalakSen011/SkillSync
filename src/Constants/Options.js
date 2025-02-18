@@ -27,4 +27,5 @@ export const roleOptions = [
   { label: "Select Role", value: "",  },
   { label: "HR", value: "CHA6xgL" },
   { label: "Developer", value: "CHWIISR" },
+  { label: "Fresher", value: "CHLG9xg" },
 ];
