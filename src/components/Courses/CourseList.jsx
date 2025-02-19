@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 
@@ -7,8 +7,16 @@ import CourseListTable from "./CourseListTable";
 import { PATH_ADD_NEW_COURSE } from "../../Constants/RouteConstants";
 
 import { filter, search } from "../../Assets/index";
+import FilterModal from "../../Common/FilterModal";
 
 const CourseList = () => {
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
+  const handleFilterClick = () => {
+    setShowFilterModal(true);
+    console.log("Filter Clicked");
+  };
+
   return (
     <>
       <div className="text-xl font-semibold mb-5">All Courses</div>
@@ -27,7 +35,10 @@ const CourseList = () => {
               className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4"
             />
           </div>
-          <button className="bg-white p-3 border border-neutral-300 items-end">
+          <button
+            className="bg-white p-3 border border-neutral-300 items-end"
+            onClick={handleFilterClick}
+          >
             <img className="h-4" src={filter} alt="filter" />
           </button>
         </div>
@@ -38,6 +49,7 @@ const CourseList = () => {
       </div>
       {/* CourseList Component */}
       <CourseListTable />
+      {showFilterModal && <FilterModal />}
     </>
   );
 };

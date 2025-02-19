@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { show, hide } from "../../../Assets/index";
-import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
-import { validateEmail, validatePassword } from "../../../utils/validation";
 import { loginUser } from "../../../Api/authApi";
+
+import { show, hide } from "../../../Assets/index";
+
+import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
+
+import { validateEmail, validatePassword } from "../../../utils/validation";
+
+
+import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
@@ -18,7 +24,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     formState: { errors },
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,19 +34,20 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await loginUser(data); 
+      const response = await loginUser(data);
       localStorage.setItem("token", response?.data?.token);
       localStorage.setItem("uidb64", "VVJNbkZXcw");
       dispatch(setisAuthenticated(true));
       navigate(PATH_DASHBOARD);
-      toast.success("Signed In Successfully");
+      toast.success(MESSAGE_CONSTANTS.signInSuccess);
     } catch (error) {
-      toast.error("Invalid Email or Password");
+      toast.error(error?.message || MESSAGE_CONSTANTS.ERROR_DEFAULT);
     } finally {
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
     }
   };
 
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Email Input Field */}
@@ -50,7 +57,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
           control={control}
           defaultValue=""
           rules={{
-            required: "Email cannot be empty.",
+            required: MESSAGE_CONSTANTS.emailRequired,
             validate: (value) => validateEmail(value) || true,
           }}
           render={({ field }) => (
@@ -77,7 +84,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             control={control}
             defaultValue=""
             rules={{
-              required: "Password cannot be empty.",
+              required: MESSAGE_CONSTANTS.passwordRequired,
               validate: (value) => validatePassword(value) || true,
             }}
             render={({ field }) => (
@@ -87,7 +94,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
                 className="w-full px-4 py-2"
                 placeholder="Password"
                 {...field}
-                disabled={isSubmitting} 
+                disabled={isSubmitting}
               />
             )}
           />
@@ -96,7 +103,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
             type="button"
             className="absolute top-3 right-2"
             onClick={() => setShowPassword(!showPassword)}
-            disabled={isSubmitting} 
+            disabled={isSubmitting}
           >
             <img
               src={showPassword ? show : hide}
@@ -116,9 +123,9 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
           type="button"
           className="text-sm text-white hover:underline"
           onClick={() => setIsForgotModalOpen(true)}
-          disabled={isSubmitting} 
+          disabled={isSubmitting}
         >
-          Forgot password?
+          {MESSAGE_CONSTANTS.forgotPassword}
         </button>
       </div>
 
@@ -127,15 +134,15 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
         <button
           type="submit"
           className="p-8 py-2 border text-white border-green-600 flex items-center justify-center"
-          disabled={isSubmitting} 
+          disabled={isSubmitting}
         >
           {isSubmitting ? (
             <>
               <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
-              Signing In...
+              {MESSAGE_CONSTANTS.signingIn}
             </>
           ) : (
-            "Sign In"
+            MESSAGE_CONSTANTS.signIn
           )}
         </button>
 
@@ -143,7 +150,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
           to={PATH_SIGNUP}
           className="p-8 py-2 border text-white border-green-600"
         >
-          Sign Up
+          {MESSAGE_CONSTANTS.signUp}
         </Link>
       </div>
     </form>

@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+
 import {
   sent_mail,
   forgotPassword as forgotPasswordImg,
 } from "../../../Assets/index";
+
 import { changeType } from "../../../Store/Slice/typeSlice";
 import { setUserEmail } from "../../../Store/Slice/usersSlice";
+
+  
 import { forgotPassword } from "../../../Api/authApi";
 import { validateEmail } from "../../../utils/validation";
-import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants"; // Import constants
+import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
@@ -18,6 +23,8 @@ const ForgotPassword = ({ onClose }) => {
 
   const type = useSelector((state) => state?.type?.type);
   const dispatch = useDispatch();
+
+  const isSentEmailMode = type === "sentEmail";
 
   const handleEmailChange = (e) => {
     setEmail(e.target?.value);
@@ -63,12 +70,12 @@ const ForgotPassword = ({ onClose }) => {
         </button>
 
         <img
-          className={type === "sentEmail" ? "w-1/3" : "w-80"}
-          src={type === "sentEmail" ? sent_mail : forgotPasswordImg}
+          className={isSentEmailMode ? "w-1/3" : "w-80"}
+          src={isSentEmailMode ? sent_mail : forgotPasswordImg}
           alt="Password Reset"
         />
-
-        {type === "sentEmail" ? (
+  
+        {isSentEmailMode ? (
           <div className="flex flex-col items-center">
             <h2 className="text-lg p-3 text-center">
               {MESSAGE_CONSTANTS.EMAIL_CHECK}

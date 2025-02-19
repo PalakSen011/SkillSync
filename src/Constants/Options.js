@@ -1,13 +1,13 @@
 export const statusOptions = [
-  { value: "Draft", label: "Draft" },
-  { value: "Active", label: "Active", disabled: true },
-  { value: "Inactive", label: "Inactive", disabled: true },
+  {  label: "Draft",value: "Draft",id: "status_active" },
+  {  label: "Active",value: "Active",id: "status_active", disabled: true },
+  { value: "Inactive", label: "Inactive",id: "status_inactive", disabled: true },
 ];
 export const categoryOptions = [
-  { label: "", value: "", dsiabled: true },
-  { value: "Training", label: "Training" },
-  { value: "Workshop", label: "Workshop" },
-  { value: "Seminar", label: "Seminar" },
+  // { label: "", value: "", dsiabled: true },
+  {  label: "Training",value: "Training",id: "category_training", },
+  {  label: "Compliance",value: "Compliance",id: "category_compliance" },
+  {  label: "Learning",value: "Learning",id: "category_learning" },
 ];
 
 export const optionTypes = [
@@ -16,15 +16,20 @@ export const optionTypes = [
   { label: "Single Choice", value: "radio" },
 ];
 
+export const mandatoryOptions = [
+  { id: "mandatory_yes", label: "Yes" },
+  { id: "mandatory_no", label: "No" },
+];
+
 export const genderOptions = [
-  { label: "Select Gender", value: "",  },
+  { label: "Select Gender", value: "" },
   { label: "Male", value: "CHRELgT" },
   { label: "Female", value: "CHEfbqz" },
   { label: "Other", value: "CHN0hVk" },
 ];
 
 export const roleOptions = [
-  { label: "Select Role", value: "",  },
+  { label: "Select Role", value: "" },
   { label: "HR", value: "CHA6xgL" },
   { label: "Developer", value: "CHWIISR" },
   { label: "Fresher", value: "CHLG9xg" },

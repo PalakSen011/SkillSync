@@ -11,6 +11,7 @@ import { deleteCourse } from "../../Store/Slice/courseSlice";
 import { PATH_COURSES } from "../../Constants/RouteConstants";
 
 import ConfirmationDelete from "../../Common/ConfirmationDelete";
+
 const CourseDetails = () => {
   const [activeTab, setActiveTab] = useState("details");
   const [showDeleteModal, setShowDeleteModal] = useState(false);

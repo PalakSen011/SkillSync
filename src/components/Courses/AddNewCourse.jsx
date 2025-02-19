@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 
 import Header from "./Header";
 import AddModule from "./Modules/AddModule";
-import CourseInputField from "../../Common/CourseInputField";
-import DropdownField from "../../Common/DropdownField";
+import {CourseInputField,DropdownField} from "../../Common/index"
 
 import { addCourse, replaceCourseById } from "../../Store/Slice/courseSlice";
 import { statusOptions, categoryOptions } from "../../Constants/Options";

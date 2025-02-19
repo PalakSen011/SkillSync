@@ -1,27 +1,42 @@
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import Pagination from "rc-pagination";
-import dropDownIcon from "../../Assets/caretIcon.svg";
 import "rc-pagination/assets/index.css";
+
+import { courseList } from "../../Api/courseApi";
+import {darkdropdown  } from "../../Assets/index"
 import { PATH_COURSE_DETAIL } from "../../Constants/RouteConstants";
 
-const Courses = () => {
-  const dispatch = useDispatch();
+const CoursesListTable = () => {
   const navigate = useNavigate();
-  const courses = useSelector((state) => state.courses.courses); // Fetch courses from Redux store
-  const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [itemsPerPage, setItemsPerPage] = useState(9); // Items per page
+  const [courses, setCourses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Calculate the displayed courses based on the current page and items per page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentCourses = courses.slice(indexOfFirstItem, indexOfLastItem);
 
+  const fetchCourses = async (currentPage, itemsPerPage) => {
+    try {
+      const response = await courseList();
+      console.log(response);
+      setCourses(response.data.results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses(currentCourses, itemsPerPage);
+  }, [itemsPerPage]);
+
   const handleItemsPerPageChange = (event) => {
     const newItemsPerPage = parseInt(event.target.value);
     setItemsPerPage(newItemsPerPage);
-    setCurrentPage(1); // Reset to the first page
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page) => {
@@ -50,7 +65,7 @@ const Courses = () => {
                     <span>Mandatory</span>
                     <img
                       className="pt-1 pl-2"
-                      src={dropDownIcon}
+                      src={darkdropdown}
                       alt="caret icon"
                     />
                   </th>
@@ -59,13 +74,11 @@ const Courses = () => {
                     <span>No of assignees</span>
                     <img
                       className="pt-1 pl-2"
-                      src={dropDownIcon}
+                      src={darkdropdown}
                       alt="caret icon"
                     />
                   </th>
-                  <th className="border-b p-5 ">
-                    Course duration
-                  </th>
+                  <th className="border-b p-5 ">Course duration</th>
                   <th className="border-b p-4  pr-6">Status</th>
                 </tr>
               </thead>
@@ -74,27 +87,23 @@ const Courses = () => {
                   <tr
                     key={index}
                     className="hover:bg-gray-50 p-6 text-sm text-neutral-700 cursor-pointer"
-                    onClick={() => handleCourseClick(course.course_id)}
+                    onClick={() => handleCourseClick(course.id)}
                   >
                     <td className="border-b p-5 pl-6">{course.course_title}</td>
                     <td className="border-b p-5 ">
                       {course.is_mandatory ? "Yes" : "No"}
                     </td>
-                    <td className="border-b p-5 ">
-                      {course.category}
-                    </td>
-                    <td className="border-b p-5 ">
-                      {course.assignee}
-                    </td>
+                    <td className="border-b p-5 ">{course.category_name}</td>
+                    <td className="border-b p-5 ">{course.no_of_assignee}</td>
                     <td className="border-b p-5">{course.duration}</td>
                     <td className="border-b p-4  pr-6">
                       <span
                         className={
-                          course.status === "Draft"
+                          course.status === "draft"
                             ? "btn-draft"
-                            : course.status === "Active"
+                            : course.status === "active"
                             ? "btn-active"
-                            : "btn-Inactive"
+                            : "btn-inactive"
                         }
                       >
                         {course.status}
@@ -115,7 +124,7 @@ const Courses = () => {
                 value={itemsPerPage}
                 onChange={handleItemsPerPageChange}
               >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                   <option key={num} value={num}>
                     {num}
                   </option>
@@ -140,4 +149,4 @@ const Courses = () => {
   );
 };
 
-export default Courses;
+export default CoursesListTable;

@@ -1,6 +1,17 @@
 export const MESSAGE_CONSTANTS = {
   // General messages
   ERROR_DEFAULT: "Something went wrong",
+
+  //Sign-up messages
+  ERROR_PASSWORD_REQUIRED: "Password cannot be empty.",
+  ERROR_FIRST_NAME_REQUIRED: "First name is required.",
+  ERROR_LAST_NAME_REQUIRED: "Last name is required.",
+  ERROR_PHONE_REQUIRED: "Phone number is required.",
+  ERROR_GENDER_REQUIRED: "Gender is required.",
+  ERROR_ROLE_REQUIRED: "Role is required.",
+  ERROR_INVALID_EMAIL: "Email is required.",
+  SUCCESS_SIGNUP: "Account created successfully!",
+
   
   // Sign-in messages
   SIGN_IN_TITLE: "Sign In",
@@ -9,6 +20,16 @@ export const MESSAGE_CONSTANTS = {
   PASSWORD_PLACEHOLDER: "Enter your password",
   INVALID_CREDENTIALS: "Invalid or missing credentials.",
   SIGN_IN_BUTTON: "Sign In",
+
+  // Sign-in form messages
+  emailRequired: "Email cannot be empty.",
+  passwordRequired: "Password cannot be empty.",
+  signInSuccess: "Signed In Successfully",
+  signInError: "Invalid Email or Password",
+  forgotPassword: "Forgot password?",
+  signIn: "Sign In",
+  signUp: "Sign Up",
+  signingIn: "Signing In...",
 
   // Forgot Password messages
   FORGOT_PASSWORD_PROMPT: "Forgot your password?",

@@ -28,6 +28,7 @@ const SignIn = () => {
 
   const user_id = localStorage.getItem("uidb64");
   const token = localStorage.getItem("token");
+  console.log("🚀 ~ SignIn ~ token:", token)
 
   const isSignInMode = type !== "resetPassword";
 
