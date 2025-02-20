@@ -7,7 +7,7 @@ import { resetPassword } from "../../../Api/authApi";
 import {
   validatePassword,
   validateConfirmPassword,
-} from "../../../utils/validation";
+} from "../../../Utils/validation";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 
 const ResetPassword = ({ setIsResetSuccessfulModal }) => {
