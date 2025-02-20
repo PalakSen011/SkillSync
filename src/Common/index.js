@@ -1,6 +1,6 @@
 import ConfirmationDelete from './ConfirmationDelete';
 import ConfirmLogoutModal from './ConfirmLogoutModal';
-import CourseInputField from './CourseInputField';
+import CourseInputField from './InputField';
 import DropdownField from './DropdownField';
 import HeaderComponent from './HeaderComponent';
 import Home from './Home';

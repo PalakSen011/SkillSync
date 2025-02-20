@@ -29,7 +29,9 @@ const SignUp = () => {
 
     try {
       const response = await signUpUser(data);
-      toast.success(response?.data?.message || MESSAGE_CONSTANTS.SUCCESS_SIGNUP);
+      toast.success(
+        response?.data?.message || MESSAGE_CONSTANTS.SUCCESS_SIGNUP
+      );
       navigate(PATH_SIGNIN);
     } catch (error) {
       toast.error(error?.message || MESSAGE_CONSTANTS.ERROR_DEFAULT);
@@ -45,14 +47,29 @@ const SignUp = () => {
       </div>
       <div className="min-h-screen relative">
         <div className="absolute top-36 left-8 sm:left-16 md:top-24 md:left-36 lg:top-36 lg:left-48 w-full max-w-sm">
-          <h2 className="text-2xl font-semibold mb-2 text-green-400">Sign Up</h2>
+          <h2 className="text-2xl font-semibold mb-2 text-green-400">
+            Sign Up
+          </h2>
           <p className="mb-6 font-light text-white">
             Create an account to access courses.
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormFields fields={signUpFormFields} register={register} errors={errors} isSubmitting={isSubmitting} />
-            <SubmitButton isSubmitting={isSubmitting} />
+            <FormFields
+              fields={signUpFormFields}
+              register={register}
+              errors={errors}
+              isSubmitting={isSubmitting}
+            />
+            <SubmitButton
+              isSubmitting={isSubmitting}
+              className="w-full py-2 border text-white border-green-600 flex items-center justify-center"
+              message={
+                isSubmitting
+                  ? MESSAGE_CONSTANTS.signingIn
+                  : MESSAGE_CONSTANTS.signIn
+              }
+            />
           </form>
         </div>
       </div>

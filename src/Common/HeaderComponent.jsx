@@ -1,21 +1,24 @@
 import React, { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import logo from "../assets/logo.svg";
-import notification from "../assets/notification.svg";
-import dropDownIcon from "../assets/dropDownIcon.svg";
+import { useDispatch } from "react-redux";
+
+import {logo,notification,dropdownIcon} from "../Assets/index"
 import UserImg from "../../public/UserImg.jpeg";
 import ConfirmLogoutModal from "./ConfirmLogoutModal";
+import { logout } from "../Store/Slice/usersSlice";
 
 const HeaderComp = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Function to handle logout confirmation
   const handleConfirmLogout = () => {
     setIsModalOpen(false);
-    console.log("Logged out");
     navigate("/sign-in");
+    dispatch(logout())
     toast.success("Successfully logged out!");
   };
 
@@ -35,7 +38,7 @@ const HeaderComp = () => {
           <h3 className="text-white text-m">User Name</h3>
           <p className="text-green-500 text-xs">Admin</p>
         </div>
-        <img src={dropDownIcon} alt="dropDownIcon" />
+        <img src={dropdownIcon} alt="dropdownIcon" />
 
         {/* Logout Button */}
         <button

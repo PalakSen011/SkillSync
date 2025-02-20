@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SelectionField from "./SelectionField";
 import {
   categoryOptions,
@@ -8,51 +8,124 @@ import {
 import RangeSlider from "./RangeSlider";
 
 const FilterModal = () => {
+  const [filters, setFilters] = useState({
+    mandatory: "",
+    category: [],
+    status: [],
+    assigneeRange: [0, 100],
+    courseDuration: [0, 100],
+  });
+
+  // Handler for radio inputs (Mandatory)
+  const handleMandatoryChange = (value) => {
+    setFilters((prev) => ({ ...prev, mandatory: value }));
+  };
+
+  // Handler for checkbox inputs (Category, Status)
+  const handleCheckboxChange = (name, value) => {
+    setFilters((prev) => {
+      const currentValues = prev[name];
+      return {
+        ...prev,
+        [name]: currentValues.includes(value)
+          ? currentValues.filter((item) => item !== value) // Remove if already selected
+          : [...currentValues, value], // Add if not selected
+      };
+    });
+  };
+
+  // Handler for range sliders
+  const handleRangeChange = (name, value) => {
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white pt-2  mr-6 ml-0  shadow-lg max-w-xl w-1/4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white pt-2 shadow-lg max-w-xl w-1/4">
         <div className="text-sm">
           {/* Mandatory section */}
           <SelectionField
             type="radio"
-            name="Mandatory"
+            name="mandatory"
             options={mandatoryOptions}
+            onChange={handleMandatoryChange}
+            selected={filters.mandatory}
           />
-
-          {/* Full-width divider */}
-          <div className="my-2 w-full">
-            <hr className="border-t border-gray-300 w-full" />
-          </div>
 
           {/* Category Section */}
           <SelectionField
             type="checkbox"
-            name="Category"
+            name="category"
             options={categoryOptions}
+            onChange={handleCheckboxChange}
+            selected={filters.category}
           />
-
-          {/* Full-width divider */}
+          {/* 
           <div className="my-2 w-full">
             <hr className="border-t border-gray-300 w-full" />
-          </div>
+          </div> */}
 
           {/* Status Section */}
           <SelectionField
             type="checkbox"
-            name="Status"
+            name="status"
             options={statusOptions}
+            onChange={handleCheckboxChange}
+            selected={filters.status}
           />
 
-          {/* Full-width divider */}
-          <div className="my-2 w-full">
+          {/* <div className="my-2 w-full">
             <hr className="border-t border-gray-300 w-full" />
+          </div> */}
+
+          {/* Range Sliders */}
+          <div className="mt-3">
+            <RangeSlider
+              onChange={(value) => handleRangeChange("assigneeRange", value)}
+              message="No of assignees"
+              value={filters.assigneeRange}
+            />
           </div>
-          <RangeSlider/>
+
+          {/* <div className="my-2 w-full">
+            <hr className="border-t border-gray-300 w-full" />
+          </div> */}
+
+          <div className="mt-3">
+            <RangeSlider
+              onChange={(value) => handleRangeChange("courseDuration", value)}
+              message="Course Duration (min)"
+              value={filters.courseDuration}
+            />
+          </div>
+
+          {/* <div className="my-2 w-full">
+            <hr className="border-t border-gray-300 w-full" />
+          </div> */}
         </div>
 
-        <div className="flex justify-end gap-6  p-3">
-          <button className="btn-primary">Clear All</button>
-          <button className="btn-secondary">Apply</button>
+        {/* Buttons */}
+        <div className="flex justify-end gap-6 p-3">
+          <button
+            className="btn-primary"
+            onClick={() =>
+              setFilters({
+                mandatory: "",
+                category: [],
+                status: [],
+                assigneeRange: [0, 100],
+                courseDuration: [0, 100],
+              })
+            }
+          >
+            Clear All
+          </button>
+          <button
+            className="btn-secondary"
+            onClick={() => console.log("Applied Filters:", filters)}
+          >
+            Apply
+          </button>
         </div>
       </div>
     </div>

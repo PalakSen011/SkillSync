@@ -3,18 +3,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import CourseListTable from "./CourseListTable";
-
-import { PATH_ADD_NEW_COURSE } from "../../Constants/RouteConstants";
-
-import { filter, search } from "../../Assets/index";
 import FilterModal from "../../Common/FilterModal";
+import { filter, search } from "../../Assets/index";
+import { PATH_ADD_NEW_COURSE } from "../../Constants/RouteConstants";
 
 const CourseList = () => {
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const handleFilterClick = () => {
     setShowFilterModal(true);
-    console.log("Filter Clicked");
   };
 
   return (

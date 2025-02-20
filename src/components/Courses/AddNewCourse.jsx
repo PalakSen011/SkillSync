@@ -128,9 +128,10 @@ const AddNewCourse = ({ onBackClick }) => {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center gap-4 mt-3">
-            <CourseInputField
+            <InputField
               id="courseTitle"
               label="Title"
+              type="text"
               required
               errors={errors?.title}
               value={courseDetails?.title}

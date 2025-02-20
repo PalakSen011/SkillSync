@@ -5,7 +5,7 @@ import Pagination from "rc-pagination";
 import "rc-pagination/assets/index.css";
 
 import { courseList } from "../../Api/courseApi";
-import {darkdropdown  } from "../../Assets/index"
+import { darkdropdown } from "../../Assets/index";
 import { PATH_COURSE_DETAIL } from "../../Constants/RouteConstants";
 
 const CoursesListTable = () => {
@@ -22,7 +22,6 @@ const CoursesListTable = () => {
   const fetchCourses = async (currentPage, itemsPerPage) => {
     try {
       const response = await courseList();
-      console.log(response);
       setCourses(response.data.results);
     } catch (error) {
       console.log(error);
@@ -60,26 +59,27 @@ const CoursesListTable = () => {
             <table className="min-w-full table-auto border-collapse text-sm mt-4 text-slate-800 bg-white">
               <thead>
                 <tr className="text-left">
-                  <th className="border-b p-5 pl-6">Name</th>
-                  <th className="flex border-b p-5 hide-on-mobile">
-                    <span>Mandatory</span>
-                    <img
-                      className="pt-1 pl-2"
-                      src={darkdropdown}
-                      alt="caret icon"
-                    />
-                  </th>
-                  <th className="border-b p-5 ">Category</th>
-                  <th className="flex border-b p-5 ">
-                    <span>No of assignees</span>
-                    <img
-                      className="pt-1 pl-2"
-                      src={darkdropdown}
-                      alt="caret icon"
-                    />
-                  </th>
-                  <th className="border-b p-5 ">Course duration</th>
-                  <th className="border-b p-4  pr-6">Status</th>
+                  {[
+                    "Name",
+                    "Mandatory",
+                    "Category",
+                    "No of assignees",
+                    "Course duration",
+                    "Status",
+                  ].map((header, idx) => (
+                    <th key={idx} className="border-b p-5">
+                      <div className="flex items-center">
+                        {header}
+                        {["Mandatory", "No of assignees"].includes(header) && (
+                          <img
+                            className="pt-1 pl-2"
+                            src={darkdropdown}
+                            alt="caret icon"
+                          />
+                        )}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>

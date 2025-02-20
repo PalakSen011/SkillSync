@@ -35,14 +35,14 @@ export const signUpFormFields = [
       name: "gender",
       options: genderOptions,
       validation: { required: MESSAGE_CONSTANTS.ERROR_GENDER_REQUIRED },
-      className: "w-1/2",
+      className: "w-auto",
     },
     {
       type: "dropdown",
       name: "role",
       options: roleOptions,
       validation: { required: MESSAGE_CONSTANTS.ERROR_ROLE_REQUIRED },
-      className: "w-1/4",
+      className: " w-1/3",
     },
     {
       type: "password",

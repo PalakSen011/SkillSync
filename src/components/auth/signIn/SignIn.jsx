@@ -24,12 +24,10 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const type = useSelector((state) => state.type?.type);
+  const user_id = useSelector((state)=>state.users?.user_id)
+  const token = useSelector((state)=>state.users?.token);
   const isAuthenticated = useSelector((state) => state.users?.isAuthenticated);
-
-  const user_id = localStorage.getItem("uidb64");
-  const token = localStorage.getItem("token");
-  console.log("🚀 ~ SignIn ~ token:", token)
-
+  
   const isSignInMode = type !== "resetPassword";
 
   useEffect(() => {

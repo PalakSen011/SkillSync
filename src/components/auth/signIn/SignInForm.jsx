@@ -2,28 +2,28 @@ import React, { useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { loginUser } from "../../../Api/authApi";
-
-import { show, hide } from "../../../Assets/index";
-
-import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
-
+import { setAuthData } from "../../../Store/Slice/usersSlice";
 import { validateEmail, validatePassword } from "../../../utils/validation";
 
-
+import SubmitButton from "../SignUp/SubmitButton";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
+import { InputField, PasswordField } from "../../../Common";
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
-    control,
+    register,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
+    watch,
   } = useForm();
-  const [showPassword, setShowPassword] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,9 +35,10 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
 
     try {
       const response = await loginUser(data);
-      localStorage.setItem("token", response?.data?.token);
-      localStorage.setItem("uidb64", "VVJNbkZXcw");
-      dispatch(setisAuthenticated(true));
+      const user_id = response?.data?.user_id;
+      const token = response?.data?.token;
+
+      dispatch(setAuthData({ user_id, token }));
       navigate(PATH_DASHBOARD);
       toast.success(MESSAGE_CONSTANTS.signInSuccess);
     } catch (error) {
@@ -47,74 +48,53 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     }
   };
 
-  
+  // Handle email validation
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    const error = validateEmail(value);
+    if (error) {
+      setError("email", { type: "manual", message: error });
+    } else {
+      clearErrors("email");
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Email Input Field */}
       <div className="mb-4">
-        <Controller
+        <InputField
+          id="email"
           name="email"
-          control={control}
-          defaultValue=""
-          rules={{
+          type="email"
+          placeholder="Enter your email"
+          register={register}
+          validation={{
             required: MESSAGE_CONSTANTS.emailRequired,
             validate: (value) => validateEmail(value) || true,
           }}
-          render={({ field }) => (
-            <input
-              type="email"
-              id="email"
-              className="w-full px-4 py-2"
-              placeholder="Email"
-              {...field}
-              disabled={isSubmitting} // Disable input while submitting
-            />
-          )}
+          errors={errors}
+          disabled={isSubmitting}
+          onChange={(e) => {
+            handleEmailChange;
+          }}
         />
-        {errors?.email && (
-          <p className="text-red-500 text-sm">{errors?.email?.message}</p>
-        )}
       </div>
 
       {/* Password Input Field */}
       <div className="mb-4">
         <div className="relative">
-          <Controller
+          <PasswordField
+            register={register}
             name="password"
-            control={control}
-            defaultValue=""
-            rules={{
+            errors={errors}
+            disabled={isSubmitting}
+            validation={{
               required: MESSAGE_CONSTANTS.passwordRequired,
               validate: (value) => validatePassword(value) || true,
             }}
-            render={({ field }) => (
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                className="w-full px-4 py-2"
-                placeholder="Password"
-                {...field}
-                disabled={isSubmitting}
-              />
-            )}
           />
-          {/* Toggle Password Visibility */}
-          <button
-            type="button"
-            className="absolute top-3 right-2"
-            onClick={() => setShowPassword(!showPassword)}
-            disabled={isSubmitting}
-          >
-            <img
-              src={showPassword ? show : hide}
-              alt={showPassword ? "Hide password" : "Show password"}
-              className="w-5 h-5"
-            />
-          </button>
         </div>
-        {errors?.password && (
-          <p className="text-red-500 text-sm">{errors?.password?.message}</p>
-        )}
       </div>
 
       {/* Forgot Password Button */}
@@ -131,20 +111,15 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
 
       {/* Sign In and Sign Up Buttons */}
       <div className="flex justify-between">
-        <button
-          type="submit"
+        <SubmitButton
+          isSubmitting={isSubmitting}
           className="p-8 py-2 border text-white border-green-600 flex items-center justify-center"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
-              {MESSAGE_CONSTANTS.signingIn}
-            </>
-          ) : (
-            MESSAGE_CONSTANTS.signIn
-          )}
-        </button>
+          message={
+            isSubmitting
+              ? MESSAGE_CONSTANTS.signingIn
+              : MESSAGE_CONSTANTS.signIn
+          }
+        />
 
         <Link
           to={PATH_SIGNUP}

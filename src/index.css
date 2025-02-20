@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  font-family: 'Inter', Arial, sans-serif; /* Add a fallback font for safety */
+html,
+body {
+  font-family: "Inter", Arial, sans-serif; /* Add a fallback font for safety */
   font-size: 15px; /* Base font size */
   line-height: 15.73px; /* Optional: Adjust line height */
 }
@@ -70,3 +71,42 @@ html, body {
   color: red;
 }
 
+.horizontal-slider {
+  /* width: 100%; */
+  /* max-width: 500px; */
+  /* height: 50px; */
+  margin: 10px;
+  padding: 10px;
+}
+
+.horizontal-slider .example-track {
+  top: 10px;
+  height: 5px;
+}
+
+.example-track.example-track-0 {
+  background: #f2f2f2;
+}
+
+.example-track.example-track-1 {
+  background: #38c776;
+}
+
+.example-track.example-track-2 {
+  background: #f2f2f2;
+}
+
+.horizontal-slider .example-thumb {
+  top: 5px;
+  width: 15px;
+  height: 15px;
+  line-height: 65px;
+  border-radius: 50%;
+  font-size: 0.9em;
+  text-align: center;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.36);
+  color: #848484;
+  cursor: pointer;
+  box-sizing: border-box;
+}

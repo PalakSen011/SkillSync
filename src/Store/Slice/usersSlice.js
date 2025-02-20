@@ -8,12 +8,15 @@ const initialState = {
   message: "",
   userEmail: "",
   userEmailError: false,
+  token:null,
+  user_id:null
 };
 
 const usersSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
+    
     // Action to add a new user to the state
     addUser: (state, action) => {
       const newUser = {
@@ -25,6 +28,16 @@ const usersSlice = createSlice({
 
     setisAuthenticated: (state,action) => {
       state.isAuthenticated = action.payload;
+    },
+    setAuthData: (state, action) => {
+      state.isAuthenticated = true;
+      state.token = action.payload.token;
+      state.user_id = action.payload.user_id;
+    },
+    logout: (state) => {
+      // state.isAuthenticated = false;
+      state.token = null;
+      state.user_id = null;
     },
     setUser: (state, action) => {
       const { userData, email } = action.payload;
@@ -113,6 +126,8 @@ export const {
   setisAuthenticated,
   setUser,
   resetUserEmail,
+  logout,
+  setAuthData
 } = usersSlice.actions;
 
 export default usersSlice.reducer;

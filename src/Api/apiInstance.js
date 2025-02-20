@@ -1,4 +1,5 @@
 import axios from "axios";
+import {appStore} from "../Store/appStore"
 
 const apiInstance = axios.create({
   baseURL:
@@ -9,7 +10,8 @@ const apiInstance = axios.create({
 });
 
 apiInstance.interceptors.request.use((request) => {
-  const token = localStorage.getItem("token");
+  // const token = useSelector((state)=>state.users?.token);
+  const token = appStore.getState()?.users?.token;
   console.log("🚀 ~ apiInstance.interceptorsrequest.use ~ token:", token)
   if (token) {
     request.headers.Authorization = `Token  ${token}`;

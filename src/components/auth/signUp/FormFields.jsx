@@ -1,10 +1,15 @@
 import React from "react";
-import { SignUpInputField, DropdownField, PasswordField } from "../../../Common";
+import {
+  SignUpInputField,
+  DropdownField,
+  PasswordField,
+} from "../../../Common";
 
 const FormFields = ({ fields, register, errors, isSubmitting }) => {
   return fields.map((field) => {
     switch (field.type) {
-      case "text"||"email":
+      case "text":
+      case "email":
         return (
           <SignUpInputField
             key={field.name}

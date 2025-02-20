@@ -1,28 +1,43 @@
 import React from "react";
 
 const InputField = ({
-  label,
-  required,
-  type = "text",
-  value,
-  placeholder,
-  onChange,
   id,
-}) => (
-  <div className="flex flex-col w-2/3 ">
-    <label htmlFor={id} className="text-sm  text-neutral-500 font-medium mb-1">
-      {label}
-      {required &&  <span className="req"> *</span>}
-    </label>
-    <input
-      type={type}
-      id={id}
-      placeholder={placeholder}
-      className="border border-gray-300 px-3 py-2 text-sm"
-      value={value}
-      onChange={onChange}
-    />
-  </div>
-);
+  label,
+  name,
+  required,
+  value,
+  type,
+  placeholder,
+  errors,
+  className,
+  onChange,
+  register
+}) => {
+  return (
+    <div className={`${className || "flex flex-col"}`}>
+      {label && (
+        <label
+          htmlFor={id}
+          className="text-sm text-neutral-500 font-medium mb-1"
+        >
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+      )}
+      <input
+        id={id}
+        type={type}
+        required={required}
+        value={value}
+        placeholder={placeholder}
+        className="appearance-none border px-3 py-2 text-sm"
+        {...register(name)} 
+        onChange={onChange}
+      />
+      {errors?.[id] && (
+        <p className="text-red-500 text-sm">{errors[id]?.message}</p>
+      )}
+    </div>
+  );
+};
 
 export default InputField;

@@ -11,7 +11,6 @@ import {
 import { changeType } from "../../../Store/Slice/typeSlice";
 import { setUserEmail } from "../../../Store/Slice/usersSlice";
 
-  
 import { forgotPassword } from "../../../Api/authApi";
 import { validateEmail } from "../../../utils/validation";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
@@ -74,7 +73,7 @@ const ForgotPassword = ({ onClose }) => {
           src={isSentEmailMode ? sent_mail : forgotPasswordImg}
           alt="Password Reset"
         />
-  
+
         {isSentEmailMode ? (
           <div className="flex flex-col items-center">
             <h2 className="text-lg p-3 text-center">

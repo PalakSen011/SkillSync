@@ -1,5 +1,7 @@
 import React from "react";
+
 import { NavLink } from "react-router-dom";
+
 import { home, graduation_cap, user_settings } from "../Assets/index";
 import {
   PATH_COURSES,
@@ -7,7 +9,6 @@ import {
   PATH_USER_MANAGEMENT,
 } from "../Constants/RouteConstants";
 
-// Reusable SidebarLink component
 const SidebarLink = ({ to, icon, label }) => {
   return (
     <NavLink

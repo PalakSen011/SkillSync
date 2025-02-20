@@ -1,44 +1,27 @@
-import { useState } from "react";
-import Nouislider from "nouislider-react";
-import "nouislider/distribute/nouislider.css";
+import React from "react";
+import ReactSlider from "react-slider";
 
-const RangeSlider = () => {
-  const [minValue, setMinValue] = useState("30");
-
-  const displayMin = (event) => {
-    setMinValue(event[0]);
-  };
-  const Slider = () => (
-    <Nouislider
-      range={{ min: 0, max: 100 }}
-      start={[0, 50]}
-      connect
-      tooltips={[true, false]}
-      onChange={displayMin}
-      
-    />
-  );
-
+const RangeSlider = ({ onChange, message, value }) => {
   return (
-    <div>
-      {Slider()}
-      <center>
-        <div style={{ display: "inline", padding: "2%" }}>
-          <h3>Min Value</h3>
-          <br></br>
-          <div
-            style={{
-              background: "green",
-              color: "white",
-              display: "inline",
-              padding: "1%",
-            }}
-          >
-            {minValue}
-          </div>
-        </div>
-      </center>
-    </div>
+    <>
+      <div className="pb-5">
+        <p className="mb-2 pl-3 font-medium">{message}</p>
+        <ReactSlider
+          className="horizontal-slider"
+          thumbClassName="example-thumb"
+          trackClassName="example-track"
+          value={value} // Controlled component
+          onChange={onChange} // Update state on change
+          ariaLabel={["Lower thumb", "Upper thumb"]}
+          renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+          pearling
+          minDistance={5}
+        />
+      </div>
+      <div className="my-2 w-full">
+        <hr className="border-t border-gray-300 w-full" />
+      </div>
+    </>
   );
 };
 
