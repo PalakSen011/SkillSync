@@ -1,7 +1,10 @@
 import { MESSAGE_CONSTANTS } from "./MessageConstants";
 import { genderOptions, roleOptions } from "./Options";
-<<<<<<< HEAD
-import { validatePhoneNumber, validatePassword,validateEmail} from "../utils/validation";
+import {
+  validatePhoneNumber,
+  validatePassword,
+  validateEmail,
+} from "../utils/validation";
 const handleEmailChange = (e) => {
   const value = e.target.value;
   const error = validateEmail(value);
@@ -11,10 +14,7 @@ const handleEmailChange = (e) => {
     clearErrors("email");
   }
 };
-=======
-import { validatePhoneNumber } from "../Utils/validation";
 
->>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22
 export const signUpFormFields = [
   {
     type: "text",
@@ -48,22 +48,16 @@ export const signUpFormFields = [
     name: "gender",
     options: genderOptions,
     validation: { required: MESSAGE_CONSTANTS.ERROR_GENDER_REQUIRED },
-<<<<<<< HEAD
+
     className: "w-auto",
-=======
-    className: "w-1/2",
->>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22
   },
   {
     type: "dropdown",
     name: "role",
     options: roleOptions,
     validation: { required: MESSAGE_CONSTANTS.ERROR_ROLE_REQUIRED },
-<<<<<<< HEAD
+
     className: " w-1/3",
-=======
-    className: "w-1/4",
->>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22
   },
   {
     type: "password",
@@ -71,8 +65,6 @@ export const signUpFormFields = [
     validation: { required: MESSAGE_CONSTANTS.ERROR_PASSWORD_REQUIRED },
   },
 ];
-<<<<<<< HEAD
-
 export const signInFormFields = [
   {
     id: "email",
@@ -86,7 +78,7 @@ export const signInFormFields = [
     onChange: handleEmailChange,
   },
   {
-    type:"password",
+    type: "password",
     name: "password",
     validation: {
       required: MESSAGE_CONSTANTS.passwordRequired,
@@ -94,5 +86,3 @@ export const signInFormFields = [
     },
   },
 ];
-=======
->>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22

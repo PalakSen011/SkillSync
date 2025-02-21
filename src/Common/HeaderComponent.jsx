@@ -2,15 +2,11 @@ import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-<<<<<<< HEAD
+
 import { useDispatch } from "react-redux";
 
-import {logo,notification,dropdownIcon} from "../Assets/index"
-=======
-import logo from "../Assets/logo.svg";
-import notification from "../Assets/notification.svg";
-import dropDownIcon from "../Assets/dropdownIcon.svg";
->>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22
+import { logo, notification, dropdownIcon } from "../Assets/index";
+
 import UserImg from "../../public/UserImg.jpeg";
 import ConfirmLogoutModal from "./ConfirmLogoutModal";
 import { logout } from "../Store/Slice/usersSlice";
@@ -24,7 +20,7 @@ const HeaderComp = () => {
   const handleConfirmLogout = () => {
     setIsModalOpen(false);
     navigate("/sign-in");
-    dispatch(logout())
+    dispatch(logout());
     toast.success("Successfully logged out!");
   };
 
