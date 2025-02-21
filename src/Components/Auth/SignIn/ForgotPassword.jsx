@@ -12,7 +12,7 @@ import { changeType } from "../../../Store/Slice/typeSlice";
 import { setUserEmail } from "../../../Store/Slice/usersSlice";
 
 import { forgotPassword } from "../../../Api/authApi";
-import { validateEmail } from "../../../utils/validation";
+import { validateEmail } from "../../../Utils/validation";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 
 const ForgotPassword = ({ onClose }) => {

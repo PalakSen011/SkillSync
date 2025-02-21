@@ -2,9 +2,15 @@ import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+<<<<<<< HEAD
 import { useDispatch } from "react-redux";
 
 import {logo,notification,dropdownIcon} from "../Assets/index"
+=======
+import logo from "../Assets/logo.svg";
+import notification from "../Assets/notification.svg";
+import dropDownIcon from "../Assets/dropdownIcon.svg";
+>>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22
 import UserImg from "../../public/UserImg.jpeg";
 import ConfirmLogoutModal from "./ConfirmLogoutModal";
 import { logout } from "../Store/Slice/usersSlice";
@@ -29,10 +35,18 @@ const HeaderComp = () => {
       </div>
 
       <div className="flex items-center space-x-4">
-        <img className="h-6 cursor-pointer" src={notification} alt="Notification Icon" />
+        <img
+          className="h-6 cursor-pointer"
+          src={notification}
+          alt="Notification Icon"
+        />
         <p className="text-white text-2xl font-medium">|</p>
         <div className="w-12 h-10 border border-slate-600 overflow-hidden">
-          <img className="w-full h-10 object-cover" src={UserImg} alt="User Image" />
+          <img
+            className="w-full h-10 object-cover"
+            src={UserImg}
+            alt="User Image"
+          />
         </div>
         <div>
           <h3 className="text-white text-m">User Name</h3>

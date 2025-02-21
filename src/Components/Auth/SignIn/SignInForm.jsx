@@ -9,9 +9,18 @@ import { loginUser } from "../../../Api/authApi";
 import { setAuthData } from "../../../Store/Slice/usersSlice";
 import { validateEmail, } from "../../../utils/validation";
 
+<<<<<<< HEAD:src/components/auth/signIn/SignInForm.jsx
 import SignInFields from "./SingInField";
 import SubmitButton from "../SignUp/SubmitButton";
 import { signInFormFields } from "../../../Constants/InputFields";
+=======
+import { show, hide } from "../../../Assets/index";
+
+import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
+
+import { validateEmail, validatePassword } from "../../../Utils/validation";
+
+>>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22:src/Components/Auth/SignIn/SignInForm.jsx
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
 
@@ -49,6 +58,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     }
   };
 
+<<<<<<< HEAD:src/components/auth/signIn/SignInForm.jsx
   // Handle email validation
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -62,6 +72,8 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     }
   };
 
+=======
+>>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22:src/Components/Auth/SignIn/SignInForm.jsx
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
