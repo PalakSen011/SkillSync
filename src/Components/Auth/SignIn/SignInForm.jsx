@@ -11,8 +11,7 @@ import { show, hide } from "../../../Assets/index";
 
 import { setisAuthenticated } from "../../../Store/Slice/usersSlice";
 
-import { validateEmail, validatePassword } from "../../../utils/validation";
-
+import { validateEmail, validatePassword } from "../../../Utils/validation";
 
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
@@ -47,7 +46,6 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     }
   };
 
-  
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Email Input Field */}
