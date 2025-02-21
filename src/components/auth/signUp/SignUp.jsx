@@ -10,7 +10,7 @@ import { PATH_SIGNIN } from "../../../Constants/RouteConstants";
 import { signUpFormFields } from "../../../Constants/InputFields";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 
-import FormFields from "./FormFields";
+import SignUpFields from "./SignUpFields";
 import SubmitButton from "./SubmitButton";
 
 const SignUp = () => {
@@ -55,7 +55,7 @@ const SignUp = () => {
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormFields
+            <SignUpFields
               fields={signUpFormFields}
               register={register}
               errors={errors}

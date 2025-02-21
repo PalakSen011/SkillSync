@@ -1,42 +1,26 @@
 import React from "react";
-import {
-  SignUpInputField,
-  DropdownField,
-  PasswordField,
-} from "../../../Common";
+import { InputField, PasswordField } from "../../../Common";
 
-const FormFields = ({ fields, register, errors, isSubmitting }) => {
+const SignInFields = ({ fields, register, errors, isSubmitting ,onChange}) => {
   return fields.map((field) => {
     switch (field.type) {
       case "text":
       case "email":
         return (
-          <SignUpInputField
+          <InputField
+            id={field.id}
             key={field.name}
             type={field.type}
             placeholder={field.placeholder}
             register={register}
             name={field.name}
+            onChange={onChange}
             errors={errors}
             disabled={isSubmitting}
             validation={field.validation}
           />
         );
-
-      case "dropdown":
-        return (
-          <DropdownField
-            key={field.name}
-            id={field.name}
-            required
-            error={errors?.[field.name]}
-            options={field.options}
-            {...register(field.name, field.validation)}
-            disabled={isSubmitting}
-            className={field.className}
-          />
-        );
-
+        
       case "password":
         return (
           <PasswordField
@@ -55,4 +39,4 @@ const FormFields = ({ fields, register, errors, isSubmitting }) => {
   });
 };
 
-export default FormFields;
+export default SignInFields;

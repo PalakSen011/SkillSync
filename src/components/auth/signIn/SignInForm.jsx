@@ -7,12 +7,13 @@ import { toast } from "react-toastify";
 
 import { loginUser } from "../../../Api/authApi";
 import { setAuthData } from "../../../Store/Slice/usersSlice";
-import { validateEmail, validatePassword } from "../../../utils/validation";
+import { validateEmail, } from "../../../utils/validation";
 
+import SignInFields from "./SingInField";
 import SubmitButton from "../SignUp/SubmitButton";
+import { signInFormFields } from "../../../Constants/InputFields";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
-import { InputField, PasswordField } from "../../../Common";
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
@@ -49,54 +50,29 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
   };
 
   // Handle email validation
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    const error = validateEmail(value);
-    if (error) {
-      setError("email", { type: "manual", message: error });
-    } else {
-      clearErrors("email");
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "email") {
+      const error = validateEmail(value);
+      if (error) {
+        setError("email", { type: "manual", message: error });
+      } else {
+        clearErrors("email");
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {/* Email Input Field */}
       <div className="mb-4">
-        <InputField
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Enter your email"
+        <SignInFields
+          fields={signInFormFields}
           register={register}
-          validation={{
-            required: MESSAGE_CONSTANTS.emailRequired,
-            validate: (value) => validateEmail(value) || true,
-          }}
           errors={errors}
-          disabled={isSubmitting}
-          onChange={(e) => {
-            handleEmailChange;
-          }}
+          isSubmitting={isSubmitting}
+          onChange={handleInputChange}
         />
       </div>
-
-      {/* Password Input Field */}
-      <div className="mb-4">
-        <div className="relative">
-          <PasswordField
-            register={register}
-            name="password"
-            errors={errors}
-            disabled={isSubmitting}
-            validation={{
-              required: MESSAGE_CONSTANTS.passwordRequired,
-              validate: (value) => validatePassword(value) || true,
-            }}
-          />
-        </div>
-      </div>
-
       {/* Forgot Password Button */}
       <div className="mb-4 text-right">
         <button

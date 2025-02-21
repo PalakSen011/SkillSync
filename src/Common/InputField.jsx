@@ -36,6 +36,7 @@ const InputField = ({
       {errors?.[id] && (
         <p className="text-red-500 text-sm">{errors[id]?.message}</p>
       )}
+      <br />
     </div>
   );
 };
