@@ -8,13 +8,9 @@ import { resetPassword } from "../../../Api/authApi";
 import {
   validatePassword,
   validateConfirmPassword,
-<<<<<<< HEAD:src/components/auth/signIn/ResetPasswordForm.jsx
 } from "../../../utils/validation";
 
 import SubmitButton from "../SignUp/SubmitButton";
-=======
-} from "../../../Utils/validation";
->>>>>>> 053b7dea817024186a614e80046c90a4f61b7f22:src/Components/Auth/SignIn/ResetPasswordForm.jsx
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 import PasswordField from "../../../Common/PasswordField";
 
