@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { loginUser } from "../../../Api/authApi";
 import { setAuthData } from "../../../Store/Slice/usersSlice";
-import { validateEmail, } from "../../../utils/validation";
+import { validateEmail, } from "../../../Utils/validation";
 
-import SignInFields from "./SingInField";
 import SubmitButton from "../SignUp/SubmitButton";
 import { signInFormFields } from "../../../Constants/InputFields";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
+import FieldTypeMapper from "../../../Common/FieldTypeMapper";
 
 const SignInForm = ({ setIsForgotModalOpen }) => {
   const {
@@ -22,7 +22,6 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
     formState: { errors },
     setError,
     clearErrors,
-    watch,
   } = useForm();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,7 +63,7 @@ const SignInForm = ({ setIsForgotModalOpen }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
-        <SignInFields
+        <FieldTypeMapper
           fields={signInFormFields}
           register={register}
           errors={errors}

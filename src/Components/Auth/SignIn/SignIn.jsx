@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { logo, authBackground } from "../../../Assets/index";
+import { logo, authBackground } from "../../../Assets";
 import { resetAuthenticationState } from "../../../Store/Slice/usersSlice";
 import ResetSuccessful from "../../../Common/ResetSuccessful";
 
@@ -28,11 +28,12 @@ const SignIn = () => {
   const user_id = useSelector((state)=>state.users?.user_id)
   const token = useSelector((state)=>state.users?.token);
   const isAuthenticated = useSelector((state) => state.users?.isAuthenticated);
+  console.log("🚀 ~ SignIn ~ isAuthenticated:", isAuthenticated)
   
   const isSignInMode = type !== "resetPassword";
-
+  const hasUserCredentials = user_id && token;
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       navigate(PATH_DASHBOARD);
     }
   }, [isAuthenticated, navigate]);
@@ -41,10 +42,10 @@ const SignIn = () => {
     if (isSignInMode) {
       navigate(PATH_SIGNIN);
       dispatch(resetAuthenticationState());
-    } else if (user_id && token) {
+    } else if (hasUserCredentials) {
       navigate(`${PATH_RESET_PASSWORD}/?uidb64=${user_id}&token=${token}`);
     }
-  }, [type, dispatch, navigate, user_id, token]);
+  }, [type, navigate, user_id, token]);
 
   const handleCloseModal = () => {
     setIsForgotModalOpen(false);

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import CourseListTable from "./CourseListTable";
 import FilterModal from "../../Common/FilterModal";
 import { filter, search } from "../../Assets/index";
-import { PATH_ADD_NEW_COURSE } from "../../Constants/RouteConstants";
+import {PATH_ADD_NEW_COURSE}  from "../../Constants/RouteConstants";
 
 const CourseList = () => {
   const [showFilterModal, setShowFilterModal] = useState(false);

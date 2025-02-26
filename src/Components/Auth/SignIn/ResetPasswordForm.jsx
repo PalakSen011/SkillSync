@@ -8,7 +8,7 @@ import { resetPassword } from "../../../Api/authApi";
 import {
   validatePassword,
   validateConfirmPassword,
-} from "../../../utils/validation";
+} from "../../../Utils/validation";
 
 import SubmitButton from "../SignUp/SubmitButton";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
@@ -87,6 +87,7 @@ const ResetPassword = ({ setIsResetSuccessfulModal }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      
       {/* Password Input */}
       <PasswordField
         register={register}

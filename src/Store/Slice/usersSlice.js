@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // Initial state for the slice
 const initialState = {
   Users: [], // List of users, persisted via redux-persist
-  isAuthenticated: false,
+  isAuthenticated: true,
   loggedInUser: "",
   message: "",
   userEmail: "",

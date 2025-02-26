@@ -27,6 +27,7 @@ import sent_mail from "./sent-mail.gif";
 import show from "./show.svg";
 import trash from "./trash.png";
 import user_settings from "./user-settings.svg";
+import UserMangementImg from "./UserMangementImg.png";
 
 export {
   add_green,
@@ -58,4 +59,5 @@ export {
   show,
   trash,
   user_settings,
+  UserMangementImg
 };

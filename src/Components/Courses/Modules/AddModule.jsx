@@ -13,9 +13,9 @@ import { edit_grey, trash, add_new } from "../../../Assets";
 
 const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
   const { courseId } = useParams();
-  const courses = useSelector((state) => state.courses.courses);
-  const course = courses.find(
-    (course) => course.course_id === parseInt(courseId)
+  const courses = useSelector((state) => state?.courses?.courses);
+  const course = courses?.find(
+    (course) => course?.course_id === parseInt(courseId)
   );
   // State for managing modules and UI
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,7 +25,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
   const [moduleToDelete, setModuleToDelete] = useState(null);
 
   useEffect(() => {
-    if (modules.length === 1) {
+    if (modules?.length === 1) {
       const activeId = modules[0]?.module_id;
       setActiveModuleId(activeId);
     }
@@ -48,7 +48,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
     } else {
       const updatedModules = modules.map((mod) =>
         mod.module_id === moduleId
-          ? { ...mod, module_name: moduleToSave.module_name }
+          ? { ...mod, module_name: moduleToSave?.module_name }
           : mod
       );
       setModules(updatedModules);
@@ -111,7 +111,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
         ? {
             ...module,
             lessons: module.lessons?.map((lesson) =>
-              lesson.lesson_id === updatedLesson.lesson_id
+              lesson?.lesson_id === updatedLesson?.lesson_id
                 ? { ...lesson, ...updatedLesson }
                 : lesson
             ),
@@ -123,7 +123,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
   //function to delete lesson from module
   const deleteLessonFromModule = (lessonId) => {
     if (!activeModuleId) return;
-    const deleteLesson = modules.map((module) =>
+    const deleteLesson = modules?.map((module) =>
       module.module_id === activeModuleId
         ? {
             ...module,
@@ -147,15 +147,15 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
         {/* Module Tabs */}
         {modules?.map((module) => (
           <div
-            key={module.module_id}
+            key={module?.module_id}
             className={`flex px-4 py-3 cursor-pointer ${
-              activeModuleId === module.module_id
+              activeModuleId === module?.module_id
                 ? "border-b-2 border-green-500 text-green-500"
                 : "hover:border-b-2 hover:border-green-500"
             }`}
-            onClick={() => setActiveModuleId(module.module_id)}
+            onClick={() => setActiveModuleId(module?.module_id)}
           >
-            <div className="text-sm">{module.module_name}</div>
+            <div className="text-sm">{module?.module_name}</div>
             <img
               src={edit_grey}
               alt="edit"
@@ -169,7 +169,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
               alt="trash"
               className="h-4 pl-1 cursor-pointer"
               onClick={(e) => {
-                handleDeleteModule(module.module_id, module.module_name);
+                handleDeleteModule(module?.module_id, module?.module_name);
               }}
             />
           </div>
@@ -191,7 +191,7 @@ const AddModule = ({ modules, setModules, updateTestInCourseDetails }) => {
       {modules.length > 0 && activeModuleId && (
         <Lesson
           lessons={
-            modules.find((module) => module.module_id === activeModuleId)
+            modules.find((module) => module?.module_id === activeModuleId)
               ?.lessons || []
           }
           moduleDetails={modules}

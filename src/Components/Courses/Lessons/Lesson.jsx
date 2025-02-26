@@ -26,8 +26,8 @@ const Lesson = ({
 
   useEffect(() => {
     // Set the first lesson as active by default when lessons are loaded
-    if (!activeLessonId && lessons.length > 0) {
-      setActiveLessonId(lessons[0].lesson_id);
+    if (!activeLessonId && lessons?.length > 0) {
+      setActiveLessonId(lessons[0]?.lesson_id);
       setActiveLessonData(lessons[0]);
     }
   }, [lessons]);
@@ -52,21 +52,21 @@ const Lesson = ({
 
   // Handle adding a new lesson
   const handleAddLesson = (data) => {
-    if (!data.lessonName) {
+    if (!data?.lessonName) {
       setError("Lesson name is required");
       return;
     }
 
     const newLesson = {
       lesson_id: Date.now(),
-      lesson_name: data.lessonName,
+      lesson_name: data?.lessonName,
       content: "",
       Duration: "",
       sequence: lessons.length + 1,
     };
 
     addLesson(newLesson);
-    setActiveLessonId(newLesson.lesson_id);
+    setActiveLessonId(newLesson?.lesson_id);
     setActiveLessonData(newLesson);
     reset();
     setIsAddTest(false);
@@ -104,7 +104,7 @@ const Lesson = ({
   const handleLessonClick = (lessonId) => {
     setActiveLessonId(lessonId);
     const selectedLesson = lessons.find(
-      (lesson) => lesson.lesson_id === lessonId
+      (lesson) => lesson?.lesson_id === lessonId
     );
     setActiveLessonData(selectedLesson);
     setIsAddTest(false); 

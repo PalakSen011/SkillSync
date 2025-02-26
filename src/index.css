@@ -7,6 +7,7 @@ body {
   font-family: "Inter", Arial, sans-serif; /* Add a fallback font for safety */
   font-size: 15px; /* Base font size */
   line-height: 15.73px; /* Optional: Adjust line height */
+  
 }
 .btn-primary {
   padding: 2rem;

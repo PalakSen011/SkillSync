@@ -55,7 +55,7 @@ const ForgotPassword = ({ onClose }) => {
 
   const handleResetClick = () => {
     dispatch(changeType("resetPassword"));
-    onClose?.();
+    onClose();
   };
 
   return (

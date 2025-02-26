@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import Header from "./Header";
 import AddModule from "./Modules/AddModule";
-import {CourseInputField,DropdownField} from "../../Common/index"
+import {DropdownField, InputField} from "../../Common"
 
 import { addCourse, replaceCourseById } from "../../Store/Slice/courseSlice";
 import { statusOptions, categoryOptions } from "../../Constants/Options";
@@ -24,13 +24,13 @@ const AddNewCourse = ({ onBackClick }) => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
   const [show, setShow] = useState(false);
+  const [courseDetails, setCourseDetails] = useState(InitialCourseDetails);
 
-  const courses = useSelector((state) => state.courses?.courses || []);
+  const courses = useSelector((state) => state?.courses?.courses || []);
   const course = courses?.find(
     (course) => course?.course_id === parseInt(courseId)
   );
 
-  const [courseDetails, setCourseDetails] = useState(InitialCourseDetails);
 
   const {
     register,

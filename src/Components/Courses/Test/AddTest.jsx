@@ -9,16 +9,16 @@ const AddTest = ({ moduleDetails, onSave }) => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (moduleDetails?.test && Array.isArray(moduleDetails.test)) {
+    if (moduleDetails?.test?.length) {
       const formattedQuestions = moduleDetails.test.map((q) => ({
-        id: q.id || Date.now(),
-        question: q.question || "",
-        type: q.type || "",
+        id: q?.id || Date.now(),
+        question: q?.question || "",
+        type: q?.type || "",
         options:
-          q.options?.map((opt) => ({
-            id: opt.option_id || Date.now() + Math.random(),
-            label: opt.option || "",
-            isCorrect: opt.isCorrect || false,
+          q?.options?.map((opt) => ({
+            id: opt?.option_id || Date.now() + Math.random(),
+            label: opt?.option || "",
+            isCorrect: opt?.isCorrect || false,
           })) || [],
       }));
       setQuestions(formattedQuestions);
@@ -33,19 +33,19 @@ const AddTest = ({ moduleDetails, onSave }) => {
   };
 
   const handleDeleteQuestion = (id) => {
-    setQuestions((prev) => prev.filter((q) => q.id !== id));
+    setQuestions((prev) => prev.filter((q) => q?.id !== id));
   };
 
   const handleCopyQuestion = (id) => {
     setQuestions((prev) => {
-      const questionToCopy = prev.find((q) => q.id === id);
+      const questionToCopy = prev.find((q) => q?.id === id);
       if (!questionToCopy) return prev;
 
       const copiedQuestion = {
         ...questionToCopy,
         id: Date.now(),
         options:
-          questionToCopy.options?.map((opt) => ({
+          questionToCopy?.options?.map((opt) => ({
             ...opt,
             id: Date.now() + Math.random(),
           })) || [],
@@ -57,13 +57,13 @@ const AddTest = ({ moduleDetails, onSave }) => {
 
   const handleQuestionChange = (id, value) => {
     setQuestions((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, question: value } : q))
+      prev.map((q) => (q?.id === id ? { ...q, question: value } : q))
     );
   };
 
   const handleTypeChange = (id, type) => {
     setQuestions((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, type, options: [] } : q))
+      prev.map((q) => (q?.id === id ? { ...q, type, options: [] } : q))
     );
     setErrors((prev) => ({ ...prev, [id]: "" }));
   };
@@ -71,11 +71,11 @@ const AddTest = ({ moduleDetails, onSave }) => {
   const handleAddOption = (id) => {
     setQuestions((prev) =>
       prev.map((q) =>
-        q.id === id
+        q?.id === id
           ? {
               ...q,
               options: [
-                ...q.options,
+                ...q?.options,
                 { id: Date.now(), label: "", isCorrect: false },
               ],
             }
@@ -88,11 +88,11 @@ const AddTest = ({ moduleDetails, onSave }) => {
   const handleOptionChange = (questionId, optionId, label) => {
     setQuestions((prev) =>
       prev.map((q) =>
-        q.id === questionId
+        q?.id === questionId
           ? {
               ...q,
-              options: q.options.map((option) =>
-                option.id === optionId ? { ...option, label } : option
+              options: q?.options?.map((option) =>
+                option?.id === optionId ? { ...option, label } : option
               ),
             }
           : q
@@ -103,12 +103,12 @@ const AddTest = ({ moduleDetails, onSave }) => {
   const handleOptionSelect = (questionId, optionId) => {
     setQuestions((prev) =>
       prev.map((q) =>
-        q.id === questionId
+        q?.id === questionId
           ? {
               ...q,
-              options: q.options.map((option) =>
-                option.id === optionId
-                  ? { ...option, isCorrect: !option.isCorrect }
+              options: q?.options?.map((option) =>
+                option?.id === optionId
+                  ? { ...option, isCorrect: !option?.isCorrect }
                   : option
               ),
             }
@@ -118,7 +118,7 @@ const AddTest = ({ moduleDetails, onSave }) => {
   };
 
   const saveTest = () => {
-    onSave(questions);
+    onSave?.(questions);
   };
 
   return (
@@ -131,9 +131,9 @@ const AddTest = ({ moduleDetails, onSave }) => {
       </div>
 
       <div className="mt-4 max-h-[400px] overflow-y-auto border border-neutral-300 p-4">
-        {questions.map((question) => (
+        {questions?.map((question) => (
           <TestQuestion
-            key={question.id}
+            key={question?.id}
             question={question}
             handleQuestionChange={handleQuestionChange}
             handleTypeChange={handleTypeChange}

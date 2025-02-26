@@ -1,19 +1,11 @@
 import { MESSAGE_CONSTANTS } from "./MessageConstants";
 import { genderOptions, roleOptions } from "./Options";
+import { categoryOptions, mandatoryOptions, statusOptions } from "./Options";
 import {
   validatePhoneNumber,
   validatePassword,
   validateEmail,
-} from "../utils/validation";
-const handleEmailChange = (e) => {
-  const value = e.target.value;
-  const error = validateEmail(value);
-  if (error) {
-    setError("email", { type: "manual", message: error });
-  } else {
-    clearErrors("email");
-  }
-};
+} from "../Utils/validation";
 
 export const signUpFormFields = [
   {
@@ -75,7 +67,6 @@ export const signInFormFields = [
       required: MESSAGE_CONSTANTS.emailRequired,
       validate: (value) => validateEmail(value) || true,
     },
-    onChange: handleEmailChange,
   },
   {
     type: "password",
@@ -84,5 +75,72 @@ export const signInFormFields = [
       required: MESSAGE_CONSTANTS.passwordRequired,
       validate: (value) => validatePassword(value) || true,
     },
+  },
+];
+
+export const courseListTableHeader = [
+  "Name",
+  "Mandatory",
+  "Category",
+  "No of assignees",
+  "Course duration",
+  "Status",
+];
+export const filterFields = [
+  {
+    type: "radio",
+    name: "mandatory",
+    options: mandatoryOptions,
+    label: "Mandatory",
+  },
+  {
+    type: "checkbox",
+    name: "category",
+    options: categoryOptions,
+    label: "Category",
+  },
+  {
+    type: "checkbox",
+    name: "status",
+    options: statusOptions,
+    label: "Status",
+  },
+  {
+    type: "range",
+    name: "assigneeRange",
+    label: "No of Assignees",
+    min: 0,
+    max: 100,
+  },
+  {
+    type: "range",
+    name: "courseDuration",
+    label: "Course Duration (min)",
+    min: 0,
+    max: 100,
+  },
+];
+
+export const coursesFields = [
+  {
+    id: "courseTitle",
+    name: "title",
+    type: "text",
+    placeholder: "Enter Course Title",
+    validation: { required: "Title is required" },
+  },
+  {
+    id: "category",
+    name: "category",
+    type: "dropdown",
+    options: categoryOptions,
+    validation: { required: "Category is required" },
+  },
+  {
+    id: "status",
+    name: "status",
+    type: "dropdown",
+    options: statusOptions,
+    validation: { required: "Status is required" },
   },
 ];

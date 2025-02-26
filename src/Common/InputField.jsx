@@ -34,7 +34,7 @@ const InputField = ({
         onChange={onChange}
       />
       {errors?.[id] && (
-        <p className="text-red-500 text-sm">{errors[id]?.message}</p>
+        <p className="text-red-500 text-sm">{errors?.[id]?.message}</p>
       )}
       <br />
     </div>

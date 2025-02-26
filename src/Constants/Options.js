@@ -1,5 +1,5 @@
 export const statusOptions = [
-  {  label: "Draft",value: "Draft",id: "status_active" },
+  {  label: "Draft",value: "Draft",id: "status_draft" },
   {  label: "Active",value: "Active",id: "status_active", disabled: true },
   { value: "Inactive", label: "Inactive",id: "status_inactive", disabled: true },
 ];
@@ -33,4 +33,9 @@ export const roleOptions = [
   { label: "HR", value: "CHA6xgL" },
   { label: "Developer", value: "CHWIISR" },
   { label: "Fresher", value: "CHLG9xg" },
+];
+export const taskStatusOptions = [
+  {  label: "Completed",value: "Completed",id: "status_completed" },
+  {  label: "In Progress",value: "In Progress",id: "status_in_progress" },
+  { value: "Overdue", label: "Overdue",id: "status_overdue" },
 ];

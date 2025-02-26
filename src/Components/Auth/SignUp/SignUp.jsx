@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { logo } from "../../../Assets/index";
+import { logo } from "../../../Assets/";
 import { signUpUser } from "../../../Api/authApi";
 import { PATH_SIGNIN } from "../../../Constants/RouteConstants";
 import { signUpFormFields } from "../../../Constants/InputFields";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
 
-import SignUpFields from "./SignUpFields";
 import SubmitButton from "./SubmitButton";
+import FieldTypeMapper from "../../../Common/FieldTypeMapper";
 
 const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,7 +55,7 @@ const SignUp = () => {
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <SignUpFields
+            <FieldTypeMapper
               fields={signUpFormFields}
               register={register}
               errors={errors}
