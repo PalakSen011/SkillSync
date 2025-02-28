@@ -7,6 +7,8 @@ import {
   validateEmail,
 } from "../Utils/validation";
 
+//Defines the fields required for user registration
+
 export const signUpFormFields = [
   {
     type: "text",
@@ -40,16 +42,12 @@ export const signUpFormFields = [
     name: "gender",
     options: genderOptions,
     validation: { required: MESSAGE_CONSTANTS.ERROR_GENDER_REQUIRED },
-
-    className: "w-auto",
   },
   {
     type: "dropdown",
     name: "role",
     options: roleOptions,
     validation: { required: MESSAGE_CONSTANTS.ERROR_ROLE_REQUIRED },
-
-    className: " w-1/3",
   },
   {
     type: "password",
@@ -57,6 +55,8 @@ export const signUpFormFields = [
     validation: { required: MESSAGE_CONSTANTS.ERROR_PASSWORD_REQUIRED },
   },
 ];
+
+// Defines the fields required for user login
 export const signInFormFields = [
   {
     id: "email",
@@ -78,6 +78,8 @@ export const signInFormFields = [
   },
 ];
 
+// Defines the column headers for the course list table
+
 export const courseListTableHeader = [
   "Name",
   "Mandatory",
@@ -86,6 +88,9 @@ export const courseListTableHeader = [
   "Course duration",
   "Status",
 ];
+
+// Defines the filtering options for courses
+
 export const filterFields = [
   {
     type: "radio",
@@ -121,26 +126,70 @@ export const filterFields = [
   },
 ];
 
-export const coursesFields = [
+// Defines the form fields for creating or editing a course
+
+export const courseFields = [
   {
-    id: "courseTitle",
-    name: "title",
     type: "text",
-    placeholder: "Enter Course Title",
+    name: "title",
+    id: "courseTitle",
+    label: "Title",
     validation: { required: "Title is required" },
+    className: "flex flex-col w-1/2",
   },
   {
-    id: "category",
-    name: "category",
     type: "dropdown",
+    name: "category",
+    id: "category",
+    label: "Category",
     options: categoryOptions,
     validation: { required: "Category is required" },
   },
   {
-    id: "status",
-    name: "status",
     type: "dropdown",
+    name: "status",
+    id: "status",
+    label: "Status",
     options: statusOptions,
     validation: { required: "Status is required" },
+  },
+];
+
+//Lesson Fields Configuration
+export const lessonFields = [
+  {
+    type: "text",
+    name: "lesson_name",
+    id: "lessonName",
+    label: "Lesson Name",
+    placeholder: "Enter lesson name",
+    validation: { required: "Lesson name is required" },
+    className: "flex flex-col",
+  },
+  {
+    type: "text",
+    name: "duration",
+    id: "duration",
+    label: "Duration (min)",
+    placeholder: "e.g., 50",
+    validation: { required: "Duration is required" },
+    className: "flex flex-col w-1/6",
+  },
+  {
+    type: "text",
+    name: "sequence",
+    id: "lessonNumber",
+    label: "Number",
+    placeholder: "e.g., 1",
+    validation: { required: "Number is required" },
+    className: "flex flex-col w-1/6",
+  },
+  {
+    type: "textarea",
+    name: "content",
+    id: "description",
+    label: "Description",
+    placeholder: "Add a description for the lesson",
+    className: "mt-4 relative w-full",
   },
 ];

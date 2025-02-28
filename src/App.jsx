@@ -20,7 +20,7 @@ import {
   PATH_USER_MANAGEMENT,
   PATH_COURSE_DETAIL,
   PATH_EDIT_COURSE,
-} from "./Constants/RouteConstants";
+} from "./Constants";
 
 import { ProtectedRoute, NotFound, Home } from "./Common";
 
@@ -41,7 +41,7 @@ const App = () => {
             <Route path={PATH_RESET_PASSWORD} element={<SignIn />} />
 
             {/* Protected Routes */}
-            <Route path ="/home" element={<Home/>}>
+            <Route path="/home" element={<Home />}>
               <Route path={PATH_DASHBOARD} element={<Dashboard />} />
               <Route path={PATH_USER_MANAGEMENT} element={<UserManagement />} />
               <Route path={PATH_COURSES} element={<CourseList />} />

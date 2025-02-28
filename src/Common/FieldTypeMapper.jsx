@@ -57,11 +57,13 @@ const FieldTypeMapper = ({
 
       case "text":
       case "email":
+      case "number":
         return (
           <InputField
             key={field.name}
             id={field.id || field.name}
             type={field.type}
+            label={field.label}
             placeholder={field.placeholder}
             register={register}
             name={field.name}
@@ -69,6 +71,26 @@ const FieldTypeMapper = ({
             errors={errors}
             disabled={isSubmitting}
             validation={field.validation}
+            className={field.className}
+            value={filters?.[field.name]}
+          />
+        );
+
+      case "textarea":
+        return (
+          <TextAreaField
+            key={field.name}
+            id={field.id || field.name}
+            label={field.label}
+            required={!!field.validation?.required}
+            errors={errors?.[field.name]}
+            value={filters?.[field.name] || ""}
+            onChange={onChange}
+            className={field.className || "mt-4 relative"}
+            placeholder={field.placeholder}
+            disabled={isSubmitting}
+            rows={field.rows || 5} // Default to 5 rows if not specified
+            {...(register && register(field.name, field.validation))}
           />
         );
 
@@ -77,12 +99,14 @@ const FieldTypeMapper = ({
           <DropdownField
             key={field.name}
             id={field.name}
-            required
+            label={field.label}
+            required={field.validation?.required}
             error={errors?.[field.name]}
             options={field.options}
             {...(register && register(field.name, field.validation))}
             disabled={isSubmitting}
             className={field.className}
+            value={filters?.[field.name]}
           />
         );
 

@@ -49,15 +49,14 @@ const DoughnutChart = () => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
-      tooltip: { enabled: false },
+      tooltip: { enabled: true },
     },
   };
 
   return (
-    <div style={{ width: "180px", height: "180px" }}>
+    <div style={{ width: "200px", height: "200px" }}>
       <Doughnut data={data} options={options} plugins={[textCenterPlugin]} />
     </div>
   );

@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 
+import FieldTypeMapper from "../../../Common/FieldTypeMapper";
+import { lessonFields } from "../../../Constants/InputFields";
+
 const InitialLessonDetails = {
   lesson_name: "",
   duration: "",
   sequence: "",
   content: "",
 };
+
 const AddLesson = ({ lessonData, onSave }) => {
   const [lessonDetails, setLessonDetails] = useState(InitialLessonDetails);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (lessonData) {
@@ -27,85 +32,44 @@ const AddLesson = ({ lessonData, onSave }) => {
     }));
   };
 
+  const validate = () => {
+    const newErrors = {};
+
+    if (!lessonDetails.lesson_name.trim()) {
+      newErrors.lesson_name = "Lesson name is required";
+    }
+
+    if (!lessonDetails.duration.trim()) {
+      newErrors.duration = "Duration is required";
+    } else if (isNaN(lessonDetails.duration)) {
+      newErrors.duration = "Duration must be a number";
+    }
+
+    if (!lessonDetails.sequence.trim()) {
+      newErrors.sequence = "Number is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = () => {
-    onSave({ lesson_id: lessonData?.lesson_id || null, ...lessonDetails });
+    if (validate()) {
+      onSave({ lesson_id: lessonData?.lesson_id || null, ...lessonDetails });
+    }
   };
 
   return (
     <div className="ml-4 w-full m-4 bg-white">
       <div className="flex gap-4">
-        {/* Lesson Name Input */}
-        <div className="flex flex-col">
-          <label
-            htmlFor="lessonName"
-            className="text-sm text-neutral-500 font-medium mb-1"
-          >
-            Lesson Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="lessonName"
-            className="border border-gray-300 px-3 py-2 text-sm"
-            value={lessonDetails.lesson_name}
-            onChange={(e) => handleChange("lesson_name", e.target.value)}
-            placeholder="Enter lesson name"
-          />
-        </div>
-
-        {/* Duration Input */}
-        <div className="flex flex-col w-1/6">
-          <label
-            htmlFor="duration"
-            className="text-sm text-neutral-500 font-medium mb-1"
-          >
-            Duration (min) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="duration"
-            className="border border-gray-300 px-3 py-2 text-sm"
-            value={lessonDetails.duration}
-            onChange={(e) => handleChange("duration", e.target.value)}
-            placeholder="e.g., 50"
-          />
-        </div>
-
-        {/* Number Input */}
-        <div className="flex flex-col w-1/6">
-          <label
-            htmlFor="lessonNumber"
-            className="text-sm text-neutral-500 font-medium mb-1"
-          >
-            Number <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            id="lessonNumber"
-            className="border border-gray-300 px-3 py-2 text-sm"
-            value={lessonDetails.sequence}
-            onChange={(e) => handleChange("sequence", e.target.value)}
-            placeholder="e.g., 1"
-          />
-        </div>
+        <FieldTypeMapper
+          fields={lessonFields}
+          filters={lessonDetails}
+          onChange={handleChange}
+          errors={errors}
+        />
       </div>
-
-      {/* Text Area */}
-      <div className="mt-4 relative">
-        <label
-          htmlFor="description"
-          className="text-sm text-neutral-500 font-medium mb-1"
-        >
-          Description
-        </label>
-        <textarea
-          id="description"
-          className="border border-gray-300 px-3 py-2 text-sm w-full h-40 resize-none"
-          value={lessonDetails.content}
-          onChange={(e) => handleChange("content", e.target.value)}
-          placeholder="Add a description for the lesson"
-        ></textarea>
-      </div>
-
+      
       {/* Save Button */}
       <div className="flex justify-end mt-4">
         <button

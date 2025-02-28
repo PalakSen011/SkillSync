@@ -10,7 +10,7 @@ const DropdownField = ({
   ...register
 }) => {
   return (
-    <div className={`${className || "flex flex-col w-1/4"}`}>
+    <div className={`${className || "flex flex-col "}`}>
       {label && (
         <label
           htmlFor={id}

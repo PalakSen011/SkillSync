@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { FaCaretDown,FaCaretRight  } from "react-icons/fa";
+import { FaCaretDown, FaCaretRight } from "react-icons/fa";
 
 const TableComponent = ({ data }) => {
   const [expandedRows, setExpandedRows] = useState({});
-  console.log("🚀 ~ TableComponent ~ expandedRows:", expandedRows)
+  console.log("🚀 ~ TableComponent ~ expandedRows:", expandedRows);
 
   const toggleRow = (index) => {
     setExpandedRows((prev) => ({
@@ -36,7 +36,7 @@ const TableComponent = ({ data }) => {
         </thead>
         <tbody>
           {data.map((course, index) => (
-            <>
+            <React.Fragment key={index + Date.now()}>
               <tr
                 className="border-b cursor-pointer "
                 onClick={() => toggleRow(index)}
@@ -44,11 +44,7 @@ const TableComponent = ({ data }) => {
                 <td className="p-5  flex items-center">
                   {course.subCourses ? (
                     <span className="mr-2">
-                      {expandedRows[index] ? (
-                        <FaCaretDown />
-                      ) : (
-                        <FaCaretRight />
-                      )}
+                      {expandedRows[index] ? <FaCaretDown /> : <FaCaretRight />}
                     </span>
                   ) : null}
                   {course.course}
@@ -88,7 +84,7 @@ const TableComponent = ({ data }) => {
                     <td className="p-5">{subCourse.taskStatus}</td>
                   </tr>
                 ))}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>

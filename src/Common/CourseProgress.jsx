@@ -1,6 +1,9 @@
-import React from "react";
+// import React from "react";
 
 const ProgressBar = ({ label, value, color }) => {
+
+  const totalValue = 27;
+  
   return (
     <div className="mb-8 ">
       <div className="flex justify-between text-neutral-500 text-sm ">
@@ -10,7 +13,10 @@ const ProgressBar = ({ label, value, color }) => {
       <div className="w-full bg-gray-200 rounded-full h-3">
         <div
           className="h-3 rounded-full"
-          style={{ width: `${(value / 27) * 100}%`, backgroundColor: color }}
+          style={{
+            width: `${(value / totalValue) * 100}%`,
+            backgroundColor: color,
+          }}
         ></div>
       </div>
     </div>
@@ -31,7 +37,7 @@ const CourseProgress = () => {
           value={10}
           color="rgba(255, 138, 0, 1)"
         />
-        <ProgressBar label="Overdue" value={3} color="rgba(255, 68, 88, 1)" />
+        <ProgressBar label="Overdued" value={3} color="rgba(255, 68, 88, 1)" />
       </div>
     </div>
   );

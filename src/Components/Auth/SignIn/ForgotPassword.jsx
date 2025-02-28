@@ -14,6 +14,7 @@ import { setUserEmail } from "../../../Store/Slice/usersSlice";
 import { forgotPassword } from "../../../Api/authApi";
 import { validateEmail } from "../../../Utils/validation";
 import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
+import { InputField } from "../../../Common";
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
@@ -46,7 +47,7 @@ const ForgotPassword = ({ onClose }) => {
       dispatch(changeType("sentEmail"));
     } catch (error) {
       toast.error(
-        error?.response?.data?.email?.[0] || MESSAGE_CONSTANTS.ERROR_DEFAULT
+        error?.response?.data?.email?.[0] || MESSAGE_CONSTANTS?.ERROR_DEFAULT
       );
     } finally {
       setIsSubmitting(false);
@@ -93,17 +94,16 @@ const ForgotPassword = ({ onClose }) => {
               <h2 className="text-lg pb-3 text-center">
                 {MESSAGE_CONSTANTS.ENTER_EMAIL}
               </h2>
-              <input
+              <InputField
+                id="email"
                 type="email"
-                className="w-full px-4 py-2 border border-gray-400"
                 placeholder={MESSAGE_CONSTANTS.EMAIL_PLACEHOLDER}
                 value={email}
                 onChange={handleEmailChange}
                 disabled={isSubmitting}
+                errors={emailError}
+                // className="w-full px-4 py-2 border border-gray-400"
               />
-              {emailError && (
-                <p className="text-red-500 text-sm">{emailError}</p>
-              )}
             </div>
 
             <button

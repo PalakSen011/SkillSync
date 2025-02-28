@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 
 import Header from "./Header";
 import AddModule from "./Modules/AddModule";
-import {DropdownField, InputField} from "../../Common"
 
 import { addCourse, replaceCourseById } from "../../Store/Slice/courseSlice";
-import { statusOptions, categoryOptions } from "../../Constants/Options";
 import { generateUpdatedCourse } from "../../Utils/courseUtils";
+import FieldTypeMapper from "../../Common/FieldTypeMapper";
+import { courseFields } from "../../Constants";
 
 // Define initial course details as a constant
 const InitialCourseDetails = {
@@ -30,7 +30,6 @@ const AddNewCourse = ({ onBackClick }) => {
   const course = courses?.find(
     (course) => course?.course_id === parseInt(courseId)
   );
-
 
   const {
     register,
@@ -125,37 +124,14 @@ const AddNewCourse = ({ onBackClick }) => {
             </label>
           </div>
         </div>
-
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center gap-4 mt-3">
-            <InputField
-              id="courseTitle"
-              label="Title"
-              type="text"
-              required
-              errors={errors?.title}
-              value={courseDetails?.title}
-              onChange={(e) => handleFieldChange("title", e.target.value)}
-              className="flex flex-col w-1/2"
-            />
-
-            <DropdownField
-              id="category"
-              label="Category"
-              required
-              error={errors?.category}
-              options={categoryOptions}
-              {...register("category", { required: "Category is required" })}
-              onChange={(e) => handleFieldChange("category", e.target.value)}
-            />
-            <DropdownField
-              id="status"
-              label="Status"
-              required
-              error={errors?.status}
-              options={statusOptions}
-              {...register("status", { required: "Status is required" })}
-              onChange={(e) => handleFieldChange("status", e.target.value)}
+            <FieldTypeMapper
+              fields={courseFields}
+              filters={courseDetails}
+              register={register}
+              errors={errors}
+              onChange={handleInputChange}
             />
           </div>
 

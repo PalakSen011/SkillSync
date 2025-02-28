@@ -1,0 +1,259 @@
+.user-details-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .user-management-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .profile-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+  .profile-image-wrapper {
+    position: relative;
+  }
+  
+  .profile-image {
+    height: 140px;
+    width: 140px;
+    border-radius: 50%;
+    border: 2px solid gray;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  
+  .profile-image:hover {
+    opacity: 0.8;
+  }
+  
+  .profile-info {
+    padding-left: 1rem;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .profile-name {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .profile-role {
+    font-size: 0.9rem;
+    color: gray;
+  }
+  
+  .status {
+    padding: 0.3rem 0.6rem;
+    background-color: green;
+    color: white;
+    border-radius: 5px;
+    font-size: 0.8rem;
+  }
+  
+  .profile-details {
+    margin-top: 1rem;
+  }
+  
+  .profile-field {
+    margin-top: 0.8rem;
+  }
+  
+  .field-label {
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  
+  .field-value {
+    display: flex;
+    justify-content: space-between;
+    color: gray;
+  }
+  
+  .update-link {
+    font-size: 0.75rem;
+    color: green;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .course-progress-container {
+    width: 60%;
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+  .course-progress-title {
+    font-weight: bold;
+  }
+  
+  .course-progress-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .performance-container {
+    margin-top: 1rem;
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .performance-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  .stats-container {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .stat-box {
+    padding: 1rem;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  .stat-value {
+    color: green;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .stat-label {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+  
+/*import React, { useState } from "react";
+import { UserMangementImg } from "../../Assets";
+import DoughnutChart from "../../Common/DoughnutChart";
+import CourseProgress from "../../Common/CourseProgress";
+import { tableData } from "../../Utils/tableData";
+import TableComponent from "./TableComponent";
+import "./UserManagement.css";
+
+const UserManagement = () => {
+  const [profileImage, setProfileImage] = useState(UserMangementImg);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+    }
+  };
+
+  return (
+    <>
+      <div className="user-details-title">User Details</div>
+      <div className="user-management-container">
+        <div className="profile-container">
+          <div className="profile-image-wrapper">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+              id="profilePicUpload"
+            />
+            <label htmlFor="profilePicUpload" className="cursor-pointer">
+              <img
+                className="profile-image"
+                src={profileImage}
+                alt="UserProfilePic"
+              />
+            </label>
+          </div>
+
+          <div className="profile-info">
+            <div className="profile-header">
+              <div>
+                <p className="profile-name">Peter Laningrad</p>
+                <p className="profile-role">Employee</p>
+              </div>
+              <div className="status">Active</div>
+            </div>
+
+            <div className="profile-details">
+              <div className="profile-field">
+                <p className="field-label">Email</p>
+                <div className="field-value">
+                  <span>peter.leningrad@gmail.com</span>
+                  <p className="update-link">update</p>
+                </div>
+              </div>
+              <div className="profile-field">
+                <p className="field-label">Username</p>
+                <div className="field-value">PeterL</div>
+              </div>
+              <div className="profile-field">
+                <p className="field-label">Password</p>
+                <div className="field-value">
+                  <span>**************</span>
+                  <p className="update-link">change</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="course-progress-container">
+          <p className="course-progress-title">Course & Training Progress</p>
+          <div className="course-progress-content">
+            <div className="doughnut-chart">
+              <DoughnutChart />
+            </div>
+            <div className="progress-details">
+              <CourseProgress />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="performance-container">
+        <div className="performance-content">
+          <p className="performance-title">Performance & Achievements</p>
+          <div className="stats-container">
+            <div className="stat-box">
+              <div className="stat-value">92.45%</div>
+              <div className="stat-label">Avg. score achieved per module</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-value">6hr 28min</div>
+              <div className="stat-label">Avg. time taken to complete per course</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-value">07</div>
+              <div className="stat-label">Avg. number attempts per module</div>
+            </div>
+          </div>
+          <TableComponent data={tableData} />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default UserManagement;*/

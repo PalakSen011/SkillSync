@@ -10,9 +10,7 @@ import { setAuthData } from "../../../Store/Slice/usersSlice";
 import { validateEmail, } from "../../../Utils/validation";
 
 import SubmitButton from "../SignUp/SubmitButton";
-import { signInFormFields } from "../../../Constants/InputFields";
-import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
-import { PATH_SIGNUP, PATH_DASHBOARD } from "../../../Constants/RouteConstants";
+import { PATH_SIGNUP, PATH_DASHBOARD,signInFormFields,MESSAGE_CONSTANTS } from "../../../Constants";
 import FieldTypeMapper from "../../../Common/FieldTypeMapper";
 
 const SignInForm = ({ setIsForgotModalOpen }) => {

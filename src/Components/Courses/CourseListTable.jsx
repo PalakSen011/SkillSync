@@ -5,8 +5,7 @@ import "rc-pagination/assets/index.css";
 
 import { courseList } from "../../Api/courseApi";
 import { darkdropdown } from "../../Assets/index";
-import { PATH_COURSE_DETAIL } from "../../Constants/RouteConstants";
-import { courseListTableHeader } from "../../Constants/InputFields";
+import { PATH_COURSE_DETAIL,courseListTableHeader } from "../../Constants";
 
 const CoursesListTable = () => {
   const navigate = useNavigate();

@@ -7,7 +7,7 @@ import {
   PATH_COURSES,
   PATH_DASHBOARD,
   PATH_USER_MANAGEMENT,
-} from "../Constants/RouteConstants";
+} from "../Constants";
 
 const SidebarLink = ({ to, icon, label }) => {
   return (

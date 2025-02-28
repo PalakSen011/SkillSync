@@ -6,9 +6,11 @@ import { toast } from "react-toastify";
 
 import { logo } from "../../../Assets/";
 import { signUpUser } from "../../../Api/authApi";
-import { PATH_SIGNIN } from "../../../Constants/RouteConstants";
-import { signUpFormFields } from "../../../Constants/InputFields";
-import { MESSAGE_CONSTANTS } from "../../../Constants/MessageConstants";
+import {
+  PATH_SIGNIN,
+  signUpFormFields,
+  MESSAGE_CONSTANTS,
+} from "../../../Constants";
 
 import SubmitButton from "./SubmitButton";
 import FieldTypeMapper from "../../../Common/FieldTypeMapper";

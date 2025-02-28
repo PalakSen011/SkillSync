@@ -11,7 +11,7 @@ const InputField = ({
   errors,
   className,
   onChange,
-  register
+  register,
 }) => {
   return (
     <div className={`${className || "flex flex-col"}`}>
@@ -29,10 +29,11 @@ const InputField = ({
         required={required}
         value={value}
         placeholder={placeholder}
-        className="appearance-none border px-3 py-2 text-sm"
-        {...register(name)} 
+        className={className || "appearance-none border px-3 py-2 text-sm"}
+        {...(register ? register(name) : {})} // Spread only if register exists
         onChange={onChange}
       />
+
       {errors?.[id] && (
         <p className="text-red-500 text-sm">{errors?.[id]?.message}</p>
       )}

@@ -8,7 +8,7 @@ import { delete_red, edit_Black } from "../../Assets/index";
 
 import { deleteCourse } from "../../Store/Slice/courseSlice";
 
-import { PATH_COURSES } from "../../Constants/RouteConstants";
+import { PATH_COURSES } from "../../Constants";
 
 import ConfirmationDelete from "../../Common/ConfirmationDelete";
 
