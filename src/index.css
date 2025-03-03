@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {img {display: initial;}}
 html,
 body {
   font-family: "Inter", Arial, sans-serif; /* Add a fallback font for safety */

@@ -12,7 +12,7 @@ const FormInputField = ({
   showPassword,
   togglePassword,
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="mb-4">
       <div className="relative">

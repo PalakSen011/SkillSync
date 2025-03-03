@@ -3,7 +3,6 @@ import { FaCaretDown, FaCaretRight } from "react-icons/fa";
 
 const TableComponent = ({ data }) => {
   const [expandedRows, setExpandedRows] = useState({});
-  console.log("🚀 ~ TableComponent ~ expandedRows:", expandedRows);
 
   const toggleRow = (index) => {
     setExpandedRows((prev) => ({
@@ -36,12 +35,12 @@ const TableComponent = ({ data }) => {
         </thead>
         <tbody>
           {data.map((course, index) => (
-            <React.Fragment key={index + Date.now()}>
+            <React.Fragment key={index}>
               <tr
                 className="border-b cursor-pointer "
                 onClick={() => toggleRow(index)}
               >
-                <td className="p-5  flex items-center">
+                <td className="p-5 flex items-center">
                   {course.subCourses ? (
                     <span className="mr-2">
                       {expandedRows[index] ? <FaCaretDown /> : <FaCaretRight />}
@@ -75,13 +74,23 @@ const TableComponent = ({ data }) => {
                     key={`${index}-${subIndex}`}
                     className="border-b bg-neutral-50"
                   >
-                    <td className="p-5 pl-10">{subCourse.course}</td>
+                    <td className="p-5 pl-12">{subCourse.course}</td>
                     <td className="p-5">{subCourse.scoreAchieved}</td>
                     <td className="p-5">{subCourse.timeTaken}</td>
                     <td className="p-5">{subCourse.noOfAttempts}</td>
                     <td className="p-5">{subCourse.assignedDate}</td>
                     <td className="p-5">{subCourse.completedDate}</td>
-                    <td className="p-5">{subCourse.taskStatus}</td>
+                    <td className="p-5">
+                      <span
+                        className={`px-3 py-1 rounded ${
+                          subCourse.taskStatus === "Completed"
+                            ? "bg-green-500 text-white"
+                            : "bg-gray-300"
+                        }`}
+                      >
+                        {subCourse.taskStatus}
+                      </span>
+                    </td>
                   </tr>
                 ))}
             </React.Fragment>

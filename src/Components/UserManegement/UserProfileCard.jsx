@@ -1,45 +1,26 @@
-// UserProfileCard.js
 import React, { useState } from "react";
 import { UserMangementImg } from "../../Assets";
 import ImageUploader from "./ImageUploder";
+import { userData } from "../../Utils/userData";
 
 const UserProfileCard = () => {
+  const { email, username, firstName, lastName, department } = userData.user;
   const [profileImage, setProfileImage] = useState(UserMangementImg);
 
-  // const handleImageUpload = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setProfileImage(imageUrl);
-  //   }
-  // };
-
   return (
-    <div className="flex  w-full md:w-2/5 bg-white rounded-lg p-4 border gap-2 shadow-md">
+    <div className="flex w-full md:w-2/5 bg-white rounded-lg p-4 border gap-2 shadow-md">
       <div className="relative mx-auto md:mx-0">
-        {/* <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-          id="profilePicUpload"
-        /> */}
-        {/* <label htmlFor="profilePicUpload" className="cursor-pointer block">
-          <img
-            className="h-40 w-40 md:h-56 md:w-56 rounded-full border-2 border-gray-300 hover:opacity-80 transition-opacity"
-            src={profileImage}
-            alt="UserProfilePic"
-          />
-        </label> */}
         <div className="h-40 w-40 md:h-56 md:w-56 rounded-full border-2 border-gray-300 hover:opacity-80 transition-opacity">
-          <ImageUploader/>
+          <ImageUploader />
         </div>
       </div>
       <div className="p-2 flex-1">
         <div className="flex flex-wrap justify-between">
           <div>
-            <p className="font-semibold text-[16px] mb-2">Peter Laningrad</p>
-            <p className="text-sm font-extralight text-neutral-700">Employee</p>
+            <p className="font-semibold text-[16px] mb-2">{`${firstName} ${lastName}`}</p>
+            <p className="text-sm font-extralight text-neutral-700">
+              {department}
+            </p>
           </div>
           <div className="mt-2 md:mt-0">
             <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
@@ -48,13 +29,9 @@ const UserProfileCard = () => {
           </div>
         </div>
 
-        <ProfileInfoItem
-          label="Email"
-          value="peter.leningrad@gmail.com"
-          actionLabel="update"
-        />
+        <ProfileInfoItem label="Email" value={email} actionLabel="update" />
 
-        <ProfileInfoItem label="Username" value="PeterL" />
+        <ProfileInfoItem label="Username" value={username} />
 
         <ProfileInfoItem
           label="Password"

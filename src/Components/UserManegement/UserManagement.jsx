@@ -1,41 +1,55 @@
-// UserManagement.js - Main component
-import React, { useRef } from "react";
-import { jsPDF } from "jspdf";
+import React, { useRef, useState } from "react";
 import html2canvas from "html2canvas";
+
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import UserProfileCard from "./UserProfileCard";
 import CourseTrainingProgress from "./CourseTrainingProgress";
 import PerformanceAchievements from "./PerformanceAchievements";
+import ReportDocument from "./PDFComponents/ReportDocument";
+import { userData } from "../../Utils/userData";
 
 const UserManagement = () => {
-  const pdfRef = useRef();
-
-  const handleDownloadPDF = async () => {
-    const element = pdfRef.current;
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
-    pdf.save("User_Details.pdf");
+  // Sample user data (in a real app, this would come from props or API)
+  const chartRef = useRef(null);
+  const [chartImage, setChartImage] = useState("");
+  const captureChart = async () => {
+    if (chartRef.current) {
+      try {
+        const canvas = await html2canvas(chartRef.current);
+        setChartImage(canvas.toDataURL("image/png"));
+      } catch (error) {
+        console.error("Error capturing chart:", error);
+      }
+    }
   };
 
   return (
     <>
       <div className="flex justify-end mb-4">
-        <button
+        <PDFDownloadLink
+          document={
+            <ReportDocument userData={userData} chartImage={chartImage} />
+          }
+          fileName={`${userData.user.firstName}_${userData.user.lastName}_Training_Report.pdf`}
           className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700"
-          onClick={handleDownloadPDF}
+          style={{
+            textDecoration: "none",
+            cursor: "pointer",
+          }}
+          onClick={() => captureChart()}
         >
-          Download PDF
-        </button>
+          {({ loading }) =>
+            loading ? "Generating PDF..." : "Download Customized PDF"
+          }
+        </PDFDownloadLink>
       </div>
 
-      <div ref={pdfRef}>
+      {/* Regular content for display in the app */}
+      <div className="p-5 border rounded-lg bg-white">
         <div className="text-xl font-semibold mb-5">User Details</div>
         <div className="flex gap-2 flex-col md:flex-row">
           <UserProfileCard />
-          <CourseTrainingProgress />
+          <CourseTrainingProgress chartRef={chartRef} />
         </div>
         <PerformanceAchievements />
       </div>
