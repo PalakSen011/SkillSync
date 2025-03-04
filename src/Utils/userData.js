@@ -6,7 +6,11 @@ export const userData = {
     lastName: "Laningrad",
     employeeId: "EMP12345",
     department: "Employee",
+
   },
+  avgScore: "92.45%",
+  avgTime: "6hr 28min",
+  avgAttempts: "07",
   courses: [
     {
       course: "Compensation and Benefits Policies",

@@ -23,7 +23,7 @@ const TableComponent = ({ data }) => {
 
   return (
     <div className="mt-5">
-      <table className="min-w-full table-auto border-collapse mt-4 text-slate-800 ">
+      <table id="performanceTable" className="min-w-full table-auto border-collapse mt-4 text-slate-800 ">
         <thead className="bg-neutral-100 border-b-2">
           <tr className="text-left">
             {tableHeader.map((header, index) => (

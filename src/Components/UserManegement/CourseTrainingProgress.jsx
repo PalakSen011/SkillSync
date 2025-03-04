@@ -28,6 +28,8 @@ const CourseTrainingProgress = ({ chartRef }) => {
         </Suspense>
       </div>
     </div>
+
+    
   );
 };
 

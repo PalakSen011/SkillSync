@@ -15,17 +15,17 @@ const PerformanceAchievements = () => {
         <p className="font-semibold text-lg">Performance & Achievements</p>
         <div className="flex mt-6 gap-4">
           <div className="p-4 shadow-md">
-            <div className="text-green-500 text-2xl font-semibold">92.45%</div>
+            <div className="text-green-500 text-2xl font-semibold">{userData?.avgScore}</div>
             <div className="">Avg. score achieved per module</div>
           </div>
           <div className="p-4 shadow-md">
             <div className="text-green-500 text-2xl font-semibold">
-              6hr 28min
+              {userData?.avgTime}
             </div>
             <div className="">Avg. time taken to complete per course</div>
           </div>
           <div className="p-4 shadow-md">
-            <div className="text-green-500 text-2xl font-semibold">07</div>
+            <div className="text-green-500 text-2xl font-semibold">{userData.avgAttempts}</div>
             <div className="">Avg. number attempts per module</div>
           </div>
         </div>

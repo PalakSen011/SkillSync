@@ -3,138 +3,165 @@ import { StyleSheet } from "@react-pdf/renderer";
 // Define styles for PDF document
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
-    backgroundColor: "#ffffff"
+    flexDirection: "column",
+    backgroundColor: "#FFFFFF",
+    padding: 25,
   },
   section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1
+    marginVertical: 8,
+    padding: 12,
+    borderRadius: 6,
+    backgroundColor: "#FAFAFA",
   },
   title: {
-    fontSize: 24,
-    textAlign: "center",
-    marginBottom: 20,
-    fontWeight: "bold"
-  },
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 10,
-    fontWeight: "bold"
-  },
-  row: {
-    flexDirection: "row",
-    marginBottom: 10
-  },
-  column: {
-    flexDirection: "column",
-    marginRight: 15,
-    flex: 1
-  },
-  text: {
-    fontSize: 12,
-    marginBottom: 5
-  },
-  courseTitle: {
-    fontSize: 14,
+    fontSize: 26,
     fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 5
-  },
-  subCourse: {
-    marginLeft: 10,
-    fontSize: 11
-  },
-  footer: {
-    position: "absolute",
-    bottom: 30,
-    left: 30,
-    right: 30,
-    fontSize: 10,
+    marginBottom: 18,
     textAlign: "center",
-    color: "grey"
+    color: "#333333",
   },
-  confidentialWatermark: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    backgroundColor: "rgba(0, 100, 200, 0.6)",
-    padding: 10
+  // User information styling - full width
+  userInfoContainer: {
+    flexDirection: "row",
+    gap: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 25,
+    textAlign: "center",
   },
-  watermarkText: {
-    fontSize: 16,
-    color: "white"
+  userImageContainer: {
+    width: 180,
+    height: 180,
+    borderRadius: 100,
+    overflow: "hidden",
+    borderWidth: 2,
+    borderColor: "#CCCCCC",
+    marginBottom: 12,
   },
-  scoreHighlight: {
-    fontSize: 12,
-    backgroundColor: "#e6f7ff",
-    padding: 5,
-    marginTop: 10
+  userImage: {
+    width: "100%",
+    height: "100%",
   },
-  
-  // Table styles
+  userDetails: {
+    textAlign: "center",
+  },
+  // Chart image styling
+  chartContainer: {
+    width: "100%",
+    marginVertical: 15,
+    alignItems: "center",
+  },
+  chartImage: {
+    width: "95%",
+    height: "auto",
+  },
+  // Performance card styling
+  performanceSection: {
+    margin: 8,
+    padding: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#D6D6D6",
+    backgroundColor: "#FFFFFF",
+    boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.1)",
+  },
+  performanceItem: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E5E5",
+    paddingVertical: 8,
+    marginBottom: 5,
+  },
+  performanceLabel: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#444444",
+  },
+  performanceValue: {
+    flex: 1,
+    fontSize: 13,
+    textAlign: "right",
+    color: "#222222",
+  },
+  // Table styling - refined spacing
+  table: {
+    display: "table",
+    width: "100%",
+    borderStyle: "solid",
+    borderWidth: 1,
+    marginTop: 18,
+  },
   tableRow: {
     flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#dddddd",
-    borderBottomStyle: "solid",
-    alignItems: "center",
-    height: 24,
-    fontSize: 12
   },
-  tableRowEven: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#dddddd",
-    borderBottomStyle: "solid",
-    alignItems: "center",
-    height: 24,
-    fontSize: 12,
-    backgroundColor: "#f2f2f2"
-  },
-  tableHeaderCell: {
+  tableCellHeader: {
     flex: 1,
-    paddingHorizontal: 5,
-    backgroundColor: "#0066cc",
-    color: "#ffffff"
-  },
-  tableHeaderText: {
-    fontSize: 12,
+    borderStyle: "solid",
+    borderWidth: 1,
+    padding: 7,
+    backgroundColor: "#EDEDED",
     fontWeight: "bold",
-    color: "#ffffff"
+    fontSize: 11,
+    textAlign: "center",
+    color: "#333333",
   },
   tableCell: {
     flex: 1,
-    paddingHorizontal: 5
-  },
-  tableCellText: {
-    fontSize: 10
-  },
-  
-  // Summary section styles
-  summaryContainer: {
-    marginTop: 15,
-    padding: 10,
-    borderRadius: 5,
+    borderStyle: "solid",
     borderWidth: 1,
-    borderColor: "#dddddd",
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  summaryItem: {
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  summaryLabel: {
+    padding: 6,
     fontSize: 10,
-    color: "#666666",
-    marginBottom: 3
+    textAlign: "center",
+    color: "#555555",
   },
-  summaryValue: {
-    fontSize: 14,
+  subRow: {
+    flexDirection: "row",
+    backgroundColor: "#F7F7F7",
+  },
+  subCell: {
+    flex: 1,
+    borderStyle: "solid",
+    borderWidth: 0.8,
+    padding: 5,
+    fontSize: 9,
+    textAlign: "center",
+    color: "#666666",
+  },
+  subtitle: {
+    fontSize: 18,
     fontWeight: "bold",
-    color: "#0066cc"
-  }
+    marginBottom: 10,
+    color: "#222222",
+  },
+  content: {
+    fontSize: 12,
+    marginBottom: 5,
+    color: "#444444",
+  },
+  courseProgressSection: {
+    marginVertical: 12,
+  },
+  courseProgressItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 7,
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+  },
+  courseProgressName: {
+    flex: 2,
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#444444",
+  },
+  courseProgressValue: {
+    flex: 1,
+    fontSize: 12,
+    textAlign: "right",
+    color: "#222222",
+  },
 });
 
 export default styles;

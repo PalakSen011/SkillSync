@@ -16,7 +16,7 @@ function ImageUploader() {
   const imgRef = useRef(null);
   // Load saved image from localStorage on component mount
   useEffect(() => {
-    const savedImage =  UserMangementImg ;
+    const savedImage = UserMangementImg;
     if (savedImage) {
       setImgSrc(savedImage);
     }
@@ -44,7 +44,7 @@ function ImageUploader() {
   // Initialize crop when image loads
   const onImageLoad = (e) => {
     const { width, height } = e.currentTarget;
-    
+
     // Make a centered square crop by default (perfect for profile pictures)
     const crop = centerCrop(
       makeAspectCrop(
@@ -158,13 +158,12 @@ function ImageUploader() {
       )}
       {/* Your existing div structure */}
       <div
-        className="h-40 w-40 md:h-56 md:w-56 aspect-square flex-shrink-0 rounded-full overflow-hidden border border-gray-300 relative right-0  cursor-pointer group"
+        className="relative h-40 w-40 md:h-56 md:w-56 aspect-square flex-shrink-0 rounded-full overflow-hidden border border-gray-300 cursor-pointer group"
         onClick={handleImageClick}
       >
         {imgSrc ? (
           <img src={imgSrc} alt="User" className="w-full h-full object-cover" />
         ) : (
-          // Default placeholder when no image is available
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
             <svg
               className="w-12 h-12 text-gray-400"
@@ -180,12 +179,14 @@ function ImageUploader() {
             </svg>
           </div>
         )}
+
         {/* Hover overlay */}
-        <div className=" inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 flex items-center justify-center transition-all duration-200">
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 flex items-center justify-center transition-all duration-200">
           <span className="text-white opacity-0 group-hover:opacity-100 text-xs sm:text-sm font-medium">
             {imgSrc ? "Change" : "Upload"}
           </span>
         </div>
+
         {/* Loading indicator */}
         {isUploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70">
@@ -193,6 +194,46 @@ function ImageUploader() {
           </div>
         )}
       </div>
+
+      {/* Cropping Modal */}
+      {isCropping && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-4 max-w-lg w-full">
+            <h3 className="text-lg font-medium mb-2">Crop Image</h3>
+            <div className="mb-4">
+              <ReactCrop
+                crop={crop}
+                onChange={(c) => setCrop(c)}
+                onComplete={(c) => setCompletedCrop(c)}
+                aspect={1}
+                circularCrop={false}
+              >
+                <img
+                  src={imgSrc}
+                  onLoad={onImageLoad}
+                  alt="Upload"
+                  className="max-w-full max-h-96"
+                />
+              </ReactCrop>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={cancelCrop}
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={applyCrop}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                disabled={!completedCrop}
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
